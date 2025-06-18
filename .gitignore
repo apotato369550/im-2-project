@@ -1,0 +1,35 @@
+# === Node & React ===
+node_modules/
+dist/
+build/
+.vite/
+
+# === Environment Variables ===
+.env
+.env.*.local
+
+# === Logs ===
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === PHP ===
+vendor/
+composer.lock
+
+# === PHPStorm / JetBrains IDEs ===
+.idea/
+*.iml
+
+# === VSCode ===
+.vscode/
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+
+# === Others ===
+*.log
+*.bak
+*.tmp
