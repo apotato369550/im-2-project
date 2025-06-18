@@ -42,6 +42,6 @@ Login System
 
 ## Tech Stack
 
-Frontend: HTML, CSS, JS
+Frontend: HTML, CSS, JS, React
 Backend: PHP, SQL
 
