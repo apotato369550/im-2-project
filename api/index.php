@@ -6,6 +6,7 @@ require __DIR__ . '/config/autoloader.php';
 
 header("Content-type: application/json; charset=UTF-8");
 
+set_error_handler("ErrorHandler::handleError");
 set_exception_handler("ErrorHandler::handleException");
 
 
