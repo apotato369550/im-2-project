@@ -11,4 +11,5 @@ class ErrorHandler{
             "line" => $exception->getLine()
         ]);
     }
+
 }
