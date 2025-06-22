@@ -4,7 +4,7 @@ spl_autoload_register(function ($class) {
     $paths = [
         __DIR__ . '/../models/',
         __DIR__ . '/../controllers/',
-        __DIR__ . '/../middlewares/',
+        __DIR__ . '/../middleware/',
         __DIR__ . '/../helpers/',
         __DIR__ . '/../core/'
     ];

@@ -17,6 +17,7 @@ pnpm-debug.log*
 # === PHP ===
 vendor/
 composer.lock
+composer.json
 
 # === PHPStorm / JetBrains IDEs ===
 .idea/

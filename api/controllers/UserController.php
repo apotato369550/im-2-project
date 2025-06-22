@@ -1,7 +1,10 @@
 <?php
 
+use Firebase\JWT\JWT;
+use Firebase\JWT\KEY;
+
 class UserController{
-    public function login()
+    public function login() :void
     {
         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -12,12 +15,17 @@ class UserController{
 
         $user = new User();
         $existingUser = $user->loginRequest($data['user_email']);
-
+// password_verify($data['user_password'], $existingUser['user_password'])
         if($existingUser && $data['user_password'] === $existingUser['user_password']){
-            $token = bin2hex(random_bytes(16));
+            $payload = [
+                "user_id" => $existingUser['user_id'],
+                "user_email" => $existingUser['user_email'],
+                "exp" => time() + 7200
+            ];
+            $jwt = JWT::encode($payload, JWT_SECRET, 'HS256');
             echo json_encode([
-                "message" => 'Login successful',
-                "token" => $token
+                "message" => "Login successful",
+                "token" => $jwt
             ]);
         }else{
             ErrorHelper::sendError(401, "Invalid email or password");
@@ -25,7 +33,7 @@ class UserController{
         
     }
 
-    public function register()
+    public function register() :void
     {
         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -46,4 +54,71 @@ class UserController{
         }
         
     }
+
+    /*
+    headers for profile must include the authorization header with value Bearer <token> to access protected routes
+    */
+
+    /******
+     * THESE ARE VIEW METHODS
+     * 
+    *******/
+    public function profile() 
+    {
+        $decoded = AuthMiddleware::verifyToken();
+        $user = new User();
+        $profile = $user->viewProfile($decoded->user_email);
+        if($profile){
+            echo json_encode($profile);
+        }else{
+            ErrorHelper::sendError(404, "User not Found");
+        }
+    }
+
+    public function assignments(){
+        $decoded = AuthMiddleware::verifyToken();
+        $user = new User();
+        $assignments = $user->viewAssignments($decoded->user_id);
+        if($assignments){
+            echo json_encode($assignments);
+        }else{
+            ErrorHelper::sendError(408, "Error fetching assignments");
+        }
+    }
+
+    public function orders(){
+        $decoded = AuthMiddleware::verifyToken();
+        $user = new User();
+        $orders = $user->viewOrders($decoded->user_id);
+        if($orders){
+            echo json_encode($orders);
+        }else{
+            ErrorHelper::sendError(408, "Error fetching orders");
+        }
+    }
+
+    public function quotations(){
+        $decoded = AuthMiddleware::verifyToken();
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        $user = new User();
+        $quotations = $user->viewQuotations($data);
+        if($quotations){
+            echo json_encode($quotations);
+        }else{
+            ErrorHelper::sendError(408, "Error fetching quotations");
+        }
+    }
+
+    /******
+     * THESE ARE CREATE METHODS
+     * 
+    *******/
+
+    /******
+     * THESE ARE UPDATE/EDIT METHODS
+     * 
+    *******/
+
+
 }
