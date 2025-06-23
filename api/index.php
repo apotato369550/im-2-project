@@ -22,9 +22,17 @@ $router->post('/im-2-project/api/user/register', 'UserController@register');
 
 $router->get('/im-2-project/api/user/profile', 'UserController@profile');
 $router->get('/im-2-project/api/user/quotations', 'UserController@quotations');
-$router->get('/im-2-project/api/user/assignments', 'UserController@assignments');
-$router->get('/im-2-project/api/user/orders', 'UserController@orders');
- 
+
+//assignment routes
+$router->get('/im-2-project/api/assignment', 'AssignmentController@viewAssignments');
+$router->get('/im-2-project/api/assignment/{id}', 'AssignmentController@viewAssignment');
+
+
+//order routes
+$router->get('/im-2-project/api/orders', 'OrderController@viewOrders');
+$router->get('/im-2-project/api/orders/{id}', 'OrderController@findOrder');
+
+$router->post('/im-2-project/api/orders/create', 'OrderController@createOrder');
 
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

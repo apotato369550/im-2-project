@@ -37,14 +37,7 @@ Class User {
         return $user ?: null;
     }
 
-    public function viewOrders(string $userId) : ?array
-    {
-        $db = DBHelper::getConnection();
-        $stmt = $db->prepare("SELECT * FROM orders WHERE client_id = :userId");
-        $stmt->execute(['userId' => $userId]);
-        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $orders;
-    }
+    
 
     public function viewQuotations(string $userId) : ?array
     {
@@ -56,20 +49,5 @@ Class User {
         $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $quotations;
     }
-
-    public function viewAssignments(string $userId) : ?array
-    {
-        $db = DBHelper::getConnection();
-        $stmt = $db->prepare("
-            SELECT a.* 
-            FROM assignments a
-            INNER JOIN orders o ON a.order_id = o.order_id
-            WHERE o.client_id = :client_id AND o.order_id IS NOT NULL
-        ");
-        $stmt->execute(['client_id' => $userId]);
-        $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $quotations;
-    }
-    
 
 }

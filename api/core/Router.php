@@ -15,7 +15,7 @@ Class Router{
         $uri = parse_url($requestUri, PHP_URL_PATH);
 
         foreach($this->routes as $route){
-            if($route['method'] === $requestMethod && $route['path'] === $uri){
+            if($route['method'] === $requestMethod){
                 $pattern = preg_replace('#\{[\w]+\}#', '([\w=]+)', $route['path']);
                 $pattern = "#^" . $pattern . "$#";
                 if(preg_match($pattern, $uri, $matches)){

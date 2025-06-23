@@ -76,17 +76,6 @@ class UserController{
         }
     }
 
-    public function assignments(){
-        $decoded = AuthMiddleware::verifyToken();
-        $user = new User();
-        $assignments = $user->viewAssignments($decoded->user_id);
-        if($assignments){
-            echo json_encode($assignments);
-        }else{
-            ErrorHelper::sendError(408, "Error fetching assignments");
-        }
-    }
-
     public function orders(){
         $decoded = AuthMiddleware::verifyToken();
         $user = new User();
