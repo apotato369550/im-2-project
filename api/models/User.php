@@ -26,11 +26,6 @@ Class User {
         return $success ?: null;
     }
 
-    /**
-     * 
-     * MADE SOME VIEW FUNCTIONS HERE FOR DATABASE
-     *  
-     */
     
     public function viewProfile(string $email) : ?array
     {
@@ -51,11 +46,13 @@ Class User {
         return $orders;
     }
 
-    public function viewQuotations(array $orderId) : ?array
+    public function viewQuotations(string $userId) : ?array
     {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("SELECT * FROM quotation WHERE order_id = :orderId");
-        $stmt->execute(['orderId' => $orderId['order_id']]);
+        $stmt = $db->prepare("SELECT q.* FROM quotation 
+        INNER JOIN order o ON q.order_id = o.order_id
+        WHERE o.client_id = :userId");
+        $stmt->execute(['userId' => $userId]);
         $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $quotations;
     }
@@ -73,7 +70,6 @@ Class User {
         $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $quotations;
     }
-
-
+    
 
 }

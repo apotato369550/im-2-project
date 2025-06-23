@@ -16,13 +16,18 @@ Class Router{
 
         foreach($this->routes as $route){
             if($route['method'] === $requestMethod && $route['path'] === $uri){
-                $callback = $route['callback'];
+                $pattern = preg_replace('#\{[\w]+\}#', '([\w=]+)', $route['path']);
+                $pattern = "#^" . $pattern . "$#";
+                if(preg_match($pattern, $uri, $matches)){
+                    array_shift($matches);
+                    $callback = $route['callback'];
 
-                [$class, $methodName] =  explode('@', $callback);
-                if(class_exists($class) && method_exists($class, $methodName)){
-                $controller = new $class();
-                return $controller->$methodName();
-            }
+                    [$class, $methodName] =  explode('@', $callback);
+                    if(class_exists($class) && method_exists($class, $methodName)){
+                        $controller = new $class();
+                        return $controller->$methodName(...$matches);
+                    }    
+                }
             }
 
             

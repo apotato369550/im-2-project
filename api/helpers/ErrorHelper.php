@@ -26,7 +26,7 @@ Class ErrorHelper
     {
         http_response_code(403);
 
-        echo_json_encode([
+        echo json_encode([
         'status' => '403',
         'message' => $message
         ]);

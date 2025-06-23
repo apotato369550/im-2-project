@@ -15,8 +15,8 @@ class UserController{
 
         $user = new User();
         $existingUser = $user->loginRequest($data['user_email']);
-// password_verify($data['user_password'], $existingUser['user_password'])
-        if($existingUser && $data['user_password'] === $existingUser['user_password']){
+
+        if($existingUser && password_verify($data['user_password'], $existingUser['user_password'])){
             $payload = [
                 "user_id" => $existingUser['user_id'],
                 "user_email" => $existingUser['user_email'],
@@ -25,6 +25,7 @@ class UserController{
             $jwt = JWT::encode($payload, JWT_SECRET, 'HS256');
             echo json_encode([
                 "message" => "Login successful",
+                "user_name" => $existingUser['user_name'],
                 "token" => $jwt
             ]);
         }else{
@@ -99,10 +100,9 @@ class UserController{
 
     public function quotations(){
         $decoded = AuthMiddleware::verifyToken();
-        $data = json_decode(file_get_contents("php://input"), true);
 
         $user = new User();
-        $quotations = $user->viewQuotations($data);
+        $quotations = $user->viewQuotations($decoded->user_id);
         if($quotations){
             echo json_encode($quotations);
         }else{
