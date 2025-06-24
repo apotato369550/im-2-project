@@ -64,7 +64,7 @@ class UserController{
      * THESE ARE VIEW METHODS
      * 
     *******/
-    public function profile() 
+    public function profile() : void
     {
         $decoded = AuthMiddleware::verifyToken();
         $user = new User();
@@ -75,39 +75,6 @@ class UserController{
             ErrorHelper::sendError(404, "User not Found");
         }
     }
-
-    public function orders(){
-        $decoded = AuthMiddleware::verifyToken();
-        $user = new User();
-        $orders = $user->viewOrders($decoded->user_id);
-        if($orders){
-            echo json_encode($orders);
-        }else{
-            ErrorHelper::sendError(408, "Error fetching orders");
-        }
-    }
-
-    public function quotations(){
-        $decoded = AuthMiddleware::verifyToken();
-
-        $user = new User();
-        $quotations = $user->viewQuotations($decoded->user_id);
-        if($quotations){
-            echo json_encode($quotations);
-        }else{
-            ErrorHelper::sendError(408, "Error fetching quotations");
-        }
-    }
-
-    /******
-     * THESE ARE CREATE METHODS
-     * 
-    *******/
-
-    /******
-     * THESE ARE UPDATE/EDIT METHODS
-     * 
-    *******/
-
+    
 
 }

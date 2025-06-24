@@ -23,22 +23,36 @@ class OrderController{
     public function createOrder(){
         $decoded = AuthMiddleware::verifyToken();
         $data = json_decode(file_get_contents('php://input'), true);
-        $data['user_id'] = $decoded->user_id;
+        if(!$data['concern'] && !$data['order_type']){
+            ErrorHelper::sendError(404, "Missing some required fields");
+        }
+
+        $data['client_id'] = $decoded->user_id;
         
         $order = new Order();
-        $createOrder = $order->createOrder($data);
-        if($createOrder){
+        $newOrder = $order->createOrder($data);
+        if($newOrder){
             echo json_encode([
-            "message" => "order added sucessfully",
+                "message" => "order added sucessfully"
             ]);
         }else{
-            ErrorHelper::sendError(408, "Error creating your order");
+            ErrorHelper::sendError(408, "Error creating order");
         }
         
     }
 
-    public function editOrder(){
-        
-    }
-
+    public function editOrder($id){
+        $decoded = AuthMiddleware::verifyToken();
+        $data = json_decode(file_get_contents('php://input'), true);
+        $data['order_id'] == $id;
+        $order = new Order();
+        $updatedOrder = $order->editOrder($data);
+        if($updatedOrder){
+            echo json_encode([
+                "message" => "order updated successfully"
+            ]);
+        }else{
+            ErrorHelper::sendError(408, "Error updating order");
+        }
+    }  
 }
