@@ -16,7 +16,8 @@ class Order{
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
     
-    public function createOrder($data){
+    public function createOrder($data) : bool
+    {
         $db = DBHELPER::getConnection();
         $stmt = $db->prepare("
             INSERT INTO orders(client_id, manager_id, concern, order_status)

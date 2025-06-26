@@ -16,22 +16,57 @@ set_exception_handler("ErrorHandler::handleException");
 $router = new Router();
 
 
-//user routes
-$router->post('/im-2-project/api/user/login', 'UserController@login');
-$router->post('/im-2-project/api/user/register', 'UserController@register');
-
+/**************************************************************************
+ *                          USER    ROUTES
+ *************************************************************************/
+/**********************************
+ *          GET ENDPOINTS
+ *********************************/
 $router->get('/im-2-project/api/user/profile', 'UserController@profile');
 $router->get('/im-2-project/api/user/quotations', 'UserController@quotations');
 
-//assignment routes
+
+/**********************************
+ *          POST ENDPOINTS
+ *********************************/
+$router->post('/im-2-project/api/user/login', 'UserController@login');
+$router->post('/im-2-project/api/user/register', 'UserController@register');
+
+
+
+
+
+
+/**************************************************************************
+ *                          ASSIGNMENT    ROUTES
+ *************************************************************************/
+
+/**********************************
+ *          GET ENDPOINTS
+ *********************************/
 $router->get('/im-2-project/api/assignment', 'AssignmentController@viewAssignments');
 $router->get('/im-2-project/api/assignment/{id}', 'AssignmentController@viewAssignment');
 
 
-//order routes
+/**********************************
+ *          POST ENDPOINTS
+ *********************************/
+$router->post('/im-2-project/api/assignment/create', 'AssignmentController@createAssignment');
+
+
+/**************************************************************************
+ *                          ORDER    ROUTES
+ *************************************************************************/
+
+/**********************************
+ *          GET ENDPOINTS
+ *********************************/
 $router->get('/im-2-project/api/orders', 'OrderController@viewOrders');
 $router->get('/im-2-project/api/orders/{id}', 'OrderController@findOrder');
 
+/**********************************
+ *          POST ENDPOINTS
+ *********************************/
 $router->post('/im-2-project/api/orders/create', 'OrderController@createOrder');
 
 

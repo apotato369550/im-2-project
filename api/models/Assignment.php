@@ -15,12 +15,30 @@ class Assignment{
         return $assignments ?: [];
     }
     
-    public function findAssignment($id){
+    public function findAssignment($id)
+    {
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("
         SELECT * FROM assignments WHERE assignment_id = :id
         ");
         $stmt->execute(['id'=> $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
+    public function createAssignment($data){
+        $db = DBHELPER::getConnection();
+        $stmt = $db->prepare("
+            INSERT INTO assignments(service_id, order_id, assignment_details, asssignment_status)
+            VALUES(:service_id, :order_id, :assignment_details, :assignment_status) 
+        ");
+
+        $success = $stmt->execute([
+            'service_id' => $data['service_id'],
+            'order_id' => $data['order_id'],
+            'assignment_details' => $data['assignment_details'],
+            'assignnment_stats' => 'Pending'
+        ]);
+
+        return $success ?: null;
     }
 }

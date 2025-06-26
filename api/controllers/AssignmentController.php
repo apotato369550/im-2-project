@@ -27,8 +27,21 @@ class AssignmentController{
         }
     }
 
-    public function create(){
+    //missing validation checkers
 
+    public function createAssignemnt(){
+        $data = json_decode(file_get_contents('php://input'), true);
+        $decoded = AuthMiddleware::verifyToken();
+        $assignment = new Assignment();
+        $newAssignment = $assignment->createAssignment($data);
+        
+        if($newAssignment){
+            echo json_encode([
+                "message" => 'Assignment created successfully'
+            ]);
+        }else{
+            ErrorHelper::sendError(408, "Error creating assignment");
+        }
     }
 
     public function edit(){
