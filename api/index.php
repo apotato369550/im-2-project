@@ -54,6 +54,12 @@ $router->get('/im-2-project/api/assignment/{id}', 'AssignmentController@viewAssi
 $router->post('/im-2-project/api/assignment/create', 'AssignmentController@createAssignment');
 
 
+/**********************************
+ *          PUT ENDPOINTS
+ *********************************/
+$router->put('/im-2-project/api/assignment/accept/{id}', 'AssignmentController@acceptAssignment');
+
+
 /**************************************************************************
  *                          ORDER    ROUTES
  *************************************************************************/
@@ -68,6 +74,7 @@ $router->get('/im-2-project/api/orders/{id}', 'OrderController@findOrder');
  *          POST ENDPOINTS
  *********************************/
 $router->post('/im-2-project/api/orders/create', 'OrderController@createOrder');
+
 
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

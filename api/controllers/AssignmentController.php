@@ -29,9 +29,9 @@ class AssignmentController{
 
     //missing validation checkers
 
-    public function createAssignemnt(){
-        $data = json_decode(file_get_contents('php://input'), true);
+    public function createAssignment(){
         $decoded = AuthMiddleware::verifyToken();
+        $data = json_decode(file_get_contents('php://input'), true);
         $assignment = new Assignment();
         $newAssignment = $assignment->createAssignment($data);
         
@@ -43,6 +43,26 @@ class AssignmentController{
             ErrorHelper::sendError(408, "Error creating assignment");
         }
     }
+
+
+    public function acceptAssignment($id){
+        $decoded = AuthMiddleware::verifyToken();
+        print_r($decoded);
+        $data = json_decode(file_get_contents('php://input'), true);
+        $data['worker_id'] = $decoded->user_id;
+        $data['assignment_id'] = $id;
+        $assignment = new Assignment();
+        $updateAssignment = $assignment->updateAssignment($data);
+        if($updateAssignment){
+            echo json_encode([
+                'message' => $decoded->user_name . ' ' . 'has accepted the assignment'
+            ]);
+        }else{
+            ErrorHelper::sendError(408, 'There was an error processing your request');
+        }
+
+    }
+
 
     public function edit(){
         

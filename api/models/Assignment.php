@@ -28,7 +28,7 @@ class Assignment{
     public function createAssignment($data){
         $db = DBHELPER::getConnection();
         $stmt = $db->prepare("
-            INSERT INTO assignments(service_id, order_id, assignment_details, asssignment_status)
+            INSERT INTO assignments(service_id, order_id, assignment_details, assignment_status)
             VALUES(:service_id, :order_id, :assignment_details, :assignment_status) 
         ");
 
@@ -36,7 +36,22 @@ class Assignment{
             'service_id' => $data['service_id'],
             'order_id' => $data['order_id'],
             'assignment_details' => $data['assignment_details'],
-            'assignnment_stats' => 'Pending'
+            'assignment_status' => 'Pending'
+        ]);
+
+        return $success ?: null;
+    }
+
+    public function updateAssignment($data){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("
+            UPDATE assignments
+            SET worker_id = :workerId
+            WHERE assignment_id = :assignmentId
+        ");
+        $success = $stmt->execute([
+            'workerId' => $data['worker_id'],
+            'assignmentId'=> $data['assignment_id']
         ]);
 
         return $success ?: null;

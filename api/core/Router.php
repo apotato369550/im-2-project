@@ -48,6 +48,6 @@ Class Router{
 
     public function put($uri, $controller)
     {
-        $this->addRoute('POST', $uri, $controller);
+        $this->addRoute('PUT', $uri, $controller);
     }
 }
