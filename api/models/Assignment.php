@@ -56,4 +56,18 @@ class Assignment{
 
         return $success ?: null;
     }
+    
+    public function editAssignmentStatus($data){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("
+            UPDATE assignments
+            SET assignment_status = :assignment_status
+            WHERE assignment_id = :assignment_id
+        ");
+        $success = $stmt->execute([
+            'assignment_status' => $data['assignment_status'],
+            'assignment_id' => $data['assignment_id']
+        ]);
+        return $success ?: null;
+    }
 }

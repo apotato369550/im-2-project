@@ -63,8 +63,21 @@ class AssignmentController{
 
     }
 
-
-    public function edit(){
-        
+    public function editAssignmentStatus($id){
+        $decoded = AuthMiddleware::verifyToken();
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $data['assignment_id'] = $id;
+        $assignment = new Assignment();
+        $updated = $assignment->editAssignmentStatus($data);
+        if($updated){
+            echo json_encode([
+                "message" => "Assignment status updated successfully"
+            ]);
+        }else{
+            ErrorHelper::sendError(408, "Error updating assignment status");
+        }
     }
 }

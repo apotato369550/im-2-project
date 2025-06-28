@@ -1,0 +1,59 @@
+<?php
+
+Class Item{
+    public function saveImagePath($itemId, $imagePath) {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("UPDATE item SET image_path = :image_path WHERE item_id = :item_id");
+        return $stmt->execute([
+            'image_path' => $imagePath,
+            'item_id' => $itemId
+        ]);
+    }
+
+    public function createItem($supplierId, $model, $managerId, $price, $imagePath) {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("
+            INSERT INTO item (supplier_id, model, manager_id, price, image_path)
+            VALUES (:supplier_id, :model, :manager_id, :price, :image_path)
+        ");
+        $stmt->execute([
+            'supplier_id' => $supplierId,
+            'model' => $model,
+            'manager_id' => $managerId,
+            'price' => $price,
+            'image_path' => $imagePath
+        ]);
+        return $db->lastInsertId();
+    }
+
+    public function getItem($itemId) {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("SELECT * FROM item WHERE item_id = :item_id");
+        $stmt->execute(['item_id' => $itemId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllItems() {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("SELECT * FROM item");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
+
+    public function deleteItem($itemId) {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("SELECT image_path FROM item WHERE item_id = :item_id");
+        $stmt->execute(['item_id' => $itemId]);
+        $item = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($item && !empty($item['image_path'])) {
+            $filePath = __DIR__ . '/../../' . $item['image_path'];
+            if (file_exists($filePath)) {
+                unlink($filePath); 
+            }
+        }
+
+        $stmt = $db->prepare("DELETE FROM item WHERE item_id = :item_id");
+        return $stmt->execute(['item_id' => $itemId]);
+    }
+}

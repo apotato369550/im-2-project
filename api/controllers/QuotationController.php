@@ -3,10 +3,51 @@
 class QuotationController{
 
     public function createQuotation(){
-
+        $decoded = AuthMiddleware::verifyToken();
+        $data = json_decode(file_get_contents('php://input'), true);
+        $quotation = new Quotation();
+        $newId = $quotation->createQuotation($data);
+        if($newId){
+            echo json_encode([
+                'message' => 'Quotation created successfully',
+                'quotation_id' => $newId
+            ]);
+        }else{
+            ErrorHelper::sendError(408, 'Error creating quotation');
+        }
     }
 
-    public function edit(){
-        
+    public function viewQuotationsByOrder($orderId){
+        $decoded = AuthMiddleware::verifyToken();
+        $quotation = new Quotation();
+        $results = $quotation->viewQuotationsByOrder($orderId);
+        echo json_encode($results);
+    }
+
+    public function viewUserQuotations(){
+        $decoded = AuthMiddleware::verifyToken();
+        $userId = $decoded->user_id;
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("
+            SELECT q.* FROM quotation q
+            INNER JOIN orders o ON q.order_id = o.order_id
+            WHERE o.client_id = :user_id
+        ");
+        $stmt->execute(['user_id' => $userId]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        echo json_encode($results);
+    }
+
+    public function deleteQuotation($quotationId){
+        $decoded = AuthMiddleware::verifyToken();
+        $quotation = new Quotation();
+        $deleted = $quotation->deleteQuotation($quotationId);
+        if($deleted){
+            echo json_encode([
+                'message' => 'Quotation deleted successfully'
+            ]);
+        }else{
+            ErrorHelper::sendError(408, 'Error deleting quotation');
+        }
     }
 }

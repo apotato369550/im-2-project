@@ -41,10 +41,10 @@ class OrderController{
         
     }
 
-    public function editOrder($id){
+    public function editOrderStatus($id){
         $decoded = AuthMiddleware::verifyToken();
         $data = json_decode(file_get_contents('php://input'), true);
-        $data['order_id'] == $id;
+        $data['order_id'] = $id;
         $order = new Order();
         $updatedOrder = $order->editOrder($data);
         if($updatedOrder){

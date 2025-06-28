@@ -32,22 +32,18 @@ class Order{
         return $success ?: null;
     }
 
-
-    //debatable cause they can change the order_status but not the concern
     public function editOrder($data){
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("
             UPDATE orders
-            SET concern = :concern, order_status = :orderStatus
+            SET order_status = :orderStatus
             WHERE order_id = :orderId
         ");
         $success = $stmt->execute([
-            "concern" => $data['concern'],
             "orderStatus" => $data['order_status'],
             "orderId" => $data['order_id']
         ]);
 
         return $success ?: null;
     }
-
 }

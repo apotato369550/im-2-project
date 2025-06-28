@@ -50,4 +50,9 @@ Class Router{
     {
         $this->addRoute('PUT', $uri, $controller);
     }
+
+    public function delete($uri, $controller)
+    {
+        $this->addRoute('DELETE', $uri, $controller);
+    }
 }
