@@ -13,11 +13,20 @@ Class ItemController{
             mkdir($uploadDir, 0777, true);
         }
 
+        // Get old image path
+        $itemModel = new Item();
+        $item = $itemModel->getItem($itemId);
+        if ($item && !empty($item['image_path'])) {
+            $oldFile = __DIR__ . '/../../' . $item['image_path'];
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
+        }
+
         $filename = uniqid() . '_' . basename($_FILES['image']['name']);
         $targetFile = $uploadDir . $filename;
 
         if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-            $itemModel = new Item();
             $itemModel->saveImagePath($itemId, 'uploads/' . $filename);
             echo json_encode(['message' => 'Image uploaded', 'image_path' => 'uploads/' . $filename]);
         } else {

@@ -112,8 +112,12 @@ $router->get('/im-2-project/api/items/{itemId}', 'ItemController@getItem');
 /**********************************
  *          POST ENDPOINTS
  *********************************/
-$router->post('/im-2-project/api/items/upload-image', 'ItemController@uploadImage');
 $router->post('/im-2-project/api/items/create', 'ItemController@createItem');
+
+/**********************************
+ *          PUT ENDPOINTS
+ *********************************/
+$router->put('/im-2-project/api/items/upload-image', 'ItemController@uploadImage');
 
 /**********************************
  *          DELETE ENDPOINTS
