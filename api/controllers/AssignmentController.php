@@ -36,6 +36,9 @@ class AssignmentController{
         $newAssignment = $assignment->createAssignment($data);
         
         if($newAssignment){
+            $update = new UpdateController();
+            $data['message'] = "assignment has been created for order no". $data['order_id'];
+            $newUpdate  = $update->saveUpdate($data);
             echo json_encode([
                 "message" => 'Assignment created successfully'
             ]);
@@ -47,15 +50,18 @@ class AssignmentController{
 
     public function acceptAssignment($id){
         $decoded = AuthMiddleware::verifyToken();
-        print_r($decoded);
         $data = json_decode(file_get_contents('php://input'), true);
         $data['worker_id'] = $decoded->user_id;
         $data['assignment_id'] = $id;
         $assignment = new Assignment();
-        $updateAssignment = $assignment->updateAssignment($data);
-        if($updateAssignment){
+        $acceptAssignment = $assignment->acceptAssignment($data);
+        if($acceptAssignment){
+            $update = new UpdateController();
+            $data['message'] = $decoded->user_name . " " . 'has accepted the assignement';
+            $newUpdate  = $update->saveUpdate($data);
+
             echo json_encode([
-                'message' => $decoded->user_name . ' ' . 'has accepted the assignment'
+                'message' => $data['message']
             ]);
         }else{
             ErrorHelper::sendError(408, 'There was an error processing your request');
@@ -73,6 +79,9 @@ class AssignmentController{
         $assignment = new Assignment();
         $updated = $assignment->editAssignmentStatus($data);
         if($updated){
+            $update = new UpdateController();
+            $data['message'] = 'The status for assignment no' . $data['assignment_id'] . 'has been changed to ' . $data['assignment_status'];
+            $newUpdate  = $update->saveUpdate($data);
             echo json_encode([
                 "message" => "Assignment status updated successfully"
             ]);

@@ -42,7 +42,7 @@ class Assignment{
         return $success ?: null;
     }
 
-    public function updateAssignment($data){
+    public function acceptAssignment($data){
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("
             UPDATE assignments
