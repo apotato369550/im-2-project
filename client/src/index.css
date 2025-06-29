@@ -1,0 +1,184 @@
+@import url("https://fonts.googleapis.com/css2?family=Khand:wght@300;400;500;600;700&family=Carme:wght@400&family=Alegreya+Sans+SC:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* TailwindV4 theme and design tokens */
+@theme {
+  /* Fonts */
+  --font-sans:
+    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  --font-khand: "Khand", -apple-system, Roboto, Helvetica, sans-serif;
+  --font-carme: "Carme", -apple-system, Roboto, Helvetica, sans-serif;
+  --font-alegreya-sans-sc:
+    "Alegreya Sans SC", -apple-system, Roboto, Helvetica, sans-serif;
+  --font-ibm-plex-sans:
+    "IBM Plex Sans", -apple-system, Roboto, Helvetica, sans-serif;
+
+  /* CBVT Design Colors */
+  --color-cbvt-navy: 15 40 81;
+  --color-cbvt-blue: 96 139 193;
+  --color-cbvt-light-blue: 113 147 190;
+  --color-cbvt-sky: 203 220 235;
+  --color-cbvt-cream: 245 239 235;
+  --color-cbvt-light-cream: 247 247 250;
+  --color-cbvt-gray: 103 103 103;
+  --color-cbvt-muted: 163 152 152;
+  --color-cbvt-light: 243 243 224;
+  --color-input: hsl(214.3 31.8% 91.4%);
+  --color-border: hsl(214.3 31.8% 91.4%);
+  --color-ring: hsl(222.2 84% 4.9%);
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(222.2 84% 4.9%);
+
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(222.2 84% 4.9%);
+
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(222.2 84% 4.9%);
+
+  --color-primary: hsl(222.2 47.4% 11.2%);
+  --color-primary-foreground: hsl(210 40% 98%);
+
+  --color-secondary: hsl(210 40% 96.1%);
+  --color-secondary-foreground: hsl(222.2 47.4% 11.2%);
+
+  --color-muted: hsl(210 40% 96.1%);
+  --color-muted-foreground: hsl(215.4 16.3% 46.9%);
+
+  --color-accent: hsl(210 40% 96.1%);
+  --color-accent-foreground: hsl(222.2 47.4% 11.2%);
+
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(210 40% 98%);
+
+  --color-border: hsl(214.3 31.8% 91.4%);
+  --color-input: hsl(214.3 31.8% 91.4%);
+  --color-ring: hsl(222.2 84% 4.9%);
+
+  --color-sidebar-background: hsl(0 0% 98%);
+
+  --color-sidebar-foreground: hsl(240 5.3% 26.1%);
+
+  --color-sidebar-accent: hsl(240 4.8% 95.9%);
+
+  --color-sidebar-accent-foreground: hsl(240 5.9% 10%);
+
+  --color-sidebar-border: hsl(220 13% 91%);
+
+  --color-sidebar-ring: hsl(217.2 91.2% 59.8%);
+
+  /* Font families */
+  --font-family-khand: var(--font-khand);
+  --font-family-carme: var(--font-carme);
+  --font-family-alegreya-sans-sc: var(--font-alegreya-sans-sc);
+  --font-family-ibm-plex-sans: var(--font-ibm-plex-sans);
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+/* Custom font utilities */
+.font-khand {
+  font-family:
+    "Khand",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+}
+
+.font-carme {
+  font-family:
+    "Carme",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+}
+
+.font-alegreya-sans-sc {
+  font-family:
+    "Alegreya Sans SC",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+}
+
+.font-ibm-plex-sans {
+  font-family:
+    "IBM Plex Sans",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+}
+
+/* Custom color utilities */
+.text-cbvt-navy {
+  color: rgb(15 40 81);
+}
+
+.text-cbvt-blue {
+  color: rgb(96 139 193);
+}
+
+.text-cbvt-light-blue {
+  color: rgb(113 147 190);
+}
+
+.text-cbvt-cream {
+  color: rgb(245 239 235);
+}
+
+.text-cbvt-gray {
+  color: rgb(103 103 103);
+}
+
+.text-cbvt-muted {
+  color: rgb(163 152 152);
+}
+
+.text-cbvt-light {
+  color: rgb(243 243 224);
+}
+
+.bg-cbvt-navy {
+  background-color: rgb(15 40 81);
+}
+
+.bg-cbvt-blue {
+  background-color: rgb(96 139 193);
+}
+
+.bg-cbvt-light-blue {
+  background-color: rgb(113 147 190);
+}
+
+.bg-cbvt-sky {
+  background-color: rgb(203 220 235);
+}
+
+.bg-cbvt-cream {
+  background-color: rgb(245 239 235);
+}
+
+.bg-cbvt-light-cream {
+  background-color: rgb(247 247 250);
+}
