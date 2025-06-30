@@ -125,6 +125,28 @@ $router->put('/im-2-project/api/items/upload-image', 'ItemController@uploadImage
 $router->delete('/im-2-project/api/items/delete/{itemId}', 'ItemController@deleteItem');
 
 
+/**************************************************************************
+ *                          SERVICE    ROUTES
+ *************************************************************************/
+ /**********************************
+ *          GET ENDPOINTS
+ *********************************/
+ $router->get('/im-2-project/api/services/get-all', 'ServiceController@renderServices');
+
+ /**********************************
+ *          POST ENDPOINTS
+ *********************************/
+ $router->post('/im-2-project/api/services/add', 'ServiceController@addService');
+
+
+/**************************************************************************
+ *                          SUPPLIER    ROUTES
+ *************************************************************************/
+ /**********************************
+ *          GET ENDPOINTS
+ *********************************/
+ $router->get('/im-2-project/api/suppliers/add', 'SupplierController@addSupplier');
+
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
 

@@ -32,6 +32,15 @@ class AssignmentController{
     public function createAssignment(){
         $decoded = AuthMiddleware::verifyToken();
         $data = json_decode(file_get_contents('php://input'), true);
+        
+        $missingFields = MissingRequiredFields::checkMissingFields($data, [
+            'service_id', 'order_id', 'assignment_details', 'assignment_status'
+        ]);
+
+        if(!empty($missingFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
+        }
+
         $assignment = new Assignment();
         $newAssignment = $assignment->createAssignment($data);
         
