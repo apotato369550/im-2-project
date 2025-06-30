@@ -1,6 +1,13 @@
 <?php
 
 class Order{
+    public function fetchList() {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("SELECT * FROM orders");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
+
     public function viewOrders(string $userId) : ?array
     {
         $db = DBHelper::getConnection();

@@ -8,9 +8,12 @@ class UserController{
     {
         $data = json_decode(file_get_contents("php://input"), true);
 
-        if(empty(trim($data['user_email'])) || empty(trim($data['user_password']))){
-            ErrorHelper::sendError(400, "Email and password are required");
-            return;
+        $missingFields = MissingRequiredFields::checkMissingFields($data, [
+            'user_email', 'user_password'
+        ]);
+
+        if(!empty($missingFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
         }
 
         $user = new User();
@@ -39,9 +42,12 @@ class UserController{
     {
         $data = json_decode(file_get_contents("php://input"), true);
 
-        if(empty(trim($data['user_email'])) || empty(trim($data['user_password'])) || empty(trim($data['user_name'])) || empty(trim($data['user_type']))){
-            ErrorHelper::sendError(400, "Missing some required fields");
-            return;
+        $missingFields = MissingRequiredFields::checkMissingFields($data, [
+            'user_email', 'user_password', 'user_name', 'user_type'
+        ]);
+
+        if(!empty($missingFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
         }
 
         $user = new User();

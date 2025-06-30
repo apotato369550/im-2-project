@@ -1,6 +1,15 @@
+
+    
 <?php
 
 class Assignment{
+    public function fetchList() {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("SELECT * FROM assignments");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
+
     public function viewAssignments(string $userId) : ?array
     {
         $db = DBHelper::getConnection();
@@ -39,7 +48,10 @@ class Assignment{
             'assignment_status' => 'Pending'
         ]);
 
-        return $success ?: null;
+        if ($success) {
+            return $db->lastInsertId();
+        }
+        return null;
     }
 
     public function acceptAssignment($data){

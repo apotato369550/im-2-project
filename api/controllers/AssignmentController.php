@@ -16,7 +16,12 @@ class AssignmentController{
         }
     }
 
-    //need method to retrieve assignmentList
+    public function fetchList() {
+        $decoded = AuthMiddleware::verifyToken();
+        $assignmentModel = new Assignment();
+        $allAssignments = $assignmentModel->fetchList();
+        echo json_encode($allAssignments);
+    }
 
     public function viewAssignment($id){
         $decoded = AuthMiddleware::verifyToken();
@@ -34,7 +39,7 @@ class AssignmentController{
     public function createAssignment(){
         $decoded = AuthMiddleware::verifyToken();
         $data = json_decode(file_get_contents('php://input'), true);
-        
+
         $missingFields = MissingRequiredFields::checkMissingFields($data, [
             'service_id', 'order_id', 'assignment_details'
         ]);
@@ -44,14 +49,19 @@ class AssignmentController{
         }
 
         $assignment = new Assignment();
-        $newAssignment = $assignment->createAssignment($data);
-        
-        if($newAssignment){
+        $newAssignmentId = $assignment->createAssignment($data);
+
+        if($newAssignmentId){
             $update = new UpdateController();
-            $data['message'] = "assignment has been created for order no". $data['order_id'];
-            $newUpdate  = $update->saveUpdate($data);
+            $updateData = [
+                'worker_id' => $decoded->user_id,
+                'assignment_id' => $newAssignmentId,
+                'message' => "Assignment has been created for order no " . $data['order_id']
+            ];
+            $newUpdate  = $update->saveUpdate($updateData);
             echo json_encode([
-                "message" => 'Assignment created successfully'
+                "message" => 'Assignment created successfully',
+                "assignment_id" => $newAssignmentId
             ]);
         }else{
             ErrorHelper::sendError(408, "Error creating assignment");
@@ -61,38 +71,55 @@ class AssignmentController{
 
     public function acceptAssignment($id){
         $decoded = AuthMiddleware::verifyToken();
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = [];
         $data['worker_id'] = $decoded->user_id;
         $data['assignment_id'] = $id;
         $assignment = new Assignment();
         $acceptAssignment = $assignment->acceptAssignment($data);
         if($acceptAssignment){
             $update = new UpdateController();
-            $data['message'] = $decoded->user_name . " " . 'has accepted the assignement';
-            $newUpdate  = $update->saveUpdate($data);
+            $updateData = [
+                'worker_id' => $decoded->user_id,
+                'assignment_id' => $id,
+                'message' => $decoded->user_name . " has accepted the assignment"
+            ];
+            $newUpdate  = $update->saveUpdate($updateData);
 
             echo json_encode([
-                'message' => $data['message']
+                'message' => $updateData['message']
             ]);
         }else{
             ErrorHelper::sendError(408, 'There was an error processing your request');
         }
-
     }
 
     public function editAssignmentStatus($id){
         $decoded = AuthMiddleware::verifyToken();
+
         $data = json_decode(file_get_contents('php://input'), true);
         if (!is_array($data)) {
             $data = [];
         }
+
+        $missingFields = MissingRequiredFields::checkMissingFields($data, [
+            'assignment_status'
+        ]);
+
+        if(!empty($missingFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
+        }
+
         $data['assignment_id'] = $id;
         $assignment = new Assignment();
         $updated = $assignment->editAssignmentStatus($data);
         if($updated){
             $update = new UpdateController();
-            $data['message'] = 'The status for assignment no' . $data['assignment_id'] . 'has been changed to ' . $data['assignment_status'];
-            $newUpdate  = $update->saveUpdate($data);
+            $updateData = [
+                'worker_id' => $decoded->user_id,
+                'assignment_id' => $id,
+                'message' => 'The status for assignment no ' . $id . ' has been changed to ' . $data['assignment_status']
+            ];
+            $newUpdate  = $update->saveUpdate($updateData);
             echo json_encode([
                 "message" => "Assignment status updated successfully"
             ]);

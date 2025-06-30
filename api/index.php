@@ -35,11 +35,13 @@ $router->post('/im-2-project/api/user/register', 'UserController@register');
  *                          ASSIGNMENT    ROUTES
  *************************************************************************/
 
+
 /**********************************
  *          GET ENDPOINTS
  *********************************/
 $router->get('/im-2-project/api/assignments', 'AssignmentController@viewAssignments');
 $router->get('/im-2-project/api/assignments/{id}', 'AssignmentController@viewAssignment');
+$router->get('/im-2-project/api/assignments/fetch-list', 'AssignmentController@fetchList');
 
 
 /**********************************
@@ -59,11 +61,13 @@ $router->put('/im-2-project/api/assignments/edit/{id}', 'AssignmentController@ed
  *                          ORDER    ROUTES
  *************************************************************************/
 
- /**********************************
+
+/**********************************
  *          GET ENDPOINTS
  *********************************/
 $router->get('/im-2-project/api/orders', 'OrderController@viewOrders');
 $router->get('/im-2-project/api/orders/{id}', 'OrderController@findOrder');
+$router->get('/im-2-project/api/orders/fetch-list', 'OrderController@fetchList');
 
 /**********************************
  *          POST ENDPOINTS
@@ -79,11 +83,13 @@ $router->put('/im-2-project/api/orders/edit/{id}', 'OrderController@editOrder');
 /**************************************************************************
  *                          QUOTATION    ROUTES
  *************************************************************************/
+
 /**********************************
  *          GET ENDPOINTS
  *********************************/
 $router->get('/im-2-project/api/quotations/order/{orderId}', 'QuotationController@viewQuotationsByOrder');
 $router->get('/im-2-project/api/quotations/user', 'QuotationController@viewUserQuotations');
+$router->get('/im-2-project/api/quotations/fetch-list', 'QuotationController@fetchList');
 
 
 /**********************************
@@ -103,11 +109,13 @@ $router->delete('/im-2-project/api/quotations/delete/{quotationId}', 'QuotationC
  *                          ITEM    ROUTES
  *************************************************************************/
 
- /**********************************
+
+/**********************************
  *          GET ENDPOINTS
  *********************************/
 $router->get('/im-2-project/api/items', 'ItemController@getAllItems');
 $router->get('/im-2-project/api/items/{itemId}', 'ItemController@getItem');
+$router->get('/im-2-project/api/items/fetch-list', 'ItemController@fetchList');
 
 /**********************************
  *          POST ENDPOINTS

@@ -4,6 +4,15 @@ class ServiceController{
     public function addService(){
         $decoded = AuthMiddleware::verifyToken();
         $data = json_decode(file_get_contents('php://input'), true);
+
+    $missingFields = MissingRequiredFields::checkMissingFields($data, [
+            'service_details', 'service_type'
+        ]);
+
+        if(!empty($missingFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
+        }
+
         $service = new Service();
         $newService = $service->addService($data);
         if($newService){

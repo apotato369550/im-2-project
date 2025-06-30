@@ -1,6 +1,13 @@
 <?php
 
 Class Quotation{
+    // Fetch all quotations (for manager)
+    public function fetchList() {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("SELECT * FROM quotation");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
 
     public function createQuotation($data) {
         $db = DBHelper::getConnection();

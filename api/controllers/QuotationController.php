@@ -1,10 +1,29 @@
+    // Fetch all quotations for manager
+    
 <?php
 
 class QuotationController{
 
+    public function fetchList() {
+        $decoded = AuthMiddleware::verifyToken();
+        $quotationModel = new Quotation();
+        $allQuotations = $quotationModel->fetchList();
+        echo json_encode($allQuotations);
+    }
+
     public function createQuotation(){
         $decoded = AuthMiddleware::verifyToken();
         $data = json_decode(file_get_contents('php://input'), true);
+        $missingFields = MissingRequiredFields::checkMissingFields($data, [
+            'total_payment', 'description', 'order_id'
+        ]);
+
+        if(!empty($missingFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
+        }
+
+
+
         $quotation = new Quotation();
         $newId = $quotation->createQuotation($data);
         if($newId){

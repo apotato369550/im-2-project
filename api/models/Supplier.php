@@ -7,7 +7,10 @@ class Supplier{
             INSERT INTO supplier(company_name, contact_number)
             VALUES(:companyName, :companyContactNumber)
         ');
-        $result = $stmt->execute();
+        $result = $stmt->execute([
+            'companyName' => $data['company_name'],
+            'companyContactNumber'=> $data['contact_number']
+        ]);
         return $result ?: null;
     }
 

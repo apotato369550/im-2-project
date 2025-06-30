@@ -1,9 +1,17 @@
+    // Fetch all orders for manager
+    
 <?php
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\KEY;
 
 class OrderController{
+    public function fetchList() {
+        $decoded = AuthMiddleware::verifyToken();
+        $orderModel = new Order();
+        $allOrders = $orderModel->fetchList();
+        echo json_encode($allOrders);
+    }
 
     public function viewOrders(){
         $decoded = AuthMiddleware::verifyToken();
@@ -23,8 +31,13 @@ class OrderController{
     public function createOrder(){
         $decoded = AuthMiddleware::verifyToken();
         $data = json_decode(file_get_contents('php://input'), true);
-        if(!$data['concern'] && !$data['order_type']){
-            ErrorHelper::sendError(404, "Missing some required fields");
+    
+        $missingFields = MissingRequiredFields::checkMissingFields($data, [
+            'concern', 'orderStatus'
+        ]);
+
+        if(!empty($missingFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
         }
 
         $data['client_id'] = $decoded->user_id;
