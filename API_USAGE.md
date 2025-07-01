@@ -116,5 +116,17 @@ Authorization: Bearer <JWT token>
 ```
 
 ```
+##  Order Methods  🛒 
 
+### LOGIN
+**Endpoint:** `/im-2-project/api/user/login`  
+**Method:** `POST`  
+**Body:**
+
+```json
+{
+  "user_email": "your_username",
+  "user_password": "your_password"
+}
+```
 
