@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 30, 2025 at 11:44 AM
+-- Generation Time: Jul 01, 2025 at 02:07 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,16 +33,10 @@ CREATE TABLE `assignments` (
   `worker_id` int(11) DEFAULT NULL,
   `order_id` int(11) NOT NULL,
   `assignment_details` varchar(255) DEFAULT NULL,
-  `assignment_status` varchar(255) DEFAULT NULL
+  `assignment_status` varchar(255) DEFAULT NULL,
+  `assignment_due` varchar(255) NOT NULL,
+  `assignment_date_created` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `assignments`
---
-
-INSERT INTO `assignments` (`assignment_id`, `service_id`, `worker_id`, `order_id`, `assignment_details`, `assignment_status`) VALUES
-(1, 1, 4, 1, 'iz about to get lit', 'Pending'),
-(2, 2, NULL, 2, 'something beyond this world', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -55,16 +49,13 @@ CREATE TABLE `orders` (
   `client_id` int(11) NOT NULL,
   `manager_id` int(11) NOT NULL,
   `concern` varchar(255) DEFAULT NULL,
-  `order_status` varchar(255) DEFAULT NULL
+  `order_status` varchar(255) DEFAULT NULL,
+  `phone_number` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `item_model` varchar(255) DEFAULT NULL,
+  `service_id` int(11) NOT NULL,
+  `order_date_created` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`order_id`, `client_id`, `manager_id`, `concern`, `order_status`) VALUES
-(1, 2, 1, 'My AC broke last yesterdary', 'Unread'),
-(2, 2, 1, 'installation of ac unit ASAP', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -90,14 +81,6 @@ CREATE TABLE `service` (
   `service_details` varchar(255) DEFAULT NULL,
   `service_type` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `service`
---
-
-INSERT INTO `service` (`service_id`, `service_details`, `service_type`) VALUES
-(1, 'repair is imminent in this country', 'Repair'),
-(2, 'install ac unit on client\'s home', 'Installation');
 
 -- --------------------------------------------------------
 
@@ -133,22 +116,11 @@ CREATE TABLE `updates` (
 
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
-  `user_name` varchar(255) NOT NULL,
+  `user_full_name` varchar(255) NOT NULL,
   `user_email` varchar(255) NOT NULL,
   `user_password` varchar(255) NOT NULL,
   `user_type` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`user_id`, `user_name`, `user_email`, `user_password`, `user_type`) VALUES
-(1, 'Jhanell Mingo', 'jhanell.mingo@gmail.com', '$2y$10$God1sY39Ac6jX/jIWFnfNO8gaSDvOr4tA84fxZH6IZ1sIftcoyf82', 'Manager'),
-(2, 'Heizel Lequin', 'heizel@example.com', '$2y$10$Ojtr8ryzH7XzZVi2IRnSs.qaj4eZAWXkOpQigeQxCvryvOloKWTHy', 'Client'),
-(3, 'Kristine', 'demonacolyte@gmail.com', '$2y$10$v8nj1V32C31x./zoNmt4HOwlWBW.LAPLKIVcl8MnUHQjMERho3Pee', 'Client'),
-(4, 'worker miguel', 'worker@gmail.com', '$2y$10$rQmOrUh7gvcOgc2XBRWf9OEAIVRN.kpC6KqZzCMoZQM1WPQsjlQSm', 'Worker'),
-(5, 'hannah from disney', 'hannah@example.com', '$2y$10$fir./dDWzSc/erXJZrFogO9Oz1SYCnyQNTvG1oSe5K3uHXPuQUmoy', 'Client');
 
 --
 -- Indexes for dumped tables
@@ -169,7 +141,8 @@ ALTER TABLE `assignments`
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`order_id`),
   ADD KEY `client_id` (`client_id`),
-  ADD KEY `manager_id` (`manager_id`);
+  ADD KEY `manager_id` (`manager_id`),
+  ADD KEY `service_id` (`service_id`);
 
 --
 -- Indexes for table `quotation`
@@ -253,6 +226,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `service` (`service_id`);
 
 --
 -- Constraints for table `quotation`
