@@ -118,15 +118,137 @@ Authorization: Bearer <JWT token>
 ```
 ##  Order Methods  🛒 
 
-### LOGIN
-**Endpoint:** `/im-2-project/api/user/login`  
-**Method:** `POST`  
-**Body:**
+### **DATA RETRIEVAL**
 
+#### **ALL ORDER SPECIFIC TO USER**
+**Endpoint:** `/im-2-project/api/orders`  
+**Method:** `GET`  
+>**GET** methods typically dont need a body parameter  
+
+**Headers:**
+```
+Authorization: Bearer <JWT token>
+```
+---
+
+#### **FIND SPECIFIC ORDER**
+> This method is optional, you can just derive specific orders from method above
+
+**Endpoint:** `/im-2-project/api/orders/{id}`  
+**Method:** `GET`  
+> replace {id} with the order-id you got from method above
+
+**Headers:**
+```
+Authorization: Bearer <JWT token>
+```
+
+----
+
+#### **ALL ORDERS (for manager)**
+**Endpoint:** `/im-2-project/api/orders/fetch-list`  
+**Method:** `GET`  
+
+**Headers:**
+```
+Authorization: Bearer <JWT token>
+```
+
+---
+
+### **CREATE ORDER**
+**Endpoint:** `/im-2-project/api/orders/create`  
+**Method:** `POST`  
+**Headers:**
+```
+Authorization: Bearer <JWT token>
+```
+**Body:**
 ```json
 {
-  "user_email": "your_username",
-  "user_password": "your_password"
+    "concern": "put all concern contents here",
+    "phone_number": "09235194824",
+    "address": "G. Ouano St. Villamanga",
+    "service_id": "3" // assign this based on what service they chose on the form, each service has its own id
 }
 ```
 
+**Response:**
+```json
+{
+  "message": "order added sucessfully"
+}
+```
+
+### **EDIT ORDER STATUS (for manager (?))**
+**Endpoint:** `/im-2-project/api/orders/edit/{id}`  
+**Method:** `PUT`  
+**Headers:**
+```
+Authorization: Bearer <JWT token>
+```
+**Body:**
+```json
+{
+    "order_status": "Quotation Approved" // i don't know its values yet
+}
+```
+
+**Response:**
+```json
+{
+  "message": "order updated sucessfully"
+}
+```
+
+
+##  Assignment Methods  🔎 
+
+### **DATA RETRIEVAL**
+#### **ALL ASSIGNMENT SPECIFIC TO A USER**
+**Endpoint:** `/im-2-project/api/assignments`  
+**Method:** `GET`  
+
+**Headers:**
+```
+Authorization: Bearer <JWT token>
+```
+---
+
+#### **ASSIGNMENT SPECIFIC TO USER**
+**Endpoint:** `/im-2-project/api/assignments/{id}`  
+**Method:** `GET`  
+
+**Headers:**
+```
+Authorization: Bearer <JWT token>
+```
+---
+
+#### **ALL ASSIGNMENTS**
+**Endpoint:** `/im-2-project/api/assignments/fetch-list`  
+**Method:** `GET`  
+
+**Headers:**
+```
+Authorization: Bearer <JWT token>
+```
+---
+
+#### **CREATE ASSIGMENT (for manager)**
+**Endpoint:** `/im-2-project/api/assignments/create`  
+**Method:** `POST`  
+**Headers:**
+```
+Authorization: Bearer <JWT token>
+```
+**Body:**
+```json
+{
+  "service_id": "",  // id of the service chosen can derive from order
+  "order_id": "", // order id must be specified 
+  "assignment_details": "", //some extra notes perhaps?
+  "assignment_due": "" //date
+}
+
+```
