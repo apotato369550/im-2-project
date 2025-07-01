@@ -12,6 +12,7 @@ export default function Home() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+      im a survivor
     }));
   };
 
