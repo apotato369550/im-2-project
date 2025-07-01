@@ -33,12 +33,10 @@ Class User {
         $stmt = $db->prepare("SELECT * FROM users WHERE user_email = :email");
         $stmt->execute(['email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        unset($user['user_password']);
         return $user ?: null;
     }
 
     
-
     public function viewQuotations(string $userId) : ?array
     {
         $db = DBHelper::getConnection();

@@ -1,7 +1,7 @@
 <?php
 
 class Supplier{
-    public function addSupplier(){
+    public function addSupplier($data){
         $db = DBHelper::getConnection();
         $stmt = $db->prepare('
             INSERT INTO supplier(company_name, contact_number)

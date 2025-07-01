@@ -144,7 +144,7 @@ $router->delete('/im-2-project/api/items/delete/{itemId}', 'ItemController@delet
  /**********************************
  *          POST ENDPOINTS
  *********************************/
- $router->post('/im-2-project/api/services/add', 'ServiceController@addService');
+//  $router->post('/im-2-project/api/services/add', 'ServiceController@addService');
 
 
 /**************************************************************************
@@ -153,8 +153,23 @@ $router->delete('/im-2-project/api/items/delete/{itemId}', 'ItemController@delet
  /**********************************
  *          GET ENDPOINTS
  *********************************/
- $router->get('/im-2-project/api/suppliers/add', 'SupplierController@addSupplier');
+ $router->post('/im-2-project/api/suppliers/fetch-list', 'SupplierController@getAllSupplier');
+
+
+
+ /**********************************
+ *          POST ENDPOINTS
+ *********************************/
+ $router->post('/im-2-project/api/suppliers/add', 'SupplierController@addSupplier');
+
+
+/**************************************************************************
+ *                          UPDATE    ROUTES
+ *************************************************************************/
+/**********************************
+ *          GET ENDPOINTS
+ *********************************/
+$router->get('/im-2-project/api/updates/client/{client_id}', 'UpdateController@getClientUpdates');
+
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
-
-

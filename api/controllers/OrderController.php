@@ -33,7 +33,7 @@ class OrderController{
         $data = json_decode(file_get_contents('php://input'), true);
     
         $missingFields = MissingRequiredFields::checkMissingFields($data, [
-            'concern', 'orderStatus'
+            'concern', 'phone_number', 'address', 'service_id'
         ]);
 
         if(!empty($missingFields)){

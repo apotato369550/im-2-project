@@ -1,8 +1,7 @@
-
-    
 <?php
 
 class Assignment{
+
     public function fetchList() {
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("SELECT * FROM assignments");
@@ -37,21 +36,19 @@ class Assignment{
     public function createAssignment($data){
         $db = DBHELPER::getConnection();
         $stmt = $db->prepare("
-            INSERT INTO assignments(service_id, order_id, assignment_details, assignment_status)
-            VALUES(:service_id, :order_id, :assignment_details, :assignment_status) 
+            INSERT INTO assignments(service_id, order_id, assignment_details, assignment_status, assignment_due, assignment_date_created)
+            VALUES(:service_id, :order_id, :assignmentDetails, :assignmentStatus, :assignmentDue, CURDATE());
         ");
 
         $success = $stmt->execute([
             'service_id' => $data['service_id'],
             'order_id' => $data['order_id'],
-            'assignment_details' => $data['assignment_details'],
-            'assignment_status' => 'Pending'
+            'assignmentDetails' => $data['assignment_details'],
+            'assignmentStatus' => 'Pending',
+            'assignmentDue' => $data['assignment_due'],
         ]);
 
-        if ($success) {
-            return $db->lastInsertId();
-        }
-        return null;
+        return $success ?: null;
     }
 
     public function acceptAssignment($data){

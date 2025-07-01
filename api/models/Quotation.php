@@ -1,7 +1,6 @@
 <?php
 
 Class Quotation{
-    // Fetch all quotations (for manager)
     public function fetchList() {
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("SELECT * FROM quotation");

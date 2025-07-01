@@ -25,4 +25,17 @@ class Update{
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;;
     }
+
+    public function retrieveUserUpdates($client_id){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare('
+            SELECT u.*
+            FROM updates u
+            JOIN assignments a ON a.assignment_id = u.assignment_id
+            JOIN orders o ON o.order_id = a.order_id
+            WHERE o.client_id = :client_id
+        ');
+        $stmt->execute(['client_id' => $client_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
 }

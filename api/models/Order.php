@@ -26,14 +26,19 @@ class Order{
     public function createOrder($data) : bool
     {
         $db = DBHELPER::getConnection();
+        
         $stmt = $db->prepare("
-            INSERT INTO orders(client_id, manager_id, concern, order_status)
-            VALUES(:clientId, 1, :concern, :orderStatus) 
+            INSERT INTO orders(client_id, manager_id, concern, order_status, phone_number, address, service_id, item_model, order_date_created)
+            VALUES(:clientId, 1, :concern, :orderStatus, :phoneNumber, :address, :serviceId, :itemModel, CURDATE()); 
         ");
         $success = $stmt->execute([
             'clientId' => $data['client_id'],
             'concern' => $data['concern'],
-            'orderStatus' => $data['order_status']
+            'orderStatus' => 'Pending',
+            'phoneNumber' => $data['phone_number'],
+            'address' => $data['address'],
+            'serviceId' => $data['service_id'],
+            'itemModel' => isset($data['item_model']) ? $data['item_model'] : NULL
         ]);
 
         return $success ?: null;
