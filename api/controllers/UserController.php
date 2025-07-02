@@ -9,7 +9,7 @@ class UserController{
         $data = json_decode(file_get_contents("php://input"), true);
 
         $missingFields = MissingRequiredFields::checkMissingFields($data, [
-            'user_email', 'user_password'
+            'user_email', 'user_password',
         ]);
 
         if(!empty($missingFields)){
@@ -23,13 +23,13 @@ class UserController{
             $payload = [
                 "user_id" => $existingUser['user_id'],
                 "user_email" => $existingUser['user_email'],
-                "user_name" => $existingUser['user_name'],
+                "user_full_name" => $existingUser['user_full_name'],
                 "exp" => time() + 7200
             ];
             $jwt = JWT::encode($payload, JWT_SECRET, 'HS256');
             echo json_encode([
                 "message" => "Login successful",
-                "user_name" => $existingUser['user_name'],
+                "user_full_name" => $existingUser['user_full_name'],
                 "token" => $jwt
             ]);
         }else{
@@ -43,7 +43,7 @@ class UserController{
         $data = json_decode(file_get_contents("php://input"), true);
 
         $missingFields = MissingRequiredFields::checkMissingFields($data, [
-            'user_email', 'user_password', 'user_name', 'user_type'
+            'user_email', 'user_password', 'user_full_name', 'user_type'
         ]);
 
         if(!empty($missingFields)){

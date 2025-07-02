@@ -55,7 +55,7 @@ domain-name/im-2-project/api/{resource}/{method}/{id?}
 ```json
 {
   "message": "Login successful",
-  "user_name": "{username of the corresponding account}"
+  "user_name": "{username of the corresponding account}",
   "token": "<JWT token>",
 }
 ```
@@ -235,7 +235,7 @@ Authorization: Bearer <JWT token>
 ```
 ---
 
-#### **CREATE ASSIGMENT (for manager)**
+### **CREATE ASSIGMENT (for manager)**
 **Endpoint:** `/im-2-project/api/assignments/create`  
 **Method:** `POST`  
 **Headers:**
@@ -245,10 +245,217 @@ Authorization: Bearer <JWT token>
 **Body:**
 ```json
 {
-  "service_id": "",  // id of the service chosen can derive from order
-  "order_id": "", // order id must be specified 
+  "service_id": 1 ,  // id of the service chosen can derive from order
+  "order_id":  1, // order id must be specified 
   "assignment_details": "", //some extra notes perhaps?
   "assignment_due": "" //date
 }
 
 ```
+
+### **ACCEPT ASSIGNMENT (for workers)**
+**Endpoint:** `/im-2-project/api/assignments/accept/{id}`  
+**Method:** `PUT`  
+**Headers:**
+
+> replace {id} with corresponding assignment_id
+
+```
+Authorization: Bearer <JWT token>
+
+```
+
+### **EDIT ASSIGNMENT STATUS (for workers/manager)**
+**Endpoint:** `/im-2-project/api/assignments/edit/{id}`  
+**Method:** `PUT`  
+**Headers:**
+
+> replace {id} with corresponding assignment_id
+
+```
+Authorization: Bearer <JWT token>
+
+```
+
+**BODY**
+```json
+{
+  "assignment_status" : ""
+}
+
+```
+
+
+##  Update Methods  ⚠️
+### **RETRIEVAL**
+
+#### GET UPDATE SPECIFIC TO USER
+**Endpoint:** `/im-2-project/api/updates/{client_id}` <br>
+**Method:** `GET` <br>
+**Headers:**
+```
+
+Authorization: Bearer <JWT token>
+
+```
+
+#### GET ALL UPDATES
+**Endpoint:** `/im-2-project/api/updates` <br>
+**Method:** `GET` <br>
+**Headers:**
+```
+
+Authorization: Bearer <JWT token>
+
+```
+
+## **Quotations 🤰**
+
+### RETRIEVAL <br>
+#### **SPECIFIC TO AN ORDER**
+**Endpoint:** `/im-2-project/api/quotations/order/{orderId}` <br>
+**Method:** `GET` <br>
+**Headers**
+```
+
+Authorization: Bearer <JWT token>
+
+```
+
+#### **All QUOTATIONS FOR A USER**
+**Endpoint:** `/im-2-project/api/quotations/user` <br>
+**Method:** `GET` <br>
+**Headers**
+```
+
+Authorization: Bearer <JWT token>
+
+```
+
+#### **All QUOTATIONS**
+**Endpoint:** `/im-2-project/api/quotations/fetch-list` <br>
+**Method:** `GET` <br>
+**Headers**
+```
+
+Authorization: Bearer <JWT token>
+
+```
+
+### CREATE QUOTATION
+**Endpoint:** `/im-2-project/api/quotations/create` <br>
+**Method:** `POST` <br>
+**Headers**
+```
+
+Authorization: Bearer <JWT token>
+
+```
+**Body:**
+
+```json
+{
+  "total_payment": 200,
+  "description": "description",
+  "order_id": 1 
+}
+```
+
+### DELETE ENDPOINT
+**Endpoint:** `/im-2-project/api/quotations/delete/{quotationId}`<br>
+**Method:** `DELETE` <br>
+**Headers**
+``` 
+
+Authorization: Bearer <JWT token>
+
+```
+
+##  Item Methods  🍆
+### **RETRIEVAL**
+#### **GET ALL ITEMS**
+**Endpoint:** `/im-2-project/api/items` <br>
+**Method:** `GET` <br>
+
+#### **GET SPECIFIC ITEM**
+**Endpoint:** `/im-2-project/api/items/{itemId}` <br>
+**Method:** `GET` <br> 
+
+### **CREATE ITEM**
+**Endpoint:** `/im-2-project/api/items/create`<br>
+**Method:** `POST`  
+**Headers:**
+```
+Authorization: Bearer <JWT token>
+Content-Type: multipart/form-data
+```
+**Body (form-data):**
+| Key         | Value Example      | Description                |
+|-------------|-------------------|----------------------------|
+| supplier_id | 1                 | Supplier ID (integer)      |
+| model       | "Model X"         | Item model name            |
+| manager_id  | 2                 | Manager ID (integer)       |
+| price       | 1000              | Price of the item          |
+| image       | (file upload)     | Image file for the item    |
+
+### **CHANGE IMAGE**
+**Endpoint:** `/im-2-project/api/items/upload-image`
+**Method:** `PUT`
+**Headers:**
+```
+Authorization: Bearer <JWT token>
+Content-Type: multipart/form-data
+```
+**Body (form-data):**
+| Key      | Value Example      | Description                |
+|----------|-------------------|----------------------------|
+| item_id  | 1                 | ID of the item to update   |
+| image    | (file upload)     | New image file for the item|
+
+**Notes:**
+- The old image will be deleted and replaced with the new one.
+- Both `item_id` and `image` are required fields.
+- Returns a JSON response with the new image path or an error message.
+
+### **DELETE ITEM**
+**Endpoint:** `/im-2-project/api/items/delete/{itemId}`<br>
+**Method:** `DELETE`
+
+## **SERVICES 🛠️**
+### **GET LIST OF SERVICES**
+**Endpoint:** `/im-2-project/api/services/get-all` <br>
+**Method:** `GET`
+
+## **SUPPLIER 👱🏿**
+### **GET LIST OF SUPPLIER**
+**Endpoint:** `/im-2-project/api/suppliers/fetch-list` <br>
+**Method:** `GET`
+### **ADD SUPPLIER**
+**Endpoint:** `/im-2-project/api/suppliers/add` <br>
+**Method:** `POST`<br>
+**Headers**
+```
+
+Authorization: Bearer <JWT token>
+
+```
+**Body:**
+
+```json
+{
+  
+  "company_name": "",
+  "contact_number": ""
+
+}
+
+```
+
+
+
+
+
+
+
+
+

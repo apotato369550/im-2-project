@@ -16,7 +16,7 @@ class Update{
         return $result ?: null;
     }
 
-    public function renderUpdates($data){
+    public function renderUpdates(){
         $db = DBHelper::getConnection();
         $stmt = $db->prepare('
             SELECT *

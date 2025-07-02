@@ -15,9 +15,9 @@ Class User {
     {
         $db = DBHelper::getConnection();
         $hashPassword = password_hash($account['user_password'], PASSWORD_DEFAULT);
-        $stmt = $db->prepare('INSERT INTO users(user_name, user_email, user_password, user_type) VALUES(:name, :email, :password, :type)');
+        $stmt = $db->prepare('INSERT INTO users(user_full_name, user_email, user_password, user_type) VALUES(:name, :email, :password, :type)');
         $success = $stmt->execute([
-            'name' => $account['user_name'],
+            'name' => $account['user_full_name'],
             'email' => $account['user_email'],
             'password' => $hashPassword,
             'type' => $account['user_type']

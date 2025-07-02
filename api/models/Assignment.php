@@ -55,7 +55,7 @@ class Assignment{
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("
             UPDATE assignments
-            SET worker_id = :workerId
+            SET worker_id = :workerId, assignment_status = 'ONGOING'
             WHERE assignment_id = :assignmentId
         ");
         $success = $stmt->execute([

@@ -115,7 +115,6 @@ $router->delete('/im-2-project/api/quotations/delete/{quotationId}', 'QuotationC
  *********************************/
 $router->get('/im-2-project/api/items', 'ItemController@getAllItems');
 $router->get('/im-2-project/api/items/{itemId}', 'ItemController@getItem');
-$router->get('/im-2-project/api/items/fetch-list', 'ItemController@fetchList');
 
 /**********************************
  *          POST ENDPOINTS
@@ -169,7 +168,8 @@ $router->delete('/im-2-project/api/items/delete/{itemId}', 'ItemController@delet
 /**********************************
  *          GET ENDPOINTS
  *********************************/
-$router->get('/im-2-project/api/updates/client/{client_id}', 'UpdateController@getClientUpdates');
+$router->get('/im-2-project/api/updates/{client_id}', 'UpdateController@getClientUpdates');
+$router->get('/im-2-project/api/updates', 'UpdateController@fetchUpdates');
 
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
