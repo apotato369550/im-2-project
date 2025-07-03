@@ -43,9 +43,12 @@ export default function Home() {
             >
               Contact us
             </Link>
-            <span className="text-[21px] font-alegreya-sans-sc text-cbvt-navy capitalize">
+            <Link
+              to="/catalog"
+              className="text-[21px] font-alegreya-sans-sc text-cbvt-navy capitalize hover:text-cbvt-blue transition-colors"
+            >
               catalog
-            </span>
+            </Link>
             <Link
               to="/login"
               className="bg-cbvt-navy text-white px-6 py-2 rounded-full text-[21px] font-alegreya-sans-sc capitalize hover:bg-opacity-90 transition-all inline-block"
