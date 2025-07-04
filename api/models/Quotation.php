@@ -11,8 +11,8 @@ Class Quotation{
     public function createQuotation($data) {
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("
-            INSERT INTO quotation (total_payment, description, order_id)
-            VALUES (:total_payment, :description, :order_id)
+            INSERT INTO quotation (total_payment, description, order_id, quotation_status)
+            VALUES (:total_payment, :description, :order_id, 'Pending')
         ");
         $success = $stmt->execute([
             'total_payment' => $data['total_payment'],
@@ -38,6 +38,19 @@ Class Quotation{
         ");
         $stmt->execute(['user_id' => $userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
+
+    public function updateQuotationStatus($id, $status){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare('ALTER TABLE quotation
+            SET quotation_status =  quotationStatus
+            WHERE quotation_id = :quotationId 
+        ');
+        $success = $stmt->execute([
+            'quotationStatus' => $status,
+            'quotationId' => $id
+        ]);
+        return $success;
     }
 
     public function deleteQuotation($quotationId) {

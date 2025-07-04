@@ -10,17 +10,20 @@ Class Item{
         ]);
     }
 
-    public function createItem($supplierId, $model, $managerId, $price, $imagePath) {
+    public function createItem($type, $inverter, $horsepower, $brand, $supplierId, $model, $price, $imagePath) {
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("
             INSERT INTO item (supplier_id, model, manager_id, price, image_path)
-            VALUES (:supplier_id, :model, :manager_id, :price, :image_path)
+            VALUES (:supplier_id, :model, 1, :price, :image_path)
         ");
         $stmt->execute([
             'supplier_id' => $supplierId,
             'model' => $model,
-            'manager_id' => $managerId,
             'price' => $price,
+            'type' => $type,
+            'inverter' => $inverter,
+            'horsepower' => $horsepower,
+            'brand' => $brand,
             'image_path' => $imagePath
         ]);
         return $db->lastInsertId();

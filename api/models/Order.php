@@ -28,8 +28,8 @@ class Order{
         $db = DBHELPER::getConnection();
         
         $stmt = $db->prepare("
-            INSERT INTO orders(client_id, manager_id, concern, order_status, phone_number, address, service_id, item_model, order_date_created)
-            VALUES(:clientId, 1, :concern, :orderStatus, :phoneNumber, :address, :serviceId, :itemModel, CURDATE()); 
+            INSERT INTO orders(client_id, manager_id, concern, order_status, phone_number, address, service_id, item_id, order_date_created)
+            VALUES(:clientId, 1, :concern, :orderStatus, :phoneNumber, :address, :serviceId, :item_id, CURDATE()); 
         ");
         $success = $stmt->execute([
             'clientId' => $data['client_id'],
@@ -38,7 +38,7 @@ class Order{
             'phoneNumber' => $data['phone_number'],
             'address' => $data['address'],
             'serviceId' => $data['service_id'],
-            'itemModel' => isset($data['item_model']) ? $data['item_model'] : NULL
+            'item_id' => isset($data['item_id']) ? $data['item_id'] : NULL
         ]);
 
         return $success ?: null;

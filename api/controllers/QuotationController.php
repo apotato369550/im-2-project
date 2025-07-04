@@ -22,8 +22,6 @@ class QuotationController{
             ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
         }
 
-
-
         $quotation = new Quotation();
         $newId = $quotation->createQuotation($data);
         if($newId){
@@ -55,6 +53,29 @@ class QuotationController{
         $stmt->execute(['user_id' => $userId]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         echo json_encode($results);
+    }
+
+    public function updateQuotationStatus($quotationId){
+        $decoded = AuthMiddleware::verifyToken();
+        $data = json_decode(file_get_contents('php://input'), true);
+        $missingFields = MissingRequiredFields::checkMissingFields($data, [
+            'quotation_status'
+        ]);
+
+        if(!empty($missingFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
+        }
+
+        $quotation = new Quotation();
+        $updateQuotation = $quotation->updateQuotationStatus($quotationId, $data['quotation_status']);
+        if($updateQuotation){
+            echo json_encode([
+                'message' => 'Quotation Status Updated to '. $data['quotation_status'] . ' successfully',
+            ]);
+        }else{
+            ErrorHelper::sendError(408, 'Error updating quotation');
+        }
+        
     }
 
     public function deleteQuotation($quotationId){
