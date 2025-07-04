@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Enhanced product data with detailed specifications
 const sampleProducts = [
@@ -247,6 +247,7 @@ function ProductModal({
 }
 
 export default function Catalog() {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     type: "all",
     brand: "any",
@@ -273,6 +274,15 @@ export default function Catalog() {
     setSelectedProduct(null);
   };
 
+  const handleRequestClick = (
+    product,
+    e,
+  ) => {
+    e.stopPropagation();
+    const unitName = `${product.brand} ${product.model} - ${product.hp} ${product.type}`;
+    navigate(`/contact?unit=${encodeURIComponent(unitName)}`);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -291,7 +301,7 @@ export default function Catalog() {
               about
             </Link>
             <Link
-              to="#contact"
+              to="/contact"
               className="text-[21px] font-alegreya-sans-sc text-cbvt-navy capitalize hover:text-cbvt-blue transition-colors"
             >
               Contact us
@@ -503,10 +513,7 @@ export default function Catalog() {
 
                       <button
                         className="bg-cbvt-navy text-white px-4 py-1 rounded-full text-[10px] font-carme hover:bg-opacity-90 transition-all"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          // Handle direct request action
-                        }}
+                        onClick={(e) => handleRequestClick(product, e)}
                       >
                         request
                       </button>

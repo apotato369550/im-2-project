@@ -38,7 +38,7 @@ export default function Home() {
               about
             </Link>
             <Link
-              to="#contact"
+              to="/contact"
               className="text-[21px] font-alegreya-sans-sc text-cbvt-navy capitalize hover:text-cbvt-blue transition-colors"
             >
               Contact us
