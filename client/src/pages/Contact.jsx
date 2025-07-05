@@ -12,9 +12,11 @@ export default function Contact() {
     concernDetails: "",
   });
 
-  // Check if we came from a specific unit request
+  // Check if we came from a specific unit request or service selection
   const requestedUnit = searchParams.get("unit");
+  const requestedService = searchParams.get("service");
   const isUnitRequest = !!requestedUnit;
+  const isServiceRequest = !!requestedService;
 
   useEffect(() => {
     if (requestedUnit) {
@@ -22,11 +24,16 @@ export default function Contact() {
         ...prev,
         serviceUnit: requestedUnit,
       }));
+    } else if (requestedService) {
+      setFormData((prev) => ({
+        ...prev,
+        serviceUnit: requestedService,
+      }));
     }
-  }, [requestedUnit]);
+  }, [requestedUnit, requestedService]);
 
   const handleInputChange = (
-    e,
+    e
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -104,7 +111,11 @@ export default function Contact() {
           </Link>{" "}
           /{" "}
           <span className="text-cbvt-blue">
-            {isUnitRequest ? "Installation" : "Contact"}
+            {isUnitRequest
+              ? "Installation"
+              : isServiceRequest
+                ? requestedService
+                : "Contact"}
           </span>
         </p>
       </div>
