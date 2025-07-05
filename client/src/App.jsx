@@ -1,6 +1,7 @@
 import RegisterTestingSpace from './components/RegisterTestingSpace'
 import LoginTestingSpace from './components/LoginTestingSpace';
 import ProfileTestingSpace from './components/ProfileTestingSpace';
+import OrderCreationTestingSpace from './components/OrderCreationTestingSpace';
 
 const App = () => {
 
@@ -8,7 +9,8 @@ const App = () => {
     <>
       {/* <RegisterTestingSpace/> */}
       {/* <LoginTestingSpace/> */}
-      <ProfileTestingSpace/>
+      {/* <ProfileTestingSpace/> */}
+      <OrderCreationTestingSpace/>
     </>
   );
 };

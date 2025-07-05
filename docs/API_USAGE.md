@@ -169,7 +169,8 @@ Authorization: Bearer <JWT token>
     "concern": "put all concern contents here",
     "phone_number": "09235194824",
     "address": "G. Ouano St. Villamanga",
-    "service_id": "3" // assign this based on what service they chose on the form, each service has its own id
+    "service_id": "3", // assign this based on what service they chose on the form, each service has its own id
+    "item_id": "1" //this is for ac request based orders, besides that dont include if different service is availed
 }
 ```
 
