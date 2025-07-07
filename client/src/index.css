@@ -182,3 +182,115 @@
 .bg-cbvt-light-cream {
   background-color: rgb(247 247 250);
 }
+
+.bg-cbvt-muted {
+  background-color: rgb(163 152 152);
+}
+
+.bg-cbvt-light {
+  background-color: rgb(243 243 224);
+}
+
+.bg-cbvt-light-gray {
+  background-color: #F7F7FA;
+}
+
+.border-cbvt-navy {
+  border: 2px solid rgb(15 40 81);
+}
+
+/*Custom shadow utilities*/
+
+.text-shadow-md {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  }
+
+.text-shadow-lg {
+  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.35);
+}
+
+.text-shadow-none {
+  text-shadow: none;
+}
+
+
+
+.knowMore::after {
+  width: 2rem;
+  height: 1.5rem;
+  content: "";
+  position: absolute;
+  background-color: transparent;
+  top: -2.24rem;
+  right: 0.04rem;
+  border-bottom-right-radius: 7rem;
+  box-shadow: 0.6rem 0.6rem white;
+}
+
+.grid-slider {
+          display: flex !important;
+          align-items: center !important;
+          height: 100% !important;
+          width: 100% !important;
+        }
+        
+.grid-slider .slick-dots {
+  position: static !important;
+  width: auto !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 1rem 0 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  order: 1 !important;
+}
+        
+.grid-slider .slick-list {
+  flex: 1 !important;
+  height: 100% !important;
+  order: 2 !important;
+}
+
+.grid-slider .slick-track {
+  height: 100% !important;
+}
+
+.grid-slider .slick-slide {
+  height: 100% !important;
+}
+
+.grid-slider .slick-slide > div {
+  height: 100% !important;
+}
+
+.grid-slider .slick-dots li {
+  margin: 0.5rem 0 !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+.grid-slider .slick-dots li button {
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+}
+
+.slide-content {
+  height: 100% !important;
+}
+
+.slide-content > div {
+  height: 100% !important;
+  justify-content: left;
+  margin-top: 80px;
+  align-items: start;
+  margin-left: 50px;
+}
+
+.grid-slider .slick-dots li.slick-active .dot {
+  background-color: #0f2851; 
+}
+
+

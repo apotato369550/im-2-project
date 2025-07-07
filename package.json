@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "react-router-dom": "^7.6.3",
+    "react-slick": "^0.30.3",
+    "slick-carousel": "^1.8.1",
+    "tailwindcss-textshadow": "^2.1.3"
+  }
+}
