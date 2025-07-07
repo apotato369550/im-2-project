@@ -396,6 +396,9 @@ Content-Type: multipart/form-data
 | supplier_id | 1                 | Supplier ID (integer)      |
 | model       | "Model X"         | Item model name            |
 | price       | 1000              | Price of the item          |
+| inverter    | YES               | Classifies if AC is such   |
+| brand       | Panasonic         | Brand of the AC Unit       |
+| horsepower  | 500cc             | Horsepower sa Ac           |
 | image       | (file upload)     | Image file for the item    |
 
 ### **CHANGE IMAGE**
