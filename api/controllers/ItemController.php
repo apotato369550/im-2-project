@@ -1,39 +1,51 @@
-
-    
 <?php
 
 Class ItemController{
     public function uploadImage() {
         $decoded = AuthMiddleware::verifyToken(); // Require authentication
         if (!isset($_FILES['image']) || !isset($_POST['item_id'])) {
-            echo json_encode(['error' => 'No image or item_id provided']);
-            return;
+            ErrorHelper::sendError(400, 'No image or item_id provided');
         }
         $itemId = $_POST['item_id'];
         $uploadDir = __DIR__ . '/../../uploads/';
         if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
+            if (!mkdir($uploadDir, 0777, true)) {
+                ErrorHelper::sendError(500, 'Failed to create upload directory');
+            }
+        }
+
+        $itemModel = new Item();
+        $item = $itemModel->getItem($itemId);
+        if (!$item) {
+            ErrorHelper::sendError(404, 'Item not found');
         }
 
         // Get old image path
-        $itemModel = new Item();
-        $item = $itemModel->getItem($itemId);
-        if ($item && !empty($item['image_path'])) {
+        if (!empty($item['image_path'])) {
             $oldFile = __DIR__ . '/../../' . $item['image_path'];
             if (file_exists($oldFile)) {
-                unlink($oldFile);
+                if (!unlink($oldFile)) {
+                    ErrorHelper::sendError(500, 'Failed to delete old image');
+                }
             }
         }
 
         $filename = uniqid() . '_' . basename($_FILES['image']['name']);
         $targetFile = $uploadDir . $filename;
 
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-            $itemModel->saveImagePath($itemId, 'uploads/' . $filename);
-            echo json_encode(['message' => 'Image uploaded', 'image_path' => 'uploads/' . $filename]);
-        } else {
-            echo json_encode(['error' => 'Failed to upload image']);
+        if (!is_uploaded_file($_FILES['image']['tmp_name'])) {
+            ErrorHelper::sendError(400, 'No valid uploaded file');
         }
+
+        if (!move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+            ErrorHelper::sendError(500, 'Failed to move uploaded file');
+        }
+
+        if (!$itemModel->saveImagePath($itemId, 'uploads/' . $filename)) {
+            ErrorHelper::sendError(500, 'Failed to update image path in database');
+        }
+
+        echo json_encode(['message' => 'Image uploaded', 'image_path' => 'uploads/' . $filename]);
     }
 
     public function createItem() {
@@ -43,17 +55,11 @@ Class ItemController{
             !isset($data['supplier_id']) ||
             !isset($data['model']) ||
             !isset($data['price']) ||
-            !isset($data['type']) ||
-            !isset($data['inverter']) ||
-            !isset($data['horsepower']) ||
-            !isset($data['brand']) ||
-            !isset($data['image_path']) ||
             !isset($_FILES['image'])
         ) {
             echo json_encode(['error' => 'Missing required fields']);
             return;
         }
-
         $uploadDir = __DIR__ . '/../../uploads/';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -62,17 +68,13 @@ Class ItemController{
         $filename = uniqid() . '_' . basename($_FILES['image']['name']);
         $targetFile = $uploadDir . $filename;
 
+
         if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
             $itemModel = new Item();
             $itemId = $itemModel->createItem(
                 $data['supplier_id'],
                 $data['model'],
-                $data['manager_id'],
                 $data['price'],
-                $data['type'],
-                $data['inverter'],
-                $data['horsepower'],
-                $data['brand'],
                 'uploads/' . $filename
             );
             echo json_encode(['message' => 'Item created', 'item_id' => $itemId, 'image_path' => 'uploads/' . $filename]);
