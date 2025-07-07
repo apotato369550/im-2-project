@@ -3,6 +3,7 @@ import LoginTestingSpace from './components/LoginTestingSpace';
 import ProfileTestingSpace from './components/ProfileTestingSpace';
 import OrderCreationTestingSpace from './components/OrderCreationTestingSpace';
 import ItemTestingSpace from './components/ItemTestingSpace';
+import ItemViewingTesting from './components/itemViewingTesting';
 
 const App = () => {
 
@@ -11,8 +12,9 @@ const App = () => {
       {/* <RegisterTestingSpace/> */}
       {/* <LoginTestingSpace/> */}
       {/* <ProfileTestingSpace/> */}
-      {/* <OrderCreationTestingSpace/> */}
-      <ItemTestingSpace/>
+      <OrderCreationTestingSpace/>
+      {/* <ItemTestingSpace/> */}
+      {/* <ItemViewingTesting/> */}
     </>
   );
 };

@@ -1,40 +1,51 @@
-import React from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
-import {useState, useEffect} from 'react'
 
 const OrderCreationTestingSpace = () => {
-    const [form, setForm] = ({
-        concern: "",
-        phone_number: "", 
-        address: "",
-        service_id: ""
+    const [form, setForm] = useState({
+        concern: '',
+        phone_number: '', 
+        address: '',
+        service_id: ''
     });
 
-    const handleChange = (e) =>{
-        setForm({...form, [e.target.name]: e.target.value});
-    }
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const submitRequest = (e) => {
+        e.preventDefault();
+        axios.post("http://localhost/im-2-project/api/orders/create", form, {
+            headers: {
+                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2VtYWlsIjoiamhhbmVsbEBnbWFpbC5jb20iLCJ1c2VyX2Z1bGxfbmFtZSI6IkpoYW5lbGwgTWluZ28iLCJleHAiOjE3NTE4OTE1NjN9.rGeXQkUNPlnm0JayL1r9Qrdh0nV1ewQQNwEz4JlCKOc`
+            }
+        })
+        .then(res => {
+            alert('Order created!');
+        })
+        .catch(err => {
+            alert('Error creating order!');
+            console.error(err);
+        });
+    };
 
     return (
-    <>
-        <label for='concern'>Concern </label>
-        <input type="text" name='concern'></input>
-        <br></br>
-        <br></br>
-        <label for='phone_number'>Phone Number </label>
-        <input type="number" name='phone_number'></input>
-        <br></br>
-        <br></br>
-        <label for='address'>Address </label>
-        <input type="text" name='address'></input>
-        <br></br>
-        <br></br>
-        <label for='service_id'>Service Id </label>
-        <input type="number" name='service_id'></input>
-        <br></br>
-        <br></br>
-        <button>Submit</button>
-    </>
-  )
+        <form onSubmit={submitRequest}>
+            <label htmlFor='concern'>Concern </label>
+            <input type="text" name='concern' value={form.concern} onChange={handleChange} />
+            <br /><br />
+            <label htmlFor='phone_number'>Phone Number </label>
+            <input type="text" name='phone_number' value={form.phone_number} onChange={handleChange} />
+            <br /><br />
+            <label htmlFor='address'>Address </label>
+            <input type="text" name='address' value={form.address} onChange={handleChange} />
+            <br /><br />
+            <label htmlFor='service_id'>Service Id </label>
+            <input type="number" name='service_id' value={form.service_id} onChange={handleChange} />
+            <br /><br />
+            <button type="submit" onClick = {submitRequest}>Submit</button>
+        </form>
+    )
 }
 
 export default OrderCreationTestingSpace
