@@ -395,7 +395,6 @@ Content-Type: multipart/form-data
 |-------------|-------------------|----------------------------|
 | supplier_id | 1                 | Supplier ID (integer)      |
 | model       | "Model X"         | Item model name            |
-| manager_id  | 2                 | Manager ID (integer)       |
 | price       | 1000              | Price of the item          |
 | image       | (file upload)     | Image file for the item    |
 
