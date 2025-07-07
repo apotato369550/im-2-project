@@ -12,10 +12,10 @@ const RegisterTestingSpace = () => {
 
     const registerAcc = () => {
         axios.post("http://localhost/im-2-project/api/user/register", {
-        user_email: form.user_email,
-        user_password: form.user_password,
-        user_full_name: form.user_full_name,
-        user_type: 'Client'
+          user_email: form.user_email,
+          user_password: form.user_password,
+          user_full_name: form.user_full_name,
+          user_type: 'Client'
         })
         .then((response) => {
         console.log(response);

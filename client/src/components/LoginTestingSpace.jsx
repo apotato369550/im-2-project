@@ -15,7 +15,7 @@ const LoginTestingSpace = () => {
     }
 
     const login = () =>{
-        axios.post("http://localhost/im-2-project/api/user/login", {
+        axios.post("http://localhost/im-2-project/api/user/login", { 
             user_email: form.user_email,
             user_password: form.user_password
         })
