@@ -17,7 +17,7 @@ const OrderCreationTestingSpace = () => {
         e.preventDefault();
         axios.post("http://localhost/im-2-project/api/orders/create", form, {
             headers: {
-                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2VtYWlsIjoiamhhbmVsbEBnbWFpbC5jb20iLCJ1c2VyX2Z1bGxfbmFtZSI6IkpoYW5lbGwgTWluZ28iLCJleHAiOjE3NTE4OTE1NjN9.rGeXQkUNPlnm0JayL1r9Qrdh0nV1ewQQNwEz4JlCKOc`
+                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2LCJ1c2VyX2VtYWlsIjoiamhhbmVsbEBleGFtcGxlLmNvbSIsInVzZXJfZnVsbF9uYW1lIjoiSmhhbmVsbCBNaW5nbyIsImV4cCI6MTc1MTk0NzA1M30.j7vigGpTDm6R4kxBvXit6geDbxiwsBr1RpKxhqWyh1E`
             }
         })
         .then(res => {

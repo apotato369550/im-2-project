@@ -35,7 +35,7 @@ const ItemTestingSpace = () => {
         method: 'POST',
         body: formData,
         headers: {
-          Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX2VtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwidXNlcl9mdWxsX25hbWUiOiJhZG1pbiIsImV4cCI6MTc1MTg4NDI0MH0.LQemsF5F4yX4rPalx2ZcoIfn9zlr0StwBWdehP9w6bI'
+          Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2LCJ1c2VyX2VtYWlsIjoiamhhbmVsbEBleGFtcGxlLmNvbSIsInVzZXJfZnVsbF9uYW1lIjoiSmhhbmVsbCBNaW5nbyIsImV4cCI6MTc1MTk0NzA1M30.j7vigGpTDm6R4kxBvXit6geDbxiwsBr1RpKxhqWyh1E'
         }
       });
       const data = await res.json();

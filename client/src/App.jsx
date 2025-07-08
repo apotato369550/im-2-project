@@ -12,9 +12,10 @@ const App = () => {
       {/* <RegisterTestingSpace/> */}
       {/* <LoginTestingSpace/> */}
       {/* <ProfileTestingSpace/> */}
-      <OrderCreationTestingSpace/>
+      {/* <OrderCreationTestingSpace/> */}
       {/* <ItemTestingSpace/> */}
-      {/* <ItemViewingTesting/> */}
+      <ItemViewingTesting/>
+
     </>
   );
 };
