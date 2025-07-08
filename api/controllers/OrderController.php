@@ -1,4 +1,3 @@
-    // Fetch all orders for manager
     
 <?php
 
@@ -17,6 +16,7 @@ class OrderController{
         $decoded = AuthMiddleware::verifyToken();
         $orders = new Order();
         $listOfOrders = $orders->viewOrders($decoded->user_id);
+        header('Content-Type: application/json');
         echo json_encode($listOfOrders ?: []);
     
     }

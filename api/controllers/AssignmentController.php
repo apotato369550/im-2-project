@@ -60,7 +60,6 @@ class AssignmentController{
             $newUpdate  = $update->saveUpdate($updateData);
             echo json_encode([
                 "message" => 'Assignment created successfully',
-                "assignment_id" => $newAssignmentId
             ]);
         }else{
             ErrorHelper::sendError(408, "Error creating assignment");
