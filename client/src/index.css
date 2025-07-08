@@ -135,6 +135,10 @@
   color: rgb(15 40 81);
 }
 
+.text-cbvt-hover-blue{
+  color: #013E8B;
+}
+
 .text-cbvt-blue {
   color: rgb(96 139 193);
 }
@@ -149,6 +153,10 @@
 
 .text-cbvt-gray {
   color: rgb(103 103 103);
+}
+
+.text-cbvt-dark-gray{
+  color: #3F3F46;
 }
 
 .text-cbvt-muted {
