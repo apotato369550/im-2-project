@@ -47,7 +47,12 @@ class Assignment{
             'assignmentStatus' => 'Pending',
             'assignmentDue' => $data['assignment_due'],
         ]);
+    
+        $stmt = $db->prepare('UPDATE orders SET order_status = ? WHERE order_id = ?');
+        $stmt->execute(["Assignment Created", $data['order_id']]);
 
+        $stmt = null;
+        $db = null;
         return $success ?: null;
     }
 

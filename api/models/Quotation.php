@@ -19,6 +19,13 @@ Class Quotation{
             'description' => $data['description'],
             'order_id' => $data['order_id']
         ]);
+
+        $stmt = $db->prepare("UPDATE orders SET order_status = :orderStatus WHERE order_id = :orderID");
+        $stmt = $stmt->execute([
+            'orderId' => $data["order_id"],
+            'orderStatus' => "Quotation Pending"
+        ]);
+
         return $success ? $db->lastInsertId() : null;
     }
 
@@ -40,7 +47,7 @@ Class Quotation{
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
-    public function updateQuotationStatus($id, $status){
+    public function updateQuotationStatus($quotationId, $status, $orderId){
         $db = DBHelper::getConnection();
         $stmt = $db->prepare('ALTER TABLE quotation
             SET quotation_status =  quotationStatus
@@ -48,8 +55,15 @@ Class Quotation{
         ');
         $success = $stmt->execute([
             'quotationStatus' => $status,
-            'quotationId' => $id
+            'quotationId' => $quotationId
         ]);
+
+
+        //get orderId for this 
+        // if($status === "Accepted"){
+        //     $stmt = $db
+        // }
+
         return $success;
     }
 
