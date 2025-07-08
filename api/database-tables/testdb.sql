@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 01, 2025 at 02:07 PM
+-- Generation Time: Jul 07, 2025 at 09:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,6 +41,25 @@ CREATE TABLE `assignments` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `items`
+--
+
+CREATE TABLE `items` (
+  `item_id` int(11) NOT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  `manager_id` int(11) DEFAULT NULL,
+  `model` varchar(200) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `type` varchar(200) DEFAULT NULL,
+  `inverter` varchar(20) DEFAULT NULL,
+  `horsepower` varchar(100) DEFAULT NULL,
+  `brand` varchar(100) DEFAULT NULL,
+  `image_path` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `orders`
 --
 
@@ -52,9 +71,9 @@ CREATE TABLE `orders` (
   `order_status` varchar(255) DEFAULT NULL,
   `phone_number` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
-  `item_model` varchar(255) DEFAULT NULL,
   `service_id` int(11) NOT NULL,
-  `order_date_created` varchar(255) DEFAULT NULL
+  `order_date_created` varchar(255) DEFAULT NULL,
+  `item_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -67,7 +86,8 @@ CREATE TABLE `quotation` (
   `quotation_id` int(11) NOT NULL,
   `total_payment` decimal(11,3) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `order_id` int(11) DEFAULT NULL
+  `order_id` int(11) DEFAULT NULL,
+  `quotation_status` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -123,6 +143,15 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `user_full_name`, `user_email`, `user_password`, `user_type`) VALUES
+(1, 'admin', 'admin@gmail.com', 'admin123', 'Manager'),
+(6, 'Jhanell Mingo', 'jhanell@example.com', '$2y$10$RdCHv2AF8T1FlRhYjvu3cuJE9e1rR7dKHTGfYqKUQ5073q3WvpjMu', 'Client'),
+(7, 'Heizel Lequin', 'heizel@example.com', '$2y$10$Jhsa8h5PTlVzPgeWGQXynulJyR4sOkX6/KeRASDs21NLNTHk/lut.', 'Client');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -136,13 +165,22 @@ ALTER TABLE `assignments`
   ADD KEY `order_id` (`order_id`);
 
 --
+-- Indexes for table `items`
+--
+ALTER TABLE `items`
+  ADD PRIMARY KEY (`item_id`),
+  ADD KEY `supplier_id` (`supplier_id`),
+  ADD KEY `manager_id` (`manager_id`);
+
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`order_id`),
   ADD KEY `client_id` (`client_id`),
   ADD KEY `manager_id` (`manager_id`),
-  ADD KEY `service_id` (`service_id`);
+  ADD KEY `service_id` (`service_id`),
+  ADD KEY `item_id` (`item_id`);
 
 --
 -- Indexes for table `quotation`
@@ -175,7 +213,8 @@ ALTER TABLE `updates`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `user_email` (`user_email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -186,6 +225,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `assignments`
   MODIFY `assignment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `items`
+--
+ALTER TABLE `items`
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -221,17 +266,25 @@ ALTER TABLE `updates`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `items`
+--
+ALTER TABLE `items`
+  ADD CONSTRAINT `items_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`supplier_id`),
+  ADD CONSTRAINT `items_ibfk_2` FOREIGN KEY (`manager_id`) REFERENCES `users` (`user_id`);
+
+--
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `service` (`service_id`);
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `service` (`service_id`),
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `items` (`item_id`);
 
 --
 -- Constraints for table `quotation`

@@ -30,6 +30,7 @@ class UserController{
             echo json_encode([
                 "message" => "Login successful",
                 "user_full_name" => $existingUser['user_full_name'],
+                "user_type" => $existingUser['user_type'],
                 "token" => $jwt
             ]);
         }else{
