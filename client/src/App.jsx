@@ -10,11 +10,11 @@ const App = () => {
   return (
     <>
       {/* <RegisterTestingSpace/> */}
-      {/* <LoginTestingSpace/> */}
+      <LoginTestingSpace/>
       {/* <ProfileTestingSpace/> */}
       {/* <OrderCreationTestingSpace/> */}
       {/* <ItemTestingSpace/> */}
-      <ItemViewingTesting/>
+      {/* <ItemViewingTesting/> */}
 
     </>
   );
