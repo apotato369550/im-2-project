@@ -22,11 +22,11 @@ Class Quotation{
 
         $stmt = $db->prepare("UPDATE orders SET order_status = :orderStatus WHERE order_id = :orderID");
         $stmt = $stmt->execute([
-            'orderId' => $data["order_id"],
+            'orderID' => $data["order_id"],
             'orderStatus' => "Quotation Pending"
         ]);
 
-        return $success ? $db->lastInsertId() : null;
+        return $success;
     }
 
     public function viewQuotationsByOrder($orderId) {
@@ -49,8 +49,8 @@ Class Quotation{
 
     public function updateQuotationStatus($quotationId, $status, $orderId){
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare('ALTER TABLE quotation
-            SET quotation_status =  quotationStatus
+        $stmt = $db->prepare('UPDATE quotation
+            SET quotation_status =  :quotationStatus
             WHERE quotation_id = :quotationId 
         ');
         $success = $stmt->execute([
@@ -60,9 +60,13 @@ Class Quotation{
 
 
         //get orderId for this 
-        // if($status === "Accepted"){
-        //     $stmt = $db
-        // }
+        if($status === "Accepted"){
+            $stmt = $db->prepare('UPDATE orders SET order_status = :orderStatus WHERE order_id = :orderId');
+            $stmt->execute([
+                "orderStatus" => "Quotation Approved",
+                "orderId" => $orderId
+            ]);
+        }
 
         return $success;
     }

@@ -1,4 +1,4 @@
-    // Fetch all quotations for manager
+
     
 <?php
 
@@ -26,8 +26,7 @@ class QuotationController{
         $newId = $quotation->createQuotation($data);
         if($newId){
             echo json_encode([
-                'message' => 'Quotation created successfully',
-                'quotation_id' => $newId
+                'message' => 'Quotation created successfully', 
             ]);
         }else{
             ErrorHelper::sendError(408, 'Error creating quotation');

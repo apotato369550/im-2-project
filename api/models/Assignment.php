@@ -6,7 +6,8 @@ class Assignment{
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("SELECT * FROM assignments");
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        return  $result;
     }
 
     public function viewAssignments(string $userId) : ?array
@@ -51,8 +52,6 @@ class Assignment{
         $stmt = $db->prepare('UPDATE orders SET order_status = ? WHERE order_id = ?');
         $stmt->execute(["Assignment Created", $data['order_id']]);
 
-        $stmt = null;
-        $db = null;
         return $success ?: null;
     }
 

@@ -106,6 +106,10 @@ $router->get('/im-2-project/api/quotations/fetch-list', 'QuotationController@fet
  *********************************/
 $router->post('/im-2-project/api/quotations/create', 'QuotationController@createQuotation');
 
+/**********************************
+ *          PUT ENDPOINTS
+ *********************************/
+$router->put('/im-2-project/api/quotations/update/{id}', 'QuotationController@updateQuotationStatus');
 
 /**********************************
  *          DELETE ENDPOINTS
