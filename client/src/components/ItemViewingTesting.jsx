@@ -23,7 +23,7 @@ const ItemViewingTesting = () => {
     const uploadImage = ()=>{
         if (!newImage) return;
         const formData = new FormData();
-        formData.append('item_id', 2); //make the value dynamic
+        formData.append('item_id', 1); //make the value dynamic
         formData.append('image', newImage);
         axios.post("http://localhost/im-2-project/api/items/upload-image", formData, {
             headers: {
