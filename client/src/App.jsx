@@ -5,6 +5,7 @@ import SignUp from "./pages/Signup.jsx";
 import About from "./pages/About.jsx";
 import Catalog from "./pages/Catalog.jsx";
 import Contact from "./pages/Contact.jsx";
+import ItemTestingSpace from "./components/ItemTestingSpace.jsx";
 
 const App = () => (
   <BrowserRouter>
@@ -17,6 +18,9 @@ const App = () => (
       <Route path="/contact" element={<Contact />} />
     </Routes>
   </BrowserRouter>
+
+      // <ItemTestingSpace/>
+
 );
 
 export default App;
