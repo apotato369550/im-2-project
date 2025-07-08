@@ -55,6 +55,11 @@ Class ItemController{
             !isset($data['supplier_id']) ||
             !isset($data['model']) ||
             !isset($data['price']) ||
+            !isset($data['type']) ||
+            !isset($data['inverter']) ||
+            !isset($data['horsepower']) ||
+            !isset($data['brand']) ||
+            !isset($data['image_path']) ||
             !isset($_FILES['image'])
         ) {
             echo json_encode(['error' => 'Missing required fields']);
@@ -74,7 +79,12 @@ Class ItemController{
             $itemId = $itemModel->createItem(
                 $data['supplier_id'],
                 $data['model'],
+                $data['manager_id'],
                 $data['price'],
+                $data['type'],
+                $data['inverter'],
+                $data['horsepower'],
+                $data['brand'],
                 'uploads/' . $filename
             );
             echo json_encode(['message' => 'Item created', 'item_id' => $itemId, 'image_path' => 'uploads/' . $filename]);
