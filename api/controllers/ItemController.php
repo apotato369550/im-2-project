@@ -59,7 +59,6 @@ Class ItemController{
             !isset($data['inverter']) ||
             !isset($data['horsepower']) ||
             !isset($data['brand']) ||
-            !isset($data['image_path']) ||
             !isset($_FILES['image'])
         ) {
             echo json_encode(['error' => 'Missing required fields']);
@@ -77,14 +76,13 @@ Class ItemController{
         if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
             $itemModel = new Item();
             $itemId = $itemModel->createItem(
-                $data['supplier_id'],
-                $data['model'],
-                $data['manager_id'],
-                $data['price'],
                 $data['type'],
                 $data['inverter'],
                 $data['horsepower'],
                 $data['brand'],
+                $data['supplier_id'],
+                $data['model'],
+                $data['price'],
                 'uploads/' . $filename
             );
             echo json_encode(['message' => 'Item created', 'item_id' => $itemId, 'image_path' => 'uploads/' . $filename]);
