@@ -1,8 +1,12 @@
 {
   "dependencies": {
+<<<<<<< HEAD
     "react-router-dom": "^7.6.3",
     "react-slick": "^0.30.3",
     "slick-carousel": "^1.8.1",
     "tailwindcss-textshadow": "^2.1.3"
+=======
+    "axios": "^1.10.0"
+>>>>>>> 663cbea72387602bc6d110cb2dc2258f71f89442
   }
 }

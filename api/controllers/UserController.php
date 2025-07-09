@@ -8,9 +8,12 @@ class UserController{
     {
         $data = json_decode(file_get_contents("php://input"), true);
 
-        if(empty(trim($data['user_email'])) || empty(trim($data['user_password']))){
-            ErrorHelper::sendError(400, "Email and password are required");
-            return;
+        $missingFields = MissingRequiredFields::checkMissingFields($data, [
+            'user_email', 'user_password',
+        ]);
+
+        if(!empty($missingFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
         }
 
         $user = new User();
@@ -20,12 +23,14 @@ class UserController{
             $payload = [
                 "user_id" => $existingUser['user_id'],
                 "user_email" => $existingUser['user_email'],
+                "user_full_name" => $existingUser['user_full_name'],
                 "exp" => time() + 7200
             ];
             $jwt = JWT::encode($payload, JWT_SECRET, 'HS256');
             echo json_encode([
                 "message" => "Login successful",
-                "user_name" => $existingUser['user_name'],
+                "user_full_name" => $existingUser['user_full_name'],
+                "user_type" => $existingUser['user_type'],
                 "token" => $jwt
             ]);
         }else{
@@ -38,9 +43,12 @@ class UserController{
     {
         $data = json_decode(file_get_contents("php://input"), true);
 
-        if(empty(trim($data['user_email'])) || empty(trim($data['user_password'])) || empty(trim($data['user_name'])) || empty(trim($data['user_type']))){
-            ErrorHelper::sendError(400, "Missing some required fields");
-            return;
+        $missingFields = MissingRequiredFields::checkMissingFields($data, [
+            'user_email', 'user_password', 'user_full_name', 'user_type'
+        ]);
+
+        if(!empty($missingFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
         }
 
         $user = new User();
@@ -64,7 +72,7 @@ class UserController{
      * THESE ARE VIEW METHODS
      * 
     *******/
-    public function profile() 
+    public function profile() : void
     {
         $decoded = AuthMiddleware::verifyToken();
         $user = new User();
@@ -75,39 +83,6 @@ class UserController{
             ErrorHelper::sendError(404, "User not Found");
         }
     }
-
-    public function orders(){
-        $decoded = AuthMiddleware::verifyToken();
-        $user = new User();
-        $orders = $user->viewOrders($decoded->user_id);
-        if($orders){
-            echo json_encode($orders);
-        }else{
-            ErrorHelper::sendError(408, "Error fetching orders");
-        }
-    }
-
-    public function quotations(){
-        $decoded = AuthMiddleware::verifyToken();
-
-        $user = new User();
-        $quotations = $user->viewQuotations($decoded->user_id);
-        if($quotations){
-            echo json_encode($quotations);
-        }else{
-            ErrorHelper::sendError(408, "Error fetching quotations");
-        }
-    }
-
-    /******
-     * THESE ARE CREATE METHODS
-     * 
-    *******/
-
-    /******
-     * THESE ARE UPDATE/EDIT METHODS
-     * 
-    *******/
-
+    
 
 }
