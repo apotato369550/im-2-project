@@ -18,13 +18,6 @@ export default function SignUp() {
     }));
   };
 
-  const handleUserTypeChange = (type) => {
-    setFormData((prev) => ({
-      ...prev,
-      userType: type,
-    }));
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle signup submission
@@ -202,34 +195,6 @@ export default function SignUp() {
                         fill="#676767"
                       />
                     </svg>
-                  </button>
-                </div>
-              </div>
-
-              {/* User Type Toggle */}
-              <div className="relative">
-                <div className="h-[59px] bg-gray-200 rounded-full p-2 flex">
-                  <button
-                    type="button"
-                    onClick={() => handleUserTypeChange("client")}
-                    className={`flex-1 h-full rounded-full text-[21px] font-carme transition-all ${
-                      formData.userType === "client"
-                        ? "bg-cbvt-navy text-white shadow-lg"
-                        : "text-cbvt-navy opacity-70 hover:opacity-100"
-                    }`}
-                  >
-                    client
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleUserTypeChange("worker")}
-                    className={`flex-1 h-full rounded-full text-[21px] font-carme transition-all ${
-                      formData.userType === "worker"
-                        ? "bg-cbvt-navy text-white shadow-lg"
-                        : "text-cbvt-navy opacity-70 hover:opacity-100"
-                    }`}
-                  >
-                    worker
                   </button>
                 </div>
               </div>
