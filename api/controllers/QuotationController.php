@@ -1,4 +1,4 @@
-    // Fetch all quotations for manager
+
     
 <?php
 
@@ -26,8 +26,7 @@ class QuotationController{
         $newId = $quotation->createQuotation($data);
         if($newId){
             echo json_encode([
-                'message' => 'Quotation created successfully',
-                'quotation_id' => $newId
+                'message' => 'Quotation created successfully', 
             ]);
         }else{
             ErrorHelper::sendError(408, 'Error creating quotation');
@@ -59,7 +58,7 @@ class QuotationController{
         $decoded = AuthMiddleware::verifyToken();
         $data = json_decode(file_get_contents('php://input'), true);
         $missingFields = MissingRequiredFields::checkMissingFields($data, [
-            'quotation_status'
+            'quotation_status', 'order_id'
         ]);
 
         if(!empty($missingFields)){
@@ -67,7 +66,7 @@ class QuotationController{
         }
 
         $quotation = new Quotation();
-        $updateQuotation = $quotation->updateQuotationStatus($quotationId, $data['quotation_status']);
+        $updateQuotation = $quotation->updateQuotationStatus($quotationId, $data['quotation_status'], $data['order_id']);
         if($updateQuotation){
             echo json_encode([
                 'message' => 'Quotation Status Updated to '. $data['quotation_status'] . ' successfully',

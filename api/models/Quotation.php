@@ -19,7 +19,14 @@ Class Quotation{
             'description' => $data['description'],
             'order_id' => $data['order_id']
         ]);
-        return $success ? $db->lastInsertId() : null;
+
+        $stmt = $db->prepare("UPDATE orders SET order_status = :orderStatus WHERE order_id = :orderID");
+        $stmt = $stmt->execute([
+            'orderID' => $data["order_id"],
+            'orderStatus' => "Quotation Pending"
+        ]);
+
+        return $success;
     }
 
     public function viewQuotationsByOrder($orderId) {
@@ -40,16 +47,27 @@ Class Quotation{
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
-    public function updateQuotationStatus($id, $status){
+    public function updateQuotationStatus($quotationId, $status, $orderId){
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare('ALTER TABLE quotation
-            SET quotation_status =  quotationStatus
+        $stmt = $db->prepare('UPDATE quotation
+            SET quotation_status =  :quotationStatus
             WHERE quotation_id = :quotationId 
         ');
         $success = $stmt->execute([
             'quotationStatus' => $status,
-            'quotationId' => $id
+            'quotationId' => $quotationId
         ]);
+
+
+        //get orderId for this 
+        if($status === "Accepted"){
+            $stmt = $db->prepare('UPDATE orders SET order_status = :orderStatus WHERE order_id = :orderId');
+            $stmt->execute([
+                "orderStatus" => "Quotation Approved",
+                "orderId" => $orderId
+            ]);
+        }
+
         return $success;
     }
 
