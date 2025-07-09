@@ -17,7 +17,7 @@ const sidebarItems = [
   {
     title: "Workers",
     url: "/manager/workers",
-    icon: UserCheck
+    icon: UserCheck,
   },
   {
     title: "Users",
