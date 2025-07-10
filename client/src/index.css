@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 @import url("https://fonts.googleapis.com/css2?family=Khand:wght@300;400;500;600;700&family=Carme:wght@400&family=Alegreya+Sans+SC:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
@@ -294,11 +294,6 @@
   background-color: #0f2851; 
 }
 
-
-=======
-@import url("https://fonts.googleapis.com/css2?family=Khand:wght@300;400;500;600;700&family=Carme:wght@400&family=Alegreya+Sans+SC:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
-@import "tailwindcss";
-
 @plugin 'tailwindcss-animate';
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -481,4 +476,3 @@
   background-color: rgb(247 247 250);
 }
 
->>>>>>> 663cbea72387602bc6d110cb2dc2258f71f89442
