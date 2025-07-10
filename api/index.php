@@ -30,14 +30,15 @@ $router = new Router();
 /**********************************
  *          GET ENDPOINTS
  *********************************/
-$router->get('/im-2-project/api/user/profile', 'UserController@profile');
+$router->get('/im-2-project/api/users/profile', 'UserController@profile');
 
 
 /**********************************
  *          POST ENDPOINTS
  *********************************/
-$router->post('/im-2-project/api/user/login', 'UserController@login');
-$router->post('/im-2-project/api/user/register', 'UserController@register');
+$router->post('/im-2-project/api/users/login', 'UserController@login');
+$router->post('/im-2-project/api/users/register', 'UserController@register');
+$router->post('/im-2-project/api/users/update-profile', 'UserController@updateProfilePicture');
 
 
 /**************************************************************************
