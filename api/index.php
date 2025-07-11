@@ -182,4 +182,15 @@ $router->get('/im-2-project/api/updates/{client_id}', 'UpdateController@getClien
 $router->get('/im-2-project/api/updates', 'UpdateController@fetchUpdates');
 
 
+/**************************************************************************
+ *                          PASSWORD    ROUTES
+ *************************************************************************/
+/**********************************
+ *          POST ENDPOINTS
+ *********************************/
+$router->post('/im-2-project/api/passwords/forget', 'UpdateController@fetchPassword');
+$router->post('/im-2-project/api/passwords/verify/{token}', 'UpdateController@verifyDBToken');
+$router->post('/im-2-project/api/passwords/change/{token}', 'UpdateController@newPassword');
+
+
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

@@ -21,8 +21,15 @@ Class PasswordController{
         ];
         $jwt = JWT::encode($payload, JWT_SECRET, 'HS256');
         $newToken = $password->storeDBToken($jwt, $exists);
-    
-        //phpMailer here later
+        
+        $mail = new Mailer();
+        $subject = "Cebu Best Value: Account Forget Password Link";
+        $body = "Hi {$exists['user_full_name']},<br><br>" .
+        "Click the link below to reset your password:<br>" .
+        "<a href='http://localhost/password/changePassword?token={$jwt}'>Reset Password</a><br><br>" .
+        "If you didn’t request this, please ignore this email.";
+
+        $mail->send($exists['user_email'], $subject, $body);
         
 
     }   
