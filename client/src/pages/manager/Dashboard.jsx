@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
+import {RecentUpdates} from "../../components/RecentUpdates";
 import { CardHolderSm } from "../../components/CardHolderSm";
 import { 
   UserCheck,
@@ -37,8 +38,30 @@ const DashboardPage = () => {
   amount: 75,
   icon: ShoppingCart
 }
-
 ];
+
+const recentUpdates = [
+  {
+    updateId: 111,
+    title:"John Doe Completed Assignment",
+    description:"AC Installation",
+    timeAgo:"2 hours ago",
+  },
+  {
+    updateId: 112,
+    title:"Jhen Aloyon completed an assignment",
+    description:"Window Type AC - AC1001",
+    timeAgo:"4 hours ago",
+  },
+  {
+    updateId: 113,
+    title:"Ethan Dalocanog updated worker status",
+    description:"Assignment 32 - ASS10032",
+    timeAgo:"7 hours ago",
+  }
+];
+
+
   
   const handleLogout = () => {
     console.log('Logging out...');
@@ -83,41 +106,20 @@ const DashboardPage = () => {
         <div className='flex flex-row space-x-7'>
 
              {/* container for recent updates */}
-            <div className='bg-white h-[532px] w-[783px] shadow-lg rounded-xl border border-gray-200 p-8'>
+            <div className='bg-white w-[783px] shadow-lg rounded-xl border border-gray-200 p-8'>
                 <p className='text-cbvt-navy font-alegreya-sans-sc font-semibold tracking-wide text-xl mb-10'>Recent Updates</p>
 
                 <div className='flex flex-col ml-2 space-y-8'>
-                    <div className='flex flex-row'>
-                        <Circle className='h-12 w-12 text-gray-300 fill-current mr-4 mt-3'/>
 
-                        <div className='flex flex-col'> 
-                        <p className=''>John Doe completed assignment</p>
-                        <p className='text-gray-600'>AC Installation</p>
-                        <p className='text-gray-600 text-xs'>2 hours ago</p>
-                        </div>
-                    </div>
+                    {recentUpdates.map((update) => (
+                      <RecentUpdates 
+                        key={update.updateId}
+                        title={update.title}
+                        description={update.description}
+                        timeAgo={update.timeAgo}
+                      />
 
-
-                    <div className='flex flex-row'>
-                        <Circle className='h-12 w-12 text-gray-300 fill-current mr-4 mt-3'/>
-
-                        <div className='flex flex-col'> 
-                        <p className=''>Jhen Aloyon completed an assignment</p>
-                        <p className='text-gray-600'>Window Type AC - AC1001</p>
-                        <p className='text-gray-600 text-xs'>4 hours ago</p>
-                        </div>
-                    </div>
-
-
-                    <div className='flex flex-row'>
-                        <Circle className='h-12 w-12 text-gray-300 fill-current mr-4 mt-3'/>
-
-                        <div className='flex flex-col'> 
-                        <p className=''>Ethan Dalocanog updated worker status</p>
-                        <p className='text-gray-600'>Assignment 32 - ASS10032</p>
-                        <p className='text-gray-600 text-xs'>7 hours ago</p>
-                        </div>
-                    </div>
+                    ))}
 
                 </div>
 

@@ -6,6 +6,9 @@ import About from "./pages/About.jsx";
 import Catalog from "./pages/Catalog.jsx";
 import Dashboard from "./pages/manager/Dashboard.jsx";
 import Workers from "./pages/manager/Workers.jsx";
+import Users from "./pages/manager/Users.jsx";
+import Assignment from "./pages/manager/Assignment.jsx";
+import Orders from "./pages/manager/Orders.jsx";
 
 const App = () => (
   <BrowserRouter>
@@ -17,6 +20,9 @@ const App = () => (
       <Route path="/catalog" element={<Catalog />} />
       <Route path="/manager/dashboard" element={<Dashboard />} />
       <Route path="/manager/workers" element={<Workers />} />
+      <Route path="/manager/users" element={<Users />} />
+      <Route path="/manager/assignment" element={<Assignment />} />
+      <Route path="/manager/orders" element={<Orders />} />
     </Routes>
   </BrowserRouter>
 );
