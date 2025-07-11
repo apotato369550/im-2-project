@@ -1,79 +1,17 @@
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import BreadCrumbs from "../components/BreadCrumbs";
 
 export default function About() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="container mx-auto px-4 md:px-8 py-4">
-        <div className="flex items-center justify-between">
-          <Link to="/">
-            <h1 className="text-lg md:text-2xl lg:text-[41px] font-khand font-bold text-cbvt-navy capitalize">
-              Cebu Best Value Trading
-            </h1>
-          </Link>
-          <div className="hidden lg:flex items-center space-x-8">
-            <span className="text-[21px] font-alegreya-sans-sc text-cbvt-navy capitalize">
-              about
-            </span>
-            <Link
-              to="#contact"
-              className="text-[21px] font-alegreya-sans-sc text-cbvt-navy capitalize hover:text-cbvt-blue transition-colors"
-            >
-              Contact us
-            </Link>
-            <Link
-              to="/catalog"
-              className="text-[21px] font-alegreya-sans-sc text-cbvt-navy capitalize hover:text-cbvt-blue transition-colors"
-            >
-              catalog
-            </Link>
-            <Link
-              to="/login"
-              className="bg-cbvt-navy text-white px-6 py-2 rounded-full text-[21px] font-alegreya-sans-sc capitalize hover:bg-opacity-90 transition-all inline-block"
-            >
-              Login
-            </Link>
-          </div>
-
-          {/* Mobile menu button */}
-          <button className="lg:hidden p-2">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
-        </div>
-      </nav>
-
-      {/* Breadcrumb */}
-      <div className="container mx-auto px-4 md:px-8 py-4">
-        <p className="text-[16px] font-carme text-black capitalize">
-          <Link to="/" className="text-black">
-            home
-          </Link>{" "}
-          / <span className="text-cbvt-blue">About</span>
-        </p>
-      </div>
-
-      {/* Page Title */}
-      <div className="container mx-auto px-4 md:px-8 mb-12">
-        <h1 className="text-4xl md:text-5xl lg:text-[64px] font-alegreya-sans-sc font-bold text-cbvt-navy capitalize">
-          About CBVT
-        </h1>
-      </div>
+      <Navbar />
+      <BreadCrumbs crumb="About" title="About CBVT"/>
 
       {/* Content */}
-      <div className="container mx-auto px-4 md:px-8 pb-16">
-        <div className="max-w-4xl space-y-12">
+      <div className="container mx-auto px-4 md:px-8 pb-16 flex flex-col items-center justify-center">
+        <div className="max-w-4xl space-y-12 w-full">
           {/* Our Story Section */}
           <section className="space-y-6">
             <h2 className="text-3xl md:text-4xl font-khand font-bold text-cbvt-navy">
@@ -275,43 +213,17 @@ export default function About() {
               </p>
             </div>
           </section>
-
-          {/* Contact CTA Section */}
-          <section className="bg-cbvt-navy rounded-lg p-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-khand font-bold text-white mb-4">
-              Ready to Experience the CBVT Difference?
-            </h2>
-            <p className="text-lg font-carme text-cbvt-light mb-6">
-              Contact us today to schedule a consultation or service
-              appointment. Let us show you why thousands of customers trust CBVT
-              for all their air conditioning needs.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/contact"
-                className="bg-cbvt-blue hover:bg-cbvt-blue/90 text-white px-8 py-3 rounded-full text-lg font-alegreya-sans-sc transition-all inline-block"
-              >
-                Contact Us
-              </Link>
-              <Link
-                to="/catalog"
-                className="bg-transparent border-2 border-white hover:bg-white hover:text-cbvt-navy text-white px-8 py-3 rounded-full text-lg font-alegreya-sans-sc transition-all inline-block"
-              >
-                View Catalog
-              </Link>
-            </div>
-          </section>
+          <div className="flex flex-col items-center justify-center gap-4 mt-12">
+            <Link
+              to="/contact"
+              className="bg-cbvt-navy text-white px-10 py-2 rounded-full text-xl font-alegreya-sans-sc font-bold hover: scale-105 transition-transform duration-500 ease-in-out"
+            >
+              Contact Us
+            </Link>
+          </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-cbvt-navy py-4">
-        <div className="container mx-auto px-4 md:px-8 text-center">
-          <p className="text-[19px] font-carme text-cbvt-light">
-            © 2025 Cebu Best Value Trading. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
