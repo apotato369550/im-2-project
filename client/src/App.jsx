@@ -16,6 +16,8 @@ const App = () => (
       <Route path="/about" element={<About />} />
       <Route path="/catalog" element={<Catalog />} />
       <Route path="/contact" element={<Contact />} />
+      {/* added notfound page for when user enters invalid url */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>
 
