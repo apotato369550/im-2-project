@@ -20,7 +20,7 @@ Class Password{
 
     public function storeDBToken($token, $user){
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare('INSERT INTO password_resets(user_id, token, expires_at, used)
+        $stmt = $db->prepare('INSERT INTO password_resets(user_id, token, expires_at)
         VALUES(:userID, :token, :expires_at)
         ');
 

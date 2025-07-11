@@ -1,7 +1,6 @@
 
 <?php
 
-// Make sure autoloader is loaded (in case it's not loaded yet)
 if (!class_exists('Dotenv\Dotenv')) {
     require_once __DIR__ . '/../../vendor/autoload.php';
 }

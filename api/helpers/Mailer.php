@@ -12,12 +12,12 @@ class Mailer{
         $this->mail->isSMTP();
         $this->mail->Host = 'smtp.gmail.com';
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = 'your_email@gmail.com';
-        $this->mail->Password = 'your_app_password';
+        $this->mail->Username = EMAIL_NAME;
+        $this->mail->Password = APP_PASSWORD;
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $this->mail->Port = 587;
 
-        $this->mail->setFrom('your_email@gmail.com', 'Your Name');
+        $this->mail->setFrom(EMAIL_NAME, 'Cebu Best Value');
     }
 
     public function send($to, $subject, $body, $altBody = '') {

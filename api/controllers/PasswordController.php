@@ -29,12 +29,16 @@ Class PasswordController{
         "<a href='http://localhost/password/changePassword?token={$jwt}'>Reset Password</a><br><br>" .
         "If you didn’t request this, please ignore this email.";
 
-        $mail->send($exists['user_email'], $subject, $body);
-        
+        if ($mail->send($exists['user_email'], $subject, $body)) {
+            echo json_encode(["message" => "Password reset email sent"]);
+        }else {
+            ErrorHelper::sendError(500, "Failed to send email");
+        }
 
     }   
 
-    public function verifyDBToken($token) {
+    public function verifyDBToken() {
+        $token = $_GET['token'];
         try {
             $decoded = JWT::decode($token, new Key(JWT_SECRET, 'HS256'));
 

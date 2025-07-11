@@ -188,9 +188,9 @@ $router->get('/im-2-project/api/updates', 'UpdateController@fetchUpdates');
 /**********************************
  *          POST ENDPOINTS
  *********************************/
-$router->post('/im-2-project/api/passwords/forget', 'UpdateController@fetchPassword');
-$router->post('/im-2-project/api/passwords/verify/{token}', 'UpdateController@verifyDBToken');
-$router->post('/im-2-project/api/passwords/change/{token}', 'UpdateController@newPassword');
+$router->post('/im-2-project/api/passwords/forget', 'PasswordController@forgetPassword');
+$router->post('/im-2-project/api/passwords/verify', 'PasswordController@verifyDBToken');
+$router->post('/im-2-project/api/passwords/change', 'PasswordController@newPassword');
 
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
