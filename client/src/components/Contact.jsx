@@ -1,5 +1,10 @@
 import React from 'react';
 import contactBg from "../assets/images/contactBg.png"
+import { useState } from 'react';
+import {
+  validateHomeContactForm,
+  getFieldError
+} from "../../lib/validation.js";
 
 const Contact = () => {
 
