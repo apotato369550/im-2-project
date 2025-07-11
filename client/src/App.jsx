@@ -6,6 +6,7 @@ import About from "./pages/About.jsx";
 import Catalog from "./pages/Catalog.jsx";
 import Contact from "./pages/Contact.jsx";
 import ItemTestingSpace from "./components/ItemTestingSpace.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 const App = () => (
   <BrowserRouter>
