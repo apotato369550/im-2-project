@@ -15,7 +15,7 @@ module.exports = {
         'ibm-plex-sans': ['IBM Plex Sans', '-apple-system', 'Roboto', 'Helvetica', 'sans-serif'],
       },
       colors: {
-        'cbvt-navy': 'rgb(15 40 81)',
+        'cbvt-navy': 'rgb(15 40 81) / <alpha-value>',
         'cbvt-blue': 'rgb(96 139 193)',
         'cbvt-light-blue': 'rgb(113 147 190)',
         'cbvt-sky': 'rgb(203 220 235)',
@@ -70,5 +70,6 @@ module.exports = {
   },
   plugins: [
     require("tailwindcss-animate"),
+    require('tailwindcss-textshadow'),
   ],
 }
