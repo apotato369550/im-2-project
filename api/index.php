@@ -193,4 +193,10 @@ $router->post('/im-2-project/api/passwords/verify', 'PasswordController@verifyDB
 $router->post('/im-2-project/api/passwords/change', 'PasswordController@newPassword');
 
 
+/**************************************************************************
+ *                          PASSWORD    ROUTES
+ *************************************************************************/
+$router->post('/im-2-project/api/feedbacks/create', 'FeedbackController@feedback');
+
+
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
