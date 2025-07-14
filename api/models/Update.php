@@ -19,8 +19,9 @@ class Update{
     public function renderUpdates(){
         $db = DBHelper::getConnection();
         $stmt = $db->prepare('
-            SELECT *
-            FROM updates
+            SELECT up.*, us.user_full_name
+            FROM updates up
+            JOIN users us ON us.user_id = up.worker_id
         ');
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;;
@@ -41,11 +42,12 @@ class Update{
 
     public function getRecentUpdates(){
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare('SELECT * FROM updates 
-        WHERE date_last_update >= :dateUpdate');
-        $stmt->execute([
-            "dateUpdate" => " DAY(CURRDATE()) - 7" 
-        ]);
+        $stmt = $db->prepare(
+            'SELECT up.*, us.user_full_name
+            FROM updates up
+            JOIN users us ON us.user_id = up.worker_id
+            WHERE date_last_update >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)');
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 }

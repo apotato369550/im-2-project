@@ -43,7 +43,7 @@ $router->post('/im-2-project/api/users/update-profile', 'UserController@updatePr
 
 
 /**************************************************************************
- *                          ASSIGNMENT    ROUTES
+ *                          ASSIGNMENTs    ROUTES
  *************************************************************************/
 
 
@@ -89,6 +89,11 @@ $router->post('/im-2-project/api/orders/create', 'OrderController@createOrder');
  *          PUT ENDPOINTS
  *********************************/
 $router->put('/im-2-project/api/orders/edit/{id}', 'OrderController@editOrderStatus');
+
+/**********************************
+ *          DELETE ENDPOINTS
+ *********************************/
+$router->delete('/im-2-project/api/orders/delete/{id}', 'OrderController@deleteOrder');
 
 
 /**************************************************************************
@@ -181,6 +186,7 @@ $router->delete('/im-2-project/api/items/delete/{itemId}', 'ItemController@delet
  *********************************/
 $router->get('/im-2-project/api/updates/{client_id}', 'UpdateController@getClientUpdates');
 $router->get('/im-2-project/api/updates', 'UpdateController@fetchUpdates');
+$router->get('/im-2-project/api/updates/recent', 'UpdateController@recentUpdates');
 
 
 /**************************************************************************

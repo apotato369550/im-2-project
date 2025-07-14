@@ -96,4 +96,32 @@ class Assignment{
         ]);
         return $success ?: null;
     }
+
+    public function orderExist($orderId){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare('
+            SELECT *
+            FROM assignments
+            WHERE order_id = :orderId
+        ');
+        $stmt->execute([
+            "orderID" => $orderId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
+
+    public function deleteAssignment($assigmentId){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare(
+            'UPDATE assignments
+             SET is_removed = 1
+            WHERE assignment_id = :assignmentId');
+        $result = $stmt->execute([
+            "assignmentId" => $assigmentId
+        ]);
+        
+        return $result;
+    }
+    
 }
