@@ -146,7 +146,7 @@ const Contact = () => {
           topPadding="pt-8" 
           backgroundImage={contactUsBg}
           backgroundSize="cover"
-          height="min-h-[800px]"
+          height="min-h-[900px]"
         />
       </div>
       

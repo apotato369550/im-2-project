@@ -92,7 +92,7 @@ const ContactForm = ({
                 Get in touch
               </h3>
 
-              <div className="space-y-12">
+              <div className="space-y-8">
                 {/* Location */}
                 <div className="flex items-center space-x-4">
                   <svg
@@ -192,10 +192,10 @@ const ContactForm = ({
                     <input
                       type="text"
                       name="name"
-                      placeholder="your name"
+                      placeholder="Your Name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className={`w-full px-4 md:px-6 py-3 md:py-4 rounded-full text-base md:text-lg lg:text-[24px] font-carme text-cbvt-gray placeholder-cbvt-gray/70 border-0 focus:outline-none focus:ring-2 transition-all ${getFieldError(errors, "name")
+                      className={`w-full bg-cbvt-light-cream px-6 py-4 rounded-full text-xl font-carme text-cbvt-navy placeholder-gray-400 border-0 focus:outline-none focus:ring-2 transition-all ${getFieldError(errors, "name")
                           ? "ring-2 ring-red-400 bg-red-50"
                           : "focus:ring-cbvt-blue"
                         }`}
@@ -214,7 +214,7 @@ const ContactForm = ({
                       placeholder="Your Email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full px-4 md:px-6 py-3 md:py-4 rounded-full text-base md:text-lg lg:text-[24px] font-carme text-cbvt-gray placeholder-cbvt-gray/70 border-0 focus:outline-none focus:ring-2 transition-all ${getFieldError(errors, "email")
+                      className={`w-full bg-cbvt-light-cream px-6 py-4 rounded-full text-xl font-carme text-cbvt-navy placeholder-gray-400 border-0 focus:outline-none focus:ring-2 transition-all ${getFieldError(errors, "email")
                           ? "ring-2 ring-red-400 bg-red-50"
                           : "focus:ring-cbvt-blue"
                         }`}
@@ -233,7 +233,7 @@ const ContactForm = ({
                       value={formData.message}
                       onChange={handleInputChange}
                       rows={4}
-                      className={`w-full px-4 md:px-6 py-3 md:py-4 rounded-[22px] text-base md:text-lg lg:text-[24px] font-carme text-cbvt-gray placeholder-cbvt-gray/70 border-0 focus:outline-none focus:ring-2 resize-none transition-all ${getFieldError(errors, "message")
+                      className={`w-full capitalize bg-cbvt-light-cream px-6 py-4 rounded-3xl text-xl font-carme text-cbvt-navy placeholder-gray-400 border-0 focus:outline-none focus:ring-2 resize-none transition-all ${getFieldError(errors, "message")
                           ? "ring-2 ring-red-400 bg-red-50"
                           : "focus:ring-cbvt-blue"
                         }`}

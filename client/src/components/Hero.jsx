@@ -130,7 +130,7 @@ const Hero = () => {
           </Link>
         </div>
           {/* Hero Image */}
-            <div className="absolute top-30 right-[-60px] mt-10">
+            <div className="hidden xl:block absolute top-30 right-[-60px] mt-10">
               <img
                 src={aircon}
                 alt="Air conditioner unit"
