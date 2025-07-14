@@ -11,6 +11,7 @@ import Assignment from "./pages/manager/Assignment.jsx";
 import Orders from "./pages/manager/Orders.jsx";
 import Contact from "./pages/Contact.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import ClientDashboard from "./pages/ClientDashboard.jsx";
 
 const App = () => (
   <BrowserRouter>
@@ -20,6 +21,7 @@ const App = () => (
       <Route path="/signup" element={<SignUp />} />
       <Route path="/about" element={<About />} />
       <Route path="/catalog" element={<Catalog />} />
+      <Route path="/clientdashboard" element={<ClientDashboard/>} />
       <Route path="/manager/dashboard" element={<Dashboard />} />
       <Route path="/manager/workers" element={<Workers />} />
       <Route path="/manager/users" element={<Users />} />
