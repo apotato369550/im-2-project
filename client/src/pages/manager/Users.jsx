@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter} from "lucide-react";
 import { CustomerCard } from "../../components/CustomerCard";
+import axios from 'axios';
 
 const UsersPage = () => {
   const [activeItem, setActiveItem] = useState('Users');
@@ -60,6 +61,21 @@ const UsersPage = () => {
    
 ];
   
+
+  useEffect(() => {
+    console.log("Works");
+    const userData = JSON.parse(localStorage.getItem('user_data'));
+    console.log(userData)
+    axios.get("http://localhost/im-2-project/api/users/profile", {
+      headers: {
+        Authorization: "Bearer " + userData.token
+      }
+    }).then(response => {
+      console.log(response)
+    }).catch(error => {
+      console.log(error.response.data)
+    })
+  }, [])
 
   const filteredCustomers = customerData.filter(customer =>
     customer.Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
