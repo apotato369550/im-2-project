@@ -9,6 +9,9 @@ import Workers from "./pages/manager/Workers.jsx";
 import Users from "./pages/manager/Users.jsx";
 import Assignment from "./pages/manager/Assignment.jsx";
 import Orders from "./pages/manager/Orders.jsx";
+import WorkerDashboard from "./pages/worker/WorkerDashboard.jsx";
+import WorkerAssignments from "./pages/worker/WorkerAssignments.jsx";
+import Tasks from "./pages/worker/Tasks.jsx";
 import Contact from "./pages/Contact.jsx";
 import ItemTestingSpace from "./components/ItemTestingSpace.jsx";
 import NotFound from "./pages/NotFound.jsx";
@@ -26,6 +29,9 @@ const App = () => (
       <Route path="/manager/users" element={<Users />} />
       <Route path="/manager/assignment" element={<Assignment />} />
       <Route path="/manager/orders" element={<Orders />} />
+      <Route path="/worker/dashboard" element={<WorkerDashboard />} />
+      <Route path="/worker/assignments" element={<WorkerAssignments />} />
+      <Route path="/worker/tasks" element={<Tasks />} />
       <Route path="/contact" element={<Contact />} />
       {/* added notfound page for when user enters invalid url */}
       <Route path="*" element={<NotFound />} />
