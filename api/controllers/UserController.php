@@ -21,15 +21,17 @@ class UserController{
         if($existingUser && password_verify($data['user_password'], $existingUser['user_password'])){
             $payload = [
                 "user_id" => $existingUser['user_id'],
-                "user_email" => $existingUser['user_email'],
-                "user_full_name" => $existingUser['user_full_name'],
-                "user_type" => $existingUser['user_type'],
+                // "user_email" => $existingUser['user_email'],
+                // "user_full_name" => $existingUser['user_full_name'],
+                // "user_type" => $existingUser['user_type'],
                 "exp" => time() + 7200
             ];
             $jwt = JWT::encode($payload, JWT_SECRET, 'HS256');
             echo json_encode([
                 "message" => "Login successful",
+                "user_id" => $existingUser['user_id'],
                 "user_full_name" => $existingUser['user_full_name'],
+                "user_email"=> $existingUser['user_email'],
                 "user_type" => $existingUser['user_type'],
                 "token" => $jwt
             ]);

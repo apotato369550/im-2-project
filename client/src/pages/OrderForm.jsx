@@ -1,59 +1,123 @@
 import { useState, useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import axios from 'axios';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import BreadCrumbs from "../components/BreadCrumbs";
 
 export default function OrderForm() {
+  const [userAcc, setUserAcc] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phoneNumber: "",
     address: "",
-    serviceUnit: "",
-    concernDetails: "",
+    service_id: "",
+    item_id: "",
+    concern: "",
+    requestedService: "",
   });
 
+  // Get URL parameters
   const requestedUnit = searchParams.get("unit");
+  const requestedItemID = searchParams.get("item_id");
   const requestedService = searchParams.get("service");
-  const isUnitRequest = !!requestedUnit;
-  const isServiceRequest = !!requestedService;
+  
+  // Get data from location state (from modal)
+  const selectedProduct = location.state?.selectedProduct;
+  
+  const isUnitRequest = !!requestedUnit || !!selectedProduct;
+  const currUser = JSON.parse(localStorage.getItem('user_data'));
+  console.log(currUser);
+
 
   useEffect(() => {
-    if (requestedUnit) {
-      setFormData((prev) => ({
-        ...prev,
-        serviceUnit: requestedUnit,
-      }));
-    } else if (requestedService) {
-      setFormData((prev) => ({
-        ...prev,
-        serviceUnit: requestedService,
-      }));
-    } else if (searchParams.get("service")) {
-      setFormData((prev) => ({
-        ...prev,
-        serviceUnit: searchParams.get("service"),
+    // Get user data from localStorage
+    if (currUser) {
+      setUserAcc(currUser);
+      setFormData(prev => ({
+      ...prev,
+      fullName: currUser.user_full_name,
+      email: currUser.user_email,
       }));
     }
-  }, [requestedUnit, requestedService, searchParams]);
 
-  const handleInputChange = (
-    e
-  ) => {
+    const serviceMap = {
+      "Repair": "1",
+      "Installation": "2",
+      "Retail": "3",
+    };
+
+    // Handle retail/catalog requests
+    if (requestedService === "Retail" || selectedProduct) {
+      setFormData((prev) => ({
+        ...prev,
+        service_id: serviceMap["Retail"] || "3",
+        item_id: requestedItemID || selectedProduct?.item_id || "",
+        requestedService: "Retail"
+      }));
+    } else if (requestedService) {
+      // Handle other service requests
+      setFormData((prev) => ({
+        ...prev,
+        service_id: serviceMap[requestedService] || "",
+        requestedService: requestedService
+      }));
+    }
+  }, [requestedUnit, requestedItemID, requestedService, selectedProduct]);
+
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: value || "",
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    alert("Form submitted successfully! We will contact you soon.");
+
+    if (!userAcc) {
+      alert("Please Log in First to make an Order");
+      navigate("/login");
+      return;
+    }
+
+    // Create the submission data
+    const submissionData = {
+      ...formData,
+      user_id: userAcc.user_id, // Adjust based on your user object structure
+    };
+
+    axios
+      .post("http://localhost/im-2-project/api/orders/create", submissionData, {
+        headers: {
+          Authorization: `Bearer ${userAcc.token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(() => {
+        alert("Form submitted successfully! We will contact you soon.");
+        navigate("/"); 
+      })
+      .catch((error) => {
+        console.error("Submission error:", error);
+        alert("Something went wrong. Please try again.");
+      });
   };
+
+  // Generate unit name for display
+  const getUnitName = () => {
+    if (selectedProduct) {
+      return `${selectedProduct.brand} ${selectedProduct.model} - ${selectedProduct.hp || selectedProduct.horsepower} ${selectedProduct.type}`;
+    }
+    return requestedUnit || "";
+  };
+
+  const unitName = getUnitName();
 
   return (
     <div className="min-h-screen bg-white">
@@ -141,6 +205,7 @@ export default function OrderForm() {
                   </div>
                 </div>
               </div>
+              
               <div>
                 <h2 className="text-xl md:text-2xl font-bold uppercase text-cbvt-navy mb-8 tracking-wide">
                   Service Information
@@ -159,16 +224,15 @@ export default function OrderForm() {
                         type="text"
                         id="serviceUnit"
                         name="serviceUnit"
-                        value={formData.serviceUnit}
-                        onChange={handleInputChange}
+                        value={unitName}
                         readOnly
                         className="w-full h-10 px-4 bg-cbvt-cream rounded-full text-base font-carme text-cbvt-navy border-0 focus:outline-none cursor-not-allowed"
                       />
                     ) : (
                       <select
                         id="serviceUnit"
-                        name="serviceUnit"
-                        value={formData.serviceUnit}
+                        name="requestedService"
+                        value={formData.requestedService}
                         onChange={handleInputChange}
                         required
                         className="w-full h-10 px-4 bg-white rounded-full text-base font-carme text-cbvt-navy border border-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-cbvt-blue appearance-none cursor-pointer"
@@ -183,16 +247,16 @@ export default function OrderForm() {
                   {/* Concern/Details */}
                   <div className="md:col-span-1">
                     <label
-                      htmlFor="concernDetails"
+                      htmlFor="concern"
                       className="block text-xs font-bold uppercase text-cbvt-blue mb-2 tracking-wide"
                     >
                       Concern / Details
                     </label>
                     <textarea
-                      id="concernDetails"
-                      name="concernDetails"
+                      id="concern"
+                      name="concern"
                       placeholder="Please describe your specific needs or concerns..."
-                      value={formData.concernDetails}
+                      value={formData.concern}
                       onChange={handleInputChange}
                       rows={4}
                       className="w-full px-4 py-3 bg-white rounded-3xl text-base font-carme text-cbvt-navy border border-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-cbvt-blue resize-none"
@@ -200,6 +264,7 @@ export default function OrderForm() {
                   </div>
                 </div>
               </div>
+              
               <div className="flex justify-center pt-6">
                 <button
                   type="submit"
@@ -215,4 +280,4 @@ export default function OrderForm() {
       <Footer />
     </div>
   );
-} 
+}

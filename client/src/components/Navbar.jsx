@@ -21,7 +21,6 @@ const [user, setUser] = useState(null)
           setUser(null);  
         }else{
           setUser(firstName);
-          console.log(decodedToken);
         }
       }catch(err){
         console.error("Invalid token:", err);

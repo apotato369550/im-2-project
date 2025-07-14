@@ -1,4 +1,3 @@
-
     
 <?php
 
@@ -26,7 +25,7 @@ class QuotationController{
         $newId = $quotation->createQuotation($data);
         if($newId){
             echo json_encode([
-                'message' => 'Quotation created successfully', 
+                'message' => 'Quotation created successfully',
             ]);
         }else{
             ErrorHelper::sendError(408, 'Error creating quotation');
