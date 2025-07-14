@@ -32,7 +32,7 @@ const PrivateRoute = ({ allowedRoles }) => {
         return;
       }
 
-      if (!allowedRoles.includes(decoded.user_type)) {
+      if (!allowedRoles.includes(parsed.user_type)) {
         alert("You are not authorized to access this page.");
         setShouldRedirect(true);
         return;
