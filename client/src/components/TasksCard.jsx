@@ -36,12 +36,12 @@ export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location
 
                 {/*buttons at the bottom*/}
                 <div className="flex flex-row items-center space-x-4"> 
-                    <button className="border border-gray-200 p-1 bg-white rounded-xl w-[70px] shadow-sm text-cbvt-dark-gray
+                    <button className="border border-gray-200 p-1 bg-white rounded-3xl w-[70px] shadow-sm text-cbvt-dark-gray
                                 hover:cursor-pointer hover:bg-gray-200 transition-colors">
                         Pause
                     </button>
 
-                    <button className="border border-gray-200 p-1 rounded-xl w-[120px] bg-cbvt-navy shadow-sm text-white
+                    <button className="border border-[rgb(15_40_81)] p-1 rounded-3xl w-[120px] bg-cbvt-navy shadow-sm text-white
                                 hover:cursor-pointer hover:!bg-white transition-colors hover:!text-[rgb(15_40_81)]">
                        Complete
                     </button>

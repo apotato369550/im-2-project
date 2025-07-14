@@ -9,7 +9,7 @@ const ApplyModal = () => {
       <button 
         onClick={() => setIsOpen(true)}
         className="border-[0.5px] border-[rgb(15_40_81)] bg-cbvt-navy text-white w-[100px] h-[30px] px-3 rounded-3xl text-sm flex-shrink-0 hover:bg-cbvt-hover-blue transition-colors
-                              hover:!bg-white hover:text-cbvt-navy transition-colors  hover:cursor-pointer"
+                              hover:!bg-white hover:!text-[rgb(15_40_81)] transition-colors  hover:cursor-pointer"
       >
         Apply
       </button>
@@ -50,11 +50,11 @@ const ApplyModal = () => {
              <div className="bg-gray-50 px-4 py-3 flex justify-end gap-3">
             <button
               onClick={() => setIsOpen(false)}
-              className="px-4 py-2 border border-gray-300 rounded-3xl shadow-md text-gray-700 hover:bg-gray-100 transition-colors"
+              className="px-4 py-2 border border-gray-300 rounded-3xl shadow-md text-gray-700 hover:bg-gray-200 hover:cursor-pointer transition-colors"
             >
               Cancel
             </button>
-            <button className="border w-[230px] h-[38px] rounded-3xl border-[rgb(15_40_81)] shadow-md p-1 flex justify-center bg-cbvt-navy text-white transition-all hover:!bg-white cursor-pointer hover:text-[rgb(15_40_81)] focus:outline-none">
+            <button className="border w-[230px] h-[38px] rounded-3xl border-[rgb(15_40_81)] shadow-md p-1 flex justify-center bg-cbvt-navy text-white transition-all hover:!bg-white hover:cursor-pointer hover:text-[rgb(15_40_81)] focus:outline-none">
                     Submit Application
                 </button>
           </div>
