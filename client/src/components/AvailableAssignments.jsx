@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import{User, MapPin, Calendar, Clock} from 'lucide-react';
+import ApplyModal from "./ApplyModal";
 
 export const AvailableAssignments = ({AssignmentID, Title, Description, AssignedPerson, CustomerName, Location, DueDate, EstimatedTime, Price}) => {
 
@@ -65,9 +66,7 @@ export const AvailableAssignments = ({AssignmentID, Title, Description, Assigned
                 </div>
 
 
-                <div className="border w-[230px] h-[38px] rounded-3xl border-gray-300 p-1 flex justify-center transition-all hover:bg-indigo-400 cursor-pointer focus:outline-none">
-                    <p className="text-cbvt-dark-gray">Apply</p>
-                </div>
+                <ApplyModal />
 
             </div>
 

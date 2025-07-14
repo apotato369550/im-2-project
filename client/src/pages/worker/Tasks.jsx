@@ -48,7 +48,6 @@ const AssignmentPage = () => {
 
   const filteredAssignments = workerTasks.filter(assignment =>
     assignment.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    assignment.AssignedPerson.toLowerCase().includes(searchQuery.toLowerCase()) ||
     assignment.Location.toLowerCase().includes(searchQuery.toLowerCase()) ||
     assignment.Description.toLowerCase().includes(searchQuery.toLowerCase())
   );
