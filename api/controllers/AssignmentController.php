@@ -100,7 +100,7 @@ class AssignmentController{
         }
 
         $missingFields = MissingRequiredFields::checkMissingFields($data, [
-            'assignment_status'
+            'assignment_status', 'order_id'
         ]);
 
         if(!empty($missingFields)){
@@ -124,6 +124,8 @@ class AssignmentController{
         }else{
             ErrorHelper::sendError(408, "Error updating assignment status");
         }
-        //asodijasiodjsaio
+        $order = new OrderController();
+        
+
     }
 }

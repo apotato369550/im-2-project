@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 14, 2025 at 05:25 AM
+-- Generation Time: Jul 14, 2025 at 01:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,11 +44,7 @@ CREATE TABLE `assignments` (
 
 INSERT INTO `assignments` (`assignment_id`, `service_id`, `worker_id`, `order_id`, `assignment_details`, `assignment_status`, `assignment_due`, `assignment_date_created`) VALUES
 (3, 3, NULL, 4, 'A lot has happened lately', 'Pending', '2026-01-23', '2025-07-08'),
-(4, 3, NULL, 5, 'this client needs cleaning and repairing', 'Pending', '2025-12-01', '2025-07-08'),
-(5, 3, NULL, 5, 'this client needs cleaning and repairing', 'Pending', '2025-12-01', '2025-07-08'),
-(6, 3, NULL, 5, 'this client needs cleaning and repairing', 'Pending', '2025-12-01', '2025-07-08'),
-(7, 3, NULL, 5, 'this client needs cleaning and repairing', 'Pending', '2025-12-01', '2025-07-08'),
-(8, 3, NULL, 5, 'this client needs cleaning and repairing', 'Pending', '2025-12-01', '2025-07-08');
+(4, 3, NULL, 5, 'this client needs cleaning and repairing', 'Pending', '2025-12-01', '2025-07-08');
 
 -- --------------------------------------------------------
 
@@ -66,17 +62,18 @@ CREATE TABLE `items` (
   `inverter` varchar(20) DEFAULT NULL,
   `horsepower` varchar(100) DEFAULT NULL,
   `brand` varchar(100) DEFAULT NULL,
-  `image_path` varchar(200) DEFAULT NULL
+  `image_path` varchar(200) DEFAULT NULL,
+  `is_removed` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `items`
 --
 
-INSERT INTO `items` (`item_id`, `supplier_id`, `manager_id`, `model`, `price`, `type`, `inverter`, `horsepower`, `brand`, `image_path`) VALUES
-(3, 1, 1, 'P3120', 20000.00, 'SPLIT', 'YES', '500', 'Panasonic', 'uploads/686c7eb78ea88_1801000705.webp'),
-(5, 1, 1, 'P3100', 3000.00, 'SPLIT', 'YES', '300', 'Panasonic', 'uploads/686c7ef94fbf8_images.jfif'),
-(6, 1, 1, 'RKF71CVA', 80910.00, 'SPLIT', 'INT', '3HP', 'DAIKIN', 'uploads/687078f99fdd0_D-Smart-Queen-FTKC-AVA-with-CSPF-Label.png');
+INSERT INTO `items` (`item_id`, `supplier_id`, `manager_id`, `model`, `price`, `type`, `inverter`, `horsepower`, `brand`, `image_path`, `is_removed`) VALUES
+(3, 1, 1, 'P3120', 20000.00, 'SPLIT', 'YES', '500', 'Panasonic', 'uploads/686c7eb78ea88_1801000705.webp', 0),
+(5, 1, 1, 'P3100', 3000.00, 'SPLIT', 'YES', '300', 'Panasonic', 'uploads/686c7ef94fbf8_images.jfif', 0),
+(6, 1, 1, 'RKF71CVA', 80910.00, 'SPLIT', 'INT', '3HP', 'DAIKIN', 'uploads/687078f99fdd0_D-Smart-Queen-FTKC-AVA-with-CSPF-Label.png', 0);
 
 -- --------------------------------------------------------
 
@@ -103,7 +100,8 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`order_id`, `client_id`, `manager_id`, `concern`, `order_status`, `phone_number`, `address`, `service_id`, `order_date_created`, `item_id`) VALUES
 (4, 6, 1, 'ror', 'Pending', '092341551', 'somewhere', 3, '2025-07-08', NULL),
-(5, 6, 1, 'Nag ice among aircon', 'Assignment Created', '09235194824', 'G. Ouano St. Villamanga Opao M.C', 3, '2025-07-08', NULL);
+(5, 6, 1, 'Nag ice among aircon', 'Assignment Created', '09235194824', 'G. Ouano St. Villamanga Opao M.C', 3, '2025-07-08', NULL),
+(6, 13, 1, 'I wanna buy stscvsvsfd s', 'Pending', '09235194824', 'G. Ouano St. Villamanga Opao M.C', 3, '2025-07-14', 3);
 
 -- --------------------------------------------------------
 
@@ -159,7 +157,7 @@ CREATE TABLE `service` (
 --
 
 INSERT INTO `service` (`service_id`, `service_details`, `service_type`) VALUES
-(3, 'ambot kapoy', 'Repair');
+(3, 'Fast, reliable airconditioner fixes.', 'Repair');
 
 -- --------------------------------------------------------
 
@@ -222,14 +220,15 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_full_name`, `user_email`, `user_password`, `user_type`, `image_path`) VALUES
-(1, 'admin', 'admin@gmail.com', 'admin123', 'Manager', NULL),
+(1, 'Admin Owner', 'cebubestvalue4@gmail.com', '$2y$10$/KFFuAMyVlULrWVqcmnTjOuKax/5BaW8ABwMMLxryqxaCroVNhI0q', 'manager', NULL),
 (6, 'Jhanell Mingo', 'jhanell@example.com', '$2y$10$RdCHv2AF8T1FlRhYjvu3cuJE9e1rR7dKHTGfYqKUQ5073q3WvpjMu', 'Client', NULL),
 (7, 'Heizel Lequin', 'heizel@example.com', '$2y$10$Jhsa8h5PTlVzPgeWGQXynulJyR4sOkX6/KeRASDs21NLNTHk/lut.', 'Client', NULL),
 (9, 'Jose Carumba', 'jose@example.com', '$2y$10$SYer93gd6aK0wEnhs5xe8eVzlRBK4jcAsnsPqT34pdnTd7d0H74QK', 'client', NULL),
 (10, 'Nino Calunod', 'nino@example.com', '$2y$10$d2OO4wpjxWInOmhIgfawRuWULYC/.7iV.1E/cdg7igG1oNv0x2xNC', 'client', 'uploads/686f4e87ee4f2_monkeh.jpg'),
 (11, 'Jhanell R. Mingo', 'jhanell.mingo@gmail.com', '$2y$10$cuyS9xVyafWiTYG.Y1vDguHw0lCBDgsYsoIR9w2fiSgVi1gFKKvE6', 'client', NULL),
 (12, 'Jose Carumba', 'miggycarumba912@gmail.com', '$2y$10$7Y4GdKaI6HSXtTgW2ho.wuy.oKmlE0L9NSNjwEjnx1.YaZ8PBZ7li', 'client', NULL),
-(13, 'Atheena Arcena', 'atheenaarcena2810@gmail.com', '$2y$10$t9xQwYFu/J5ih.H73SNrWeBihDautJm/Ro1dFxuplnY6B.dwuQQ0e', 'client', NULL);
+(13, 'Atheena Arcena', 'atheenaarcena2810@gmail.com', '$2y$10$t9xQwYFu/J5ih.H73SNrWeBihDautJm/Ro1dFxuplnY6B.dwuQQ0e', 'client', NULL),
+(14, 'haq buddu', 'haquidubuddu-7208@yopmail.com', '$2y$10$cmpvwRPpi/tb5TqK4BSm6etMXzVa5naaODNr9M4whD5DSOrwBTcDu', 'client', NULL);
 
 --
 -- Indexes for dumped tables
@@ -323,7 +322,7 @@ ALTER TABLE `items`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `password_resets`
@@ -359,7 +358,7 @@ ALTER TABLE `updates`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables
