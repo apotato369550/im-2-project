@@ -10,7 +10,6 @@ import Users from "./pages/manager/Users.jsx";
 import Assignment from "./pages/manager/Assignment.jsx";
 import Orders from "./pages/manager/Orders.jsx";
 import Contact from "./pages/Contact.jsx";
-import ItemTestingSpace from "./components/ItemTestingSpace.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
 const App = () => (

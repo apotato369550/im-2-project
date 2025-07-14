@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios'
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
-    username: "",
-    password: "",
-    userType: "client", // "client" or "worker"
+    user_email: "",
+    user_full_name: "",
+    user_password: "",
+    user_type: "client", // "client" or "worker"
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -21,7 +23,15 @@ export default function SignUp() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle signup submission
-    console.log("Sign up submitted:", formData);
+    axios.post("http://localhost/im-2-project/api/users/register", formData)
+    .then((data)=>{
+      console.log(data);
+      alert(data.data.message);
+      navigate("/");
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
   };
 
   return (
@@ -83,10 +93,10 @@ export default function SignUp() {
               <div className="relative">
                 <div className="relative">
                   <input
-                    type="email"
-                    name="email"
+                    type="text"
+                    name="user_email"
                     placeholder="email"
-                    value={formData.email}
+                    value={formData.user_email}
                     onChange={handleInputChange}
                     className="w-full h-[59px] px-16 py-4 bg-gray-200 rounded-full text-[21px] font-carme text-cbvt-gray placeholder-cbvt-gray/70 border-0 focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
                   />
@@ -112,9 +122,9 @@ export default function SignUp() {
                 <div className="relative">
                   <input
                     type="text"
-                    name="username"
-                    placeholder="username"
-                    value={formData.username}
+                    name="user_full_name"
+                    placeholder="full name"
+                    value={formData.user_full_name}
                     onChange={handleInputChange}
                     className="w-full h-[59px] px-16 py-4 bg-gray-200 rounded-full text-[21px] font-carme text-cbvt-gray placeholder-cbvt-gray/70 border-0 focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
                   />
@@ -143,9 +153,9 @@ export default function SignUp() {
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
-                    name="password"
+                    name="user_password"
                     placeholder="password"
-                    value={formData.password}
+                    value={formData.user_password}
                     onChange={handleInputChange}
                     className="w-full h-[59px] px-16 py-4 bg-gray-200 rounded-full text-[21px] font-carme text-cbvt-gray placeholder-cbvt-gray/70 border-0 focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
                   />
@@ -202,7 +212,7 @@ export default function SignUp() {
               {/* Sign Up Button */}
               <button
                 type="submit"
-                className="w-full h-[50px] bg-cbvt-blue hover:bg-cbvt-blue/90 text-white rounded-full text-[24px] font-khand font-medium transition-all shadow-lg"
+                className="w-full h-[50px] cursor-pointer bg-cbvt-blue hover:bg-cbvt-blue/90 text-white rounded-full text-[24px] font-khand font-medium transition-all shadow-lg"
               >
                 Sign Up
               </button>
