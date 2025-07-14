@@ -3,8 +3,8 @@ import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import Services from "../components/Services";
 import Brands from "../components/Brands";
-import Contact from "../components/Contact";
- 
+import ContactForm from "../components/ContactForm";
+import Footer from "../components/Footer";
 import React from "react"; 
 
 const Home = () => {
@@ -15,7 +15,10 @@ const Home = () => {
       <Hero/>
       <Services/>
       <Brands/>
-      <Contact/>
+      <div id="contact">
+        <ContactForm/>
+      </div>
+      <Footer/>
     </div>  
       
     </>

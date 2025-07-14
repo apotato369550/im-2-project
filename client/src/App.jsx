@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
-import SignUp from "./pages/Signup.jsx";
+import SignUp from "./pages/SignUp.jsx";
 import About from "./pages/About.jsx";
 import Catalog from "./pages/Catalog.jsx";
 import Dashboard from "./pages/manager/Dashboard.jsx";
@@ -31,7 +31,7 @@ const App = () => (
     </Routes>
   </BrowserRouter>
 
-      // <ItemTestingSpace/>
+    // <ItemTestingSpace/>
 
 );
 
