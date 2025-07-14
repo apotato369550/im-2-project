@@ -11,6 +11,24 @@ Class User {
         return $user ?: null;
     }
 
+    public function findEmail(string $email) : ?array
+    {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("SELECT * FROM users WHERE user_email = :email");
+        $stmt->execute(['email' => $email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user ?: null;
+    }
+
+    public function saveImagePath($userId, $imagePath) {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("UPDATE users SET image_path = :image_path WHERE user_id = :user_id");
+        return $stmt->execute([
+            'image_path' => $imagePath,
+            'user_id' => $userId
+        ]);
+    }
+
     public function registerNewAccount(array $account) : bool
     {
         $db = DBHelper::getConnection();

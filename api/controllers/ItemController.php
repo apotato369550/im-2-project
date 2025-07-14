@@ -1,51 +1,27 @@
 <?php
 
 Class ItemController{
+
+    //I think we can further modularize this to an imageController
     public function uploadImage() {
         $decoded = AuthMiddleware::verifyToken(); // Require authentication
-        if (!isset($_FILES['image']) || !isset($_POST['item_id'])) {
-            ErrorHelper::sendError(400, 'No image or item_id provided');
-        }
         $itemId = $_POST['item_id'];
-        $uploadDir = __DIR__ . '/../../uploads/';
-        if (!is_dir($uploadDir)) {
-            if (!mkdir($uploadDir, 0777, true)) {
-                ErrorHelper::sendError(500, 'Failed to create upload directory');
-            }
-        }
-
         $itemModel = new Item();
         $item = $itemModel->getItem($itemId);
         if (!$item) {
             ErrorHelper::sendError(404, 'Item not found');
         }
 
-        // Get old image path
-        if (!empty($item['image_path'])) {
-            $oldFile = __DIR__ . '/../../' . $item['image_path'];
-            if (file_exists($oldFile)) {
-                if (!unlink($oldFile)) {
-                    ErrorHelper::sendError(500, 'Failed to delete old image');
-                }
-            }
-        }
+        $image = new ImageController();
+        $filename = $image->saveImage($item);
 
-        $filename = uniqid() . '_' . basename($_FILES['image']['name']);
-        $targetFile = $uploadDir . $filename;
 
-        if (!is_uploaded_file($_FILES['image']['tmp_name'])) {
-            ErrorHelper::sendError(400, 'No valid uploaded file');
-        }
-
-        if (!move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-            ErrorHelper::sendError(500, 'Failed to move uploaded file');
-        }
-
-        if (!$itemModel->saveImagePath($itemId, 'uploads/' . $filename)) {
+        if (!$itemModel->saveImagePath($item['item_id'], 'uploads/' . $filename)) {
             ErrorHelper::sendError(500, 'Failed to update image path in database');
         }
 
         echo json_encode(['message' => 'Image uploaded', 'image_path' => 'uploads/' . $filename]);
+        
     }
 
     public function createItem() {

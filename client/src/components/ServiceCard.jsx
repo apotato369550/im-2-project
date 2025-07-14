@@ -1,14 +1,22 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const ServiceCard = (prop) => {
+  const navigate = useNavigate();
+  const handleButton = () => {
+    if (prop.title === 'Retail') {
+      navigate('/catalog');
+    } else {
+      navigate(`/order-form?service=${encodeURIComponent(prop.title)}`);
+    }
+  };
   return (
     <>
         <div className="relative">
             <img
               src={prop.src}
               alt="Air conditioner repair service"
-              className="w-full h-[227px] object-cover rounded-[15px] shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out
-"
+              className="w-full h-[227px] object-cover rounded-[15px] shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out"
             />
             <div className="mt-6 flex flex-row items-center justify-between gap-3">
               <div>
@@ -19,7 +27,10 @@ const ServiceCard = (prop) => {
                   {prop.desc}
                 </p>
               </div>
-              <button className="bg-cbvt-navy text-white px-4 md:px-6 py-2 rounded-full text-sm md:text-[17px] font-alegreya-sans-sc hover:scale-105 transition-all whitespace-nowrap">
+              <button 
+                className="bg-cbvt-navy text-white px-4 md:px-6 py-2 rounded-full text-sm md:text-[17px] font-alegreya-sans-sc hover:scale-105 transition-all whitespace-nowrap"
+                onClick={handleButton}
+              >
                 {prop.btn}
               </button>
             </div>
