@@ -38,4 +38,16 @@ class Update{
         $stmt->execute(['client_id' => $client_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
+
+    public function getRecentUpdates(){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare('SELECT * FROM updates 
+        WHERE date_last_update >= :dateUpdate');
+        $stmt->execute([
+            "dateUpdate" => " DAY(CURRDATE()) - 7" 
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
 }
+
+//check if update

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
-import SignUp from "./pages/Signup.jsx";
+import SignUp from "./pages/SignUp.jsx";
 import About from "./pages/About.jsx";
 import Catalog from "./pages/Catalog.jsx";
 import Dashboard from "./pages/manager/Dashboard.jsx";
@@ -13,8 +13,8 @@ import WorkerDashboard from "./pages/worker/WorkerDashboard.jsx";
 import WorkerAssignments from "./pages/worker/WorkerAssignments.jsx";
 import Tasks from "./pages/worker/Tasks.jsx";
 import Contact from "./pages/Contact.jsx";
-import ItemTestingSpace from "./components/ItemTestingSpace.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import OrderForm from "./pages/OrderForm.jsx";
 
 const App = () => (
   <BrowserRouter>
@@ -33,12 +33,13 @@ const App = () => (
       <Route path="/worker/assignments" element={<WorkerAssignments />} />
       <Route path="/worker/tasks" element={<Tasks />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/order-form" element={<OrderForm />} />
       {/* added notfound page for when user enters invalid url */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>
 
-      // <ItemTestingSpace/>
+    // <ItemTestingSpace/>
 
 );
 
