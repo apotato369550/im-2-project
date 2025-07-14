@@ -16,7 +16,7 @@ Class Item{
             INSERT INTO items (supplier_id, model, manager_id, price, image_path, type, inverter, brand, horsepower)
             VALUES (:supplier_id, :model, 1, :price, :image_path, :type, :inverter, :brand, :horsepower)
         ");
-        $stmt->execute([
+        $result = $stmt->execute([
             'supplier_id' => $supplierId,
             'model' => $model,
             'price' => $price,
@@ -58,7 +58,34 @@ Class Item{
             }
         }
 
-        $stmt = $db->prepare("DELETE FROM items WHERE item_id = :item_id");
+        $stmt = $db->prepare("UPDATE items SET is_remove = 1 WHERE item_id = :item_id");
         return $stmt->execute(['item_id' => $itemId]);
+    }
+
+    public function editItemDetails($itemId, $type, $inverter, $horsepower, $brand, $supplierId, $model, $price, $imagePath){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare(
+        'UPDATE items 
+        SET  supplier_id = :supplierId,
+             model = :model,
+             price = :price,
+             type = :type,
+             inverter = :inverter,
+             horsepower = :horsepower,
+             brand =  :brand,
+             image_path  = :imagePath
+        WHERE item_id = :itemId');
+        $stmt->execute([
+            'supplier_id' => $supplierId,
+            'model' => $model,
+            'price' => $price,
+            'type' => $type,
+            'inverter' => $inverter,
+            'horsepower' => $horsepower,
+            'brand' => $brand,
+            'image_path' => $imagePath
+        ]);
+        return $db->lastInsertId();
+
     }
 }

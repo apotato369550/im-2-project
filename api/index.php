@@ -31,6 +31,7 @@ $router = new Router();
  *          GET ENDPOINTS
  *********************************/
 $router->get('/im-2-project/api/users/profile', 'UserController@profile');
+$router->get('/im-2-project/api/users/fetch-list', 'UserController@fetchAllUsers');
 
 
 /**********************************

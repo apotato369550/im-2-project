@@ -39,17 +39,13 @@ class QuotationController{
         echo json_encode($results);
     }
 
-    public function viewUserQuotations(){
+    public function viewUserQuotations() {
         $decoded = AuthMiddleware::verifyToken();
         $userId = $decoded->user_id;
-        $db = DBHelper::getConnection();
-        $stmt = $db->prepare("
-            SELECT q.* FROM quotation q
-            INNER JOIN orders o ON q.order_id = o.order_id
-            WHERE o.client_id = :user_id
-        ");
-        $stmt->execute(['user_id' => $userId]);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        $quotation = new Quotation();
+        $results = $quotation->viewUserQuotations($userId);
+
         echo json_encode($results);
     }
 
