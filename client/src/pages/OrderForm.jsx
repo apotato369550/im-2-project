@@ -13,7 +13,7 @@ export default function OrderForm() {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    phoneNumber: "",
+    phone_number: "",
     address: "",
     service_id: "",
     item_id: "",
@@ -171,16 +171,16 @@ export default function OrderForm() {
                   </div>
                   <div>
                     <label
-                      htmlFor="phoneNumber"
+                      htmlFor="phone_number"
                       className="block text-xs font-bold uppercase text-cbvt-blue mb-2 tracking-wide"
                     >
                       Phone Number <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
-                      id="phoneNumber"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
+                      id="phone_number"
+                      name="phone_number"
+                      value={formData.phone_number}
                       onChange={handleInputChange}
                       required
                       className="w-full h-10 px-4 bg-white rounded-full text-base font-carme text-cbvt-navy border border-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
