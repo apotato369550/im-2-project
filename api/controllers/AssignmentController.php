@@ -124,7 +124,17 @@ class AssignmentController{
         }else{
             ErrorHelper::sendError(408, "Error updating assignment status");
         }
-        $order = new OrderController();
+
+        if($data['assignment_status'] === "Completed"){
+            $order = new OrderController();
+            $data['order_status'] = "Completed";
+            $orderComplete = $order->trackOrderStatus($data);
+            if($orderComplete){
+                echo json_encode([
+                "message" => "Order status updated successfully"
+                ]);
+            }
+        }
         
 
     }

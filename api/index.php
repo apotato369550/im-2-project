@@ -87,7 +87,7 @@ $router->post('/im-2-project/api/orders/create', 'OrderController@createOrder');
 /**********************************
  *          PUT ENDPOINTS
  *********************************/
-$router->put('/im-2-project/api/orders/edit/{id}', 'OrderController@editOrder');
+$router->put('/im-2-project/api/orders/edit/{id}', 'OrderController@editOrderStatus');
 
 
 /**************************************************************************

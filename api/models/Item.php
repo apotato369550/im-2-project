@@ -38,8 +38,10 @@ Class Item{
 
     public function getAllItems() {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("SELECT * FROM items");
-        $stmt->execute();
+        $stmt = $db->prepare("SELECT * FROM items WHERE is_removed = :removed");
+        $stmt->execute([
+            "removed" => 0
+        ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 

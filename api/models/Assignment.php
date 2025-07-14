@@ -4,8 +4,10 @@ class Assignment{
 
     public function fetchList() {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("SELECT * FROM assignments");
-        $stmt->execute();
+        $stmt = $db->prepare("SELECT * FROM assignments WHERE assignment_status <> :assignmentStatus");
+        $stmt->execute([
+            "assignmentStatus" => "Completed"
+        ]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         return  $result;
     }
