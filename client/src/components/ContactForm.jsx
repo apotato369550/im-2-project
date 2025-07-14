@@ -1,6 +1,11 @@
 import React from 'react';
 import contactBg from "../assets/images/contactBg.png"
 import contactUsBg from "../assets/images/contactUsBg.png"
+import { useState } from 'react';
+import {
+  validateHomeContactForm,
+  getFieldError
+} from "../../lib/validation.js";
 
 const ContactForm = ({ 
   topMargin = "mt-76", 
@@ -10,30 +15,68 @@ const ContactForm = ({
   height = "min-h-[1360px]"
 }) => {
 
-    const [formData, setFormData] = React.useState({
-      name: '',
-      email: '',
-      message: '',
-      });
-    
-      const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({
-          ...prev,
-          [name]: value,
-        }));
-      };
-    
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Form submitted:", formData);
-      };
+  const [formData, setFormData] = React.useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [errors, setErrors] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitSuccess(false);
+
+    // Validate form
+    const validation = validateHomeContactForm(formData);
+
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      console.log("Form submitted:", formData);
+      setSubmitSuccess(true);
+      setFormData({ name: "", email: "", message: "" });
+      setErrors([]);
+
+      // Hide success message after 5 seconds
+      setTimeout(() => setSubmitSuccess(false), 5000);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setErrors([
+        {
+          field: "general",
+          message: "Failed to send message. Please try again.",
+        },
+      ]);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
       <section
+
         className={`bg-cover bg-center bg-no-repeat w-full overflow-hidden ${height}`}
-        style={{ backgroundImage: `url(${backgroundImage})`,
+        style={{ backgroundImage: `url(${contactUsBg})`,
         backgroundSize: backgroundSize
        }}
       >
@@ -110,30 +153,58 @@ const ContactForm = ({
             </div>
 
             {/* Contact Form */}
-            <div className="bg-cbvt-navy rounded-4xl px-12 py-18 relative overflow-hidden order-2 opacity-80 mr-20 flex flex-col items-center">
+            <div className="bg-cbvt-navy rounded-[30px] md:rounded-[57px] p-6 md:p-12 relative overflow-hidden order-1 lg:order-2">
+              <div className="absolute inset-0 bg-gradient-to-br from-cbvt-navy/90 to-cbvt-navy opacity-90"></div>
 
-              <div className="relative z-10 self-start w-full">
-                <h4 className="text-5xl font-khand font-bold text-cbvt-cream capitalize mb-2">
+              <div className="relative z-10">
+                <h4 className="text-2xl md:text-3xl lg:text-[48px] font-khand font-bold text-cbvt-cream text-center capitalize leading-tight mb-4">
                   You have a question?
                 </h4>
 
-                <p className="text-lg font-carme text-white mb-12">
+                <p className="text-base md:text-lg lg:text-[20px] font-carme text-white text-center mb-8 md:mb-12">
                   Feel free to drop a message down below!
                 </p>
 
                 <form
                   onSubmit={handleSubmit}
-                  className="space-y-4 space-y-6"
+                  className="space-y-6"
                 >
+                  {/* Success Message */}
+                  {submitSuccess && (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-full text-center">
+                      <span className="font-carme text-sm md:text-base">
+                        ✅ Message sent successfully! We'll get back to you
+                        soon.
+                      </span>
+                    </div>
+                  )}
+
+                  {/* General Error */}
+                  {getFieldError(errors, "general") && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-full text-center">
+                      <span className="font-carme text-sm md:text-base">
+                        {getFieldError(errors, "general")}
+                      </span>
+                    </div>
+                  )}
+
                   <div>
                     <input
                       type="text"
                       name="name"
-                      placeholder="Your Name"
+                      placeholder="your name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="w-full px-6 py-4 rounded-full text-xl font-carme text-cbvt-navy capitalize placeholder-gray-400 bg-cbvt-light-cream focus:ring-2 focus:ring-cbvt-blue"
+                      className={`w-full px-4 md:px-6 py-3 md:py-4 rounded-full text-base md:text-lg lg:text-[24px] font-carme text-cbvt-gray placeholder-cbvt-gray/70 border-0 focus:outline-none focus:ring-2 transition-all ${getFieldError(errors, "name")
+                          ? "ring-2 ring-red-400 bg-red-50"
+                          : "focus:ring-cbvt-blue"
+                        }`}
                     />
+                    {getFieldError(errors, "name") && (
+                      <p className="text-red-600 text-sm font-carme mt-2 ml-4">
+                        {getFieldError(errors, "name")}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -143,26 +214,71 @@ const ContactForm = ({
                       placeholder="Your Email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-6 py-4 rounded-full text-xl font-carme text-cbvt-navy placeholder-gray-400 bg-cbvt-light-cream focus:ring-2 focus:ring-cbvt-blue"
+                      className={`w-full px-4 md:px-6 py-3 md:py-4 rounded-full text-base md:text-lg lg:text-[24px] font-carme text-cbvt-gray placeholder-cbvt-gray/70 border-0 focus:outline-none focus:ring-2 transition-all ${getFieldError(errors, "email")
+                          ? "ring-2 ring-red-400 bg-red-50"
+                          : "focus:ring-cbvt-blue"
+                        }`}
                     />
+                    {getFieldError(errors, "email") && (
+                      <p className="text-red-600 text-sm font-carme mt-2 ml-4">
+                        {getFieldError(errors, "email")}
+                      </p>
+                    )}
                   </div>
 
                   <div>
                     <textarea
                       name="message"
-                      placeholder="Your Message"
+                      placeholder="your message"
                       value={formData.message}
                       onChange={handleInputChange}
                       rows={4}
-                      className="w-full px-6 py-4 rounded-4xl text-xl font-carme text-cbvt-navy  placeholder-gray-400 bg-cbvt-light-cream focus:ring-2 focus:ring-cbvt-blue  flex items-center"
+                      className={`w-full px-4 md:px-6 py-3 md:py-4 rounded-[22px] text-base md:text-lg lg:text-[24px] font-carme text-cbvt-gray placeholder-cbvt-gray/70 border-0 focus:outline-none focus:ring-2 resize-none transition-all ${getFieldError(errors, "message")
+                          ? "ring-2 ring-red-400 bg-red-50"
+                          : "focus:ring-cbvt-blue"
+                        }`}
                     />
+                    {getFieldError(errors, "message") && (
+                      <p className="text-red-600 text-sm font-carme mt-2 ml-4">
+                        {getFieldError(errors, "message")}
+                      </p>
+                    )}
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-cbvt-light-blue text-white py-3 rounded-full text-xl font-alegreya-sans-sc font-bold  hover:scale-105 shadow-lg transition-all mt-4"
+                    disabled={isSubmitting}
+                    className={`w-full py-3 md:py-4 rounded-full text-base md:text-lg lg:text-[24px] font-alegreya-sans-sc font-bold capitalize transition-all ${isSubmitting
+                        ? "bg-cbvt-gray text-white cursor-not-allowed"
+                        : "bg-cbvt-light-blue text-white hover:bg-opacity-90 hover:shadow-lg transform hover:scale-105"
+                      }`}
                   >
-                    Send a message
+                    {isSubmitting ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg
+                          className="animate-spin h-5 w-5"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                            fill="none"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          />
+                        </svg>
+                        Sending...
+                      </span>
+                    ) : (
+                      "Send a message"
+                    )}
                   </button>
                 </form>
               </div>
