@@ -114,7 +114,7 @@ class UserController{
     }
 
     public function viewQuotations(){
-
+        
     }
     
 

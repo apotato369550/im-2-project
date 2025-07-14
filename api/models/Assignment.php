@@ -4,9 +4,20 @@ class Assignment{
 
     public function fetchList() {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("SELECT * FROM assignments WHERE assignment_status <> :assignmentStatus");
+        $stmt = $db->prepare(
+            "SELECT a.assignment_id,
+                    a.assignment_details,
+                    a.assignment_status,
+                    a.assignment_due,
+                    a.assignment_date_created,
+                    s.service_type as service_name,
+                    o.address as location
+             FROM assignments a
+             JOIN service s ON a.service_id = s.service_id
+             JOIN orders o ON o.order_id = a.order_id
+             WHERE a.is_removed <> :isRemoved");
         $stmt->execute([
-            "assignmentStatus" => "Completed"
+            "isRemoved" => 1
         ]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         return  $result;
@@ -16,7 +27,7 @@ class Assignment{
     {
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("
-            SELECT a.* 
+            SELECT a.*
             FROM assignments a
             INNER JOIN orders o ON a.order_id = o.order_id
             WHERE o.client_id = :client_id AND o.order_id IS NOT NULL
