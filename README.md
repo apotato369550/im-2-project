@@ -451,7 +451,7 @@ Content-Type: multipart/form-data
 | inverter    | YES               | Classifies if AC is such   |
 | brand       | Panasonic         | Brand of the AC Unit       |
 | horsepower  | 500cc             | Horsepower sa Ac           |
-| image       | (file upload)     | Image file for the item    |
+| image_path       | (file upload)     | Image file for the item    |
 
 ### **CHANGE IMAGE**
 **Endpoint:** `/im-2-project/api/items/upload-image`

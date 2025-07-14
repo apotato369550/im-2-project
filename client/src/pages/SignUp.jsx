@@ -48,7 +48,7 @@ export default function SignUp() {
             setRegisterSuccess('Registered successfully');
           }, 2000)
           console.log(response.status);
-          navigate("/");
+          navigate("/login");
         }else{
           setRegisterSuccess('Something went wrong try again');
         }

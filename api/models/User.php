@@ -53,7 +53,6 @@ Class User {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         return $user ?: null;
     }
-
     
     public function viewQuotations(string $userId) : ?array
     {
@@ -64,6 +63,19 @@ Class User {
         $stmt->execute(['userId' => $userId]);
         $quotations = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $quotations;
+    }
+
+    public function fetchAllUser(){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare('SELECT * FROM users WHERE user_id <> 1');
+        $stmt->execute();
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        foreach($users as &$user){
+            unset($user['user_password']);
+        }
+
+        return $users;
     }
 
 }
