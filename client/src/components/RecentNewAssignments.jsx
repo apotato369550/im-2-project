@@ -1,5 +1,9 @@
 import { Briefcase } from 'lucide-react';
+<<<<<<< Updated upstream
 import ApplyModal from './ApplyModal';
+=======
+import ApplyModal from "./ApplyModal";
+>>>>>>> Stashed changes
 
 
 export const RecentNewAssignments = ({ assignmentID, title, location, timeAgo }) => {
@@ -15,7 +19,15 @@ export const RecentNewAssignments = ({ assignmentID, title, location, timeAgo })
         <div className="flex justify-between items-baseline gap-2">
           <p className="font-medium truncate">{title}</p>
         
+<<<<<<< Updated upstream
           <ApplyModal />
+=======
+          <ApplyModal 
+                  
+                  
+          
+          />
+>>>>>>> Stashed changes
 
         </div>
         

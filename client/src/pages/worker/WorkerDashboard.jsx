@@ -3,7 +3,11 @@ import { Outlet } from 'react-router-dom';
 import WorkerSidebar from "../../components/WorkerSidebar";
 import {RecentNewAssignments} from "../../components/RecentNewAssignments";
 import { CardHolderSm } from "../../components/CardHolderSm";
+<<<<<<< Updated upstream
 import { ToDo } from '../../components/ToDo';
+=======
+import {Checklist} from "../../components/Checklist"
+>>>>>>> Stashed changes
 import { 
   Briefcase,
   Calendar,
@@ -51,6 +55,7 @@ const recentNewAssignments = [
   }
 ];
 
+<<<<<<< Updated upstream
 const toDO = [
   {
     assignmentID: 111,
@@ -67,7 +72,24 @@ const toDO = [
     title: "AC Check-up",
   }
 ];
+=======
+const toDoList =[
+  {
+    assignmentID:111,
+    title:"AC Installation"
+  },
+>>>>>>> Stashed changes
 
+  {
+    assignmentID: 112,
+    title:"AC Maintenance",
+  },
+
+  {
+    assignmentID: 113,
+    title:"AC Check-Up",
+  }
+]
 
 
   
@@ -141,6 +163,7 @@ const toDO = [
 
 
 
+<<<<<<< Updated upstream
              {/* container for To do list*/}
                     <div className='bg-white h-[245px] w-[376px] shadow-lg rounded-xl border border-gray-200 p-8'>
                         <p className='text-cbvt-navy font-alegreya-sans-sc font-semibold tracking-wide  text-xl mb-5'>To Do List:</p>
@@ -154,6 +177,24 @@ const toDO = [
                         
 
                     </div>
+=======
+             {/* container for checklist */}
+                <div>
+                  <div className='bg-white h-[245px] w-[376px] shadow-lg rounded-xl border border-gray-200 p-8'>
+                    <p className='text-cbvt-navy font-alegreya-sans-sc font-semibold tracking-wide text-xl mb-5'>
+                      To Do List:
+                    </p>
+
+                    {toDoList.map((task)=>(
+                        <Checklist 
+                        key={task.assignmentID}
+                        title={task.title}
+                      />
+                    ))}
+                      
+                  
+                     </div>
+>>>>>>> Stashed changes
                 </div>
         </div>
            

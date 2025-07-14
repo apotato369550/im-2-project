@@ -66,7 +66,11 @@ export const AvailableAssignments = ({AssignmentID, Title, Description, Assigned
                 </div>
 
 
+<<<<<<< Updated upstream
                 <ApplyModal />
+=======
+                <ApplyModal className="w-23"/>
+>>>>>>> Stashed changes
 
             </div>
 
