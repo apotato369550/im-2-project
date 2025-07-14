@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 14, 2025 at 01:49 PM
+-- Generation Time: Jul 14, 2025 at 05:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -35,16 +35,17 @@ CREATE TABLE `assignments` (
   `assignment_details` varchar(255) DEFAULT NULL,
   `assignment_status` varchar(255) DEFAULT NULL,
   `assignment_due` varchar(255) NOT NULL,
-  `assignment_date_created` varchar(255) DEFAULT NULL
+  `assignment_date_created` varchar(255) DEFAULT NULL,
+  `is_removed` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `assignments`
 --
 
-INSERT INTO `assignments` (`assignment_id`, `service_id`, `worker_id`, `order_id`, `assignment_details`, `assignment_status`, `assignment_due`, `assignment_date_created`) VALUES
-(3, 3, NULL, 4, 'A lot has happened lately', 'Pending', '2026-01-23', '2025-07-08'),
-(4, 3, NULL, 5, 'this client needs cleaning and repairing', 'Pending', '2025-12-01', '2025-07-08');
+INSERT INTO `assignments` (`assignment_id`, `service_id`, `worker_id`, `order_id`, `assignment_details`, `assignment_status`, `assignment_due`, `assignment_date_created`, `is_removed`) VALUES
+(3, 3, NULL, 4, 'A lot has happened lately', 'Pending', '2026-01-23', '2025-07-08', 0),
+(4, 3, NULL, 5, 'this client needs cleaning and repairing', 'Completed', '2025-12-01', '2025-07-08', 0);
 
 -- --------------------------------------------------------
 
@@ -91,17 +92,18 @@ CREATE TABLE `orders` (
   `address` varchar(255) NOT NULL,
   `service_id` int(11) NOT NULL,
   `order_date_created` varchar(255) DEFAULT NULL,
-  `item_id` int(11) DEFAULT NULL
+  `item_id` int(11) DEFAULT NULL,
+  `is_removed` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `client_id`, `manager_id`, `concern`, `order_status`, `phone_number`, `address`, `service_id`, `order_date_created`, `item_id`) VALUES
-(4, 6, 1, 'ror', 'Pending', '092341551', 'somewhere', 3, '2025-07-08', NULL),
-(5, 6, 1, 'Nag ice among aircon', 'Assignment Created', '09235194824', 'G. Ouano St. Villamanga Opao M.C', 3, '2025-07-08', NULL),
-(6, 13, 1, 'I wanna buy stscvsvsfd s', 'Pending', '09235194824', 'G. Ouano St. Villamanga Opao M.C', 3, '2025-07-14', 3);
+INSERT INTO `orders` (`order_id`, `client_id`, `manager_id`, `concern`, `order_status`, `phone_number`, `address`, `service_id`, `order_date_created`, `item_id`, `is_removed`) VALUES
+(4, 6, 1, 'ror', 'Completed', '092341551', 'somewhere', 3, '2025-07-08', NULL, 0),
+(5, 6, 1, 'Nag ice among aircon', 'Pending', '09235194824', 'G. Ouano St. Villamanga Opao M.C', 1, '2025-07-08', NULL, 0),
+(6, 13, 1, 'I wanna buy stscvsvsfd s', 'Pending', '09235194824', 'G. Ouano St. Villamanga Opao M.C', 3, '2025-07-14', 3, 0);
 
 -- --------------------------------------------------------
 
@@ -140,6 +142,13 @@ CREATE TABLE `quotation` (
   `quotation_status` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `quotation`
+--
+
+INSERT INTO `quotation` (`quotation_id`, `total_payment`, `description`, `order_id`, `quotation_status`) VALUES
+(1, 10000.000, 'this is the proposed amount that user will pay', 5, 'Approved');
+
 -- --------------------------------------------------------
 
 --
@@ -157,7 +166,9 @@ CREATE TABLE `service` (
 --
 
 INSERT INTO `service` (`service_id`, `service_details`, `service_type`) VALUES
-(3, 'Fast, reliable airconditioner fixes.', 'Repair');
+(1, 'Fast, reliable airconditioner fixes.', 'Repair'),
+(2, 'Expert airconditioner setup.', 'Installation'),
+(3, 'Top-brand units for sale.', 'Retail');
 
 -- --------------------------------------------------------
 
@@ -189,16 +200,19 @@ CREATE TABLE `updates` (
   `worker_id` int(11) DEFAULT NULL,
   `assignment_id` int(11) NOT NULL,
   `date_last_update` varchar(255) DEFAULT NULL,
-  `update_message` varchar(255) NOT NULL
+  `update_message` varchar(255) NOT NULL,
+  `is_read` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `updates`
 --
 
-INSERT INTO `updates` (`update_id`, `worker_id`, `assignment_id`, `date_last_update`, `update_message`) VALUES
-(1, 6, 1, '2025-07-08', 'Assignment has been created for order no 4'),
-(2, 6, 1, '2025-07-08', 'Assignment has been created for order no 5');
+INSERT INTO `updates` (`update_id`, `worker_id`, `assignment_id`, `date_last_update`, `update_message`, `is_read`) VALUES
+(1, 6, 1, '2025-07-08', 'Assignment has been created for order no 4', 0),
+(2, 6, 1, '2025-07-08', 'Assignment has been created for order no 5', 0),
+(3, 1, 4, '2025-07-14', 'The status for assignment no 4 has been changed to Completed', 0),
+(4, 1, 4, '2025-07-14', 'The status for assignment no 4 has been changed to Completed', 0);
 
 -- --------------------------------------------------------
 
@@ -221,8 +235,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `user_full_name`, `user_email`, `user_password`, `user_type`, `image_path`) VALUES
 (1, 'Admin Owner', 'cebubestvalue4@gmail.com', '$2y$10$/KFFuAMyVlULrWVqcmnTjOuKax/5BaW8ABwMMLxryqxaCroVNhI0q', 'manager', NULL),
-(6, 'Jhanell Mingo', 'jhanell@example.com', '$2y$10$RdCHv2AF8T1FlRhYjvu3cuJE9e1rR7dKHTGfYqKUQ5073q3WvpjMu', 'Client', NULL),
-(7, 'Heizel Lequin', 'heizel@example.com', '$2y$10$Jhsa8h5PTlVzPgeWGQXynulJyR4sOkX6/KeRASDs21NLNTHk/lut.', 'Client', NULL),
+(6, 'Jhanell Mingo', 'jhanell@example.com', '$2y$10$RdCHv2AF8T1FlRhYjvu3cuJE9e1rR7dKHTGfYqKUQ5073q3WvpjMu', 'client', NULL),
+(7, 'Heizel Lequin', 'heizel@example.com', '$2y$10$Jhsa8h5PTlVzPgeWGQXynulJyR4sOkX6/KeRASDs21NLNTHk/lut.', 'client', NULL),
 (9, 'Jose Carumba', 'jose@example.com', '$2y$10$SYer93gd6aK0wEnhs5xe8eVzlRBK4jcAsnsPqT34pdnTd7d0H74QK', 'client', NULL),
 (10, 'Nino Calunod', 'nino@example.com', '$2y$10$d2OO4wpjxWInOmhIgfawRuWULYC/.7iV.1E/cdg7igG1oNv0x2xNC', 'client', 'uploads/686f4e87ee4f2_monkeh.jpg'),
 (11, 'Jhanell R. Mingo', 'jhanell.mingo@gmail.com', '$2y$10$cuyS9xVyafWiTYG.Y1vDguHw0lCBDgsYsoIR9w2fiSgVi1gFKKvE6', 'client', NULL),
@@ -334,7 +348,7 @@ ALTER TABLE `password_resets`
 -- AUTO_INCREMENT for table `quotation`
 --
 ALTER TABLE `quotation`
-  MODIFY `quotation_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `quotation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `service`
@@ -352,7 +366,7 @@ ALTER TABLE `supplier`
 -- AUTO_INCREMENT for table `updates`
 --
 ALTER TABLE `updates`
-  MODIFY `update_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `update_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`

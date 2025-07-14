@@ -67,7 +67,17 @@ Class User {
 
     public function fetchAllUser(){
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare('SELECT * FROM users WHERE user_id <> 1');
+        $stmt = $db->prepare('
+            SELECT  u.*,
+                    COALESCE(SUM(q.total_payment), 0) as total_spent,
+                    COUNT(o.order_id) as order_count
+            FROM users u
+            LEFT JOIN orders o ON u.user_id = o.client_id
+            LEFT JOIN quotation q ON q.order_id = o.order_id AND q.quotation_status = "Approved"
+            WHERE u.user_id <> 1
+            GROUP BY u.user_id
+            ORDER BY total_spent;
+        ');
         $stmt->execute();
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
