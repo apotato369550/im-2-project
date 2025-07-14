@@ -10,7 +10,6 @@ export default function Login() {
   const [formData, setFormData] = useState({
     user_email: "",
     user_password: "",
-    rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
 
