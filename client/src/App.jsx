@@ -16,12 +16,12 @@ import Contact from "./pages/Contact.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import OrderForm from "./pages/OrderForm.jsx";
 
-import PrivateRoute from "./security/PrivateRoute.jsx";
+import PrivateRoute from "./security/PrivateRoute";
 
 const App = () => (
   <BrowserRouter>
     <Routes>
-      {/* Public Routes */}
+      {/* Public */}
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
@@ -30,21 +30,23 @@ const App = () => (
       <Route path="/contact" element={<Contact />} />
       <Route path="/order-form" element={<OrderForm />} />
 
-      {/* Protected Manager Routes */}
-      <Route element={<PrivateRoute />}>
+      {/* Manager Routes */}
+      <Route element={<PrivateRoute allowedRoles={['manager']} />}>
         <Route path="/manager/dashboard" element={<Dashboard />} />
         <Route path="/manager/workers" element={<Workers />} />
         <Route path="/manager/users" element={<Users />} />
         <Route path="/manager/assignment" element={<Assignment />} />
         <Route path="/manager/orders" element={<Orders />} />
+      </Route>
 
-        {/* Protected Worker Routes */}
+      {/* Worker Routes */}
+      <Route element={<PrivateRoute allowedRoles={['worker']} />}>
         <Route path="/worker/dashboard" element={<WorkerDashboard />} />
         <Route path="/worker/assignments" element={<WorkerAssignments />} />
         <Route path="/worker/tasks" element={<Tasks />} />
       </Route>
 
-      {/* Fallback Route */}
+      {/* Fallback */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>

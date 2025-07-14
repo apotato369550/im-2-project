@@ -1,35 +1,56 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { useEffect, useState } from 'react';
 
-const isAuthenticated = () => {
-  const userData = localStorage.getItem('user_data');
+const PrivateRoute = ({ allowedRoles }) => {
+  const [authorized, setAuthorized] = useState(null);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
-  if (!userData) return false;
-
-  try {
-    const parsed = JSON.parse(userData);
-    const token = parsed.token;
-
-    if (!token) return false;
-
-    const decodedToken = jwtDecode(token);
-
-    // Check if the token has expired
-    if (decodedToken.exp * 1000 < Date.now()) {
-      console.log("Token expired");
-      localStorage.removeItem('user_data'); 
-      return false;
+  useEffect(() => {
+    const userData = localStorage.getItem('user_data');
+    if (!userData) {
+      alert("You are not logged in.");
+      setShouldRedirect(true);
+      return;
     }
 
-    return true;
-  } catch (err) {
-    console.error("Invalid token or malformed user data", err);
-    return false;
-  }
-};
+    try {
+      const parsed = JSON.parse(userData);
+      const token = parsed.token;
+      if (!token) {
+        alert("Missing token.");
+        setShouldRedirect(true);
+        return;
+      }
 
-const PrivateRoute = () => {
-  return isAuthenticated() ? <Outlet /> : <Navigate to="/login" />;
+      const decoded = jwtDecode(token);
+
+      if (decoded.exp * 1000 < Date.now()) {
+        alert("Session expired. Please log in again.");
+        localStorage.removeItem('user_data');
+        setShouldRedirect(true);
+        return;
+      }
+
+      if (!allowedRoles.includes(decoded.user_type)) {
+        alert("You are not authorized to access this page.");
+        setShouldRedirect(true);
+        return;
+      }
+
+      setAuthorized(true);
+    } catch (err) {
+      console.error("Auth error:", err);
+      alert("Invalid token or session.");
+      setShouldRedirect(true);
+    }
+  }, [allowedRoles]);
+
+  if (authorized === null && !shouldRedirect) return null;
+
+  if (shouldRedirect) return <Navigate to="/" />;
+
+  return <Outlet />;
 };
 
 export default PrivateRoute;

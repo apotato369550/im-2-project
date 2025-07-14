@@ -23,6 +23,7 @@ class UserController{
                 "user_id" => $existingUser['user_id'],
                 "user_email" => $existingUser['user_email'],
                 "user_full_name" => $existingUser['user_full_name'],
+                "user_type" => $existingUser['user_type'],
                 "exp" => time() + 7200
             ];
             $jwt = JWT::encode($payload, JWT_SECRET, 'HS256');
