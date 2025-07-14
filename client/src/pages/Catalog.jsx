@@ -3,44 +3,45 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import BreadCrumbs from "../components/BreadCrumbs";
-import Modal from "react-modal"
+import Modal from "react-modal";
+import axios from 'axios';
   
-const sampleProducts = [
-  {
-    id: 1,
-    brand: "American Home",
-    model: "AHAC2409RT",
-    price: 9000,
-    hp: "1.0HP",
-    inverterType: "inverter",
-    type: "Window Type",
-    image: "/images/ahac2409rt.png",
-    category: "window",
-  },
-  {
-    id: 2,
-    brand: "Carrier",
-    model: "XPower Gold",
-    price: 15800,
-    hp: "1.5HP",
-    inverterType: "non-inverter",
-    type: "Split Type",
-    image: "/images/xpower-gold.png",
-    category: "split",
-  },
+// const sampleProducts = [
+//   {
+//     id: 1,
+//     brand: "American Home",
+//     model: "AHAC2409RT",
+//     price: 9000,
+//     hp: "1.0HP",
+//     inverterType: "inverter",
+//     type: "Window Type",
+//     image: "/images/ahac2409rt.png",
+//     category: "window",
+//   },
+//   {
+//     id: 2,
+//     brand: "Carrier",
+//     model: "XPower Gold",
+//     price: 15800,
+//     hp: "1.5HP",
+//     inverterType: "non-inverter",
+//     type: "Split Type",
+//     image: "/images/xpower-gold.png",
+//     category: "split",
+//   },
 
-  ...Array.from({ length: 9}, (_, i) => ({
-    id: i + 3,
-    brand: "Sample Brand",
-    model: `Model ${i + 3}`,
-    hp: `${1.5 + i * 0.5}HP`,
-    type: i % 2 === 0 ? "Split Type" : "Window Type",
-    price: 12000 + i * 1000,
-    image: null,
-    category: i % 2 === 0 ? "split" : "window",
-    inverterType: i % 2 === 0 ? "inverter" : "non-inverter"
-  })),
-];
+//   ...Array.from({ length: 9}, (_, i) => ({
+//     id: i + 3,
+//     brand: "Sample Brand",
+//     model: `Model ${i + 3}`,
+//     hp: `${1.5 + i * 0.5}HP`,
+//     type: i % 2 === 0 ? "Split Type" : "Window Type",
+//     price: 12000 + i * 1000,
+//     image: null,
+//     category: i % 2 === 0 ? "split" : "window",
+//     inverterType: i % 2 === 0 ? "inverter" : "non-inverter"
+//   })),
+// ];
 
 Modal.setAppElement('#root');
 
@@ -55,6 +56,23 @@ const Catalog = () => {
     inverter: "all"
   });
   const [sortBy, setSortBy] = useState("default");
+  const [itemList, setItemList] = useState([]);
+
+  
+  useEffect(()=>{
+    axios.get("http://localhost/im-2-project/api/items")
+    .then((response)=>{
+      const updatedProducts = response.data.map((product) => ({
+        ...product,
+        image_path: `http://localhost/im-2-project/${product.image_path.replace(/^(\.\.\/)+/, '')}`
+      }));
+      setItemList(updatedProducts);
+      console.log(updatedProducts);  
+    })
+    .catch((e)=>{
+      console.log(e);
+    })
+  }, [])
 
   const openModal = (product) => {
     setselectedProduct(product);
@@ -84,7 +102,7 @@ const Catalog = () => {
   };
 
   // Filter and sort products
-  const filteredAndSortedProducts = sampleProducts
+  const filteredAndSortedProducts = itemList
     .filter(product => {
       if (filters.type !== "all" && !product.type.toLowerCase().includes(filters.type)) {
         return false;
@@ -318,14 +336,14 @@ const Catalog = () => {
               {filteredAndSortedProducts.length > 0 ? (
                 filteredAndSortedProducts.map((prod) => (
                   <div
-                    key={prod.id}
+                    key={prod.item_id}
                     className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all cursor-pointer transform hover:scale-105"
                     onClick={() => openModal(prod)}
                   >
                     <div className="h-32 bg-gray-100 flex items-center justify-center">
-                      {prod.image ? (
+                      {prod.image_path ? (
                         <img
-                          src={prod.image}
+                          src={prod.image_path}
                           alt={`${prod.brand} ${prod.model}`}
                           className="max-h-full max-w-full object-contain"
                         />
@@ -394,7 +412,7 @@ const Catalog = () => {
             {/* Image */}
             <div className="flex-shrink-0 w-full md:w-[300px]">
               <img
-                src={selectedProduct?.image || "/path/to/image.png"}
+                src={selectedProduct?.image_path || "/path/to/image.png"}
                 alt={`${selectedProduct?.brand || ""} ${selectedProduct?.model || ""}`}
                 className="w-full h-auto object-contain"
               />
@@ -414,7 +432,7 @@ const Catalog = () => {
                 </div>
                 <div>
                   <p className="text-cbvt-light-blue font-bold uppercase">Horsepower</p>
-                  <p className="text-cbvt-navy">{selectedProduct?.hp}</p>
+                  <p className="text-cbvt-navy">{selectedProduct?.horsepower}</p>
                 </div>
                 <div>
                   <p className="text-cbvt-light-blue font-bold uppercase">Model</p>
@@ -422,7 +440,7 @@ const Catalog = () => {
                 </div>
                 <div>
                   <p className="text-cbvt-light-blue font-bold uppercase">Inverter</p>
-                  <p className="text-cbvt-navy">{selectedProduct?.inverterType === "inverter" ? "Yes" : "No"}</p>
+                  <p className="text-cbvt-navy">{selectedProduct?.inverter === "YES" ? "Yes" : "No"}</p>
                 </div>
                 <div>
                   <p className="text-cbvt-light-blue font-bold uppercase">Type</p>

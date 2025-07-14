@@ -11,6 +11,7 @@ import Assignment from "./pages/manager/Assignment.jsx";
 import Orders from "./pages/manager/Orders.jsx";
 import Contact from "./pages/Contact.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import OrderForm from "./pages/OrderForm.jsx";
 
 const App = () => (
   <BrowserRouter>
@@ -26,6 +27,7 @@ const App = () => (
       <Route path="/manager/assignment" element={<Assignment />} />
       <Route path="/manager/orders" element={<Orders />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/order-form" element={<OrderForm />} />
       {/* added notfound page for when user enters invalid url */}
       <Route path="*" element={<NotFound />} />
     </Routes>

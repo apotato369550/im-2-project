@@ -18,7 +18,7 @@ const [user, setUser] = useState(null)
         if(decodedToken.exp * 1000 < Date.now()){
           console.log("Token expired");
           localStorage.removeItem('user_data');
-          setUser(null);
+          setUser(null);  
         }else{
           setUser(firstName);
         }
