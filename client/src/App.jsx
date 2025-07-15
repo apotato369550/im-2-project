@@ -15,14 +15,10 @@ import WorkerAssignments from "./pages/worker/WorkerAssignments.jsx";
 import Tasks from "./pages/worker/Tasks.jsx";
 import Contact from "./pages/Contact.jsx";
 import NotFound from "./pages/NotFound.jsx";
-<<<<<<< HEAD
-import ClientDashboard from "./pages/ClientDashboard.jsx";
-=======
 import OrderForm from "./pages/OrderForm.jsx";
 import ClientDashboard from "./pages/ClientDashboard.jsx";
 
 import PrivateRoute from "./security/PrivateRoute";
->>>>>>> c052e46398cc0e58a9a5c62f2ee1fd4935648d4e
 
 const App = () => (
   <BrowserRouter>
@@ -37,14 +33,14 @@ const App = () => (
       <Route path="/contact" element={<Contact />} />
       <Route path="/order-form" element={<OrderForm />} />
 
-      {/* Manager Routes */}
-      <Route element={<PrivateRoute allowedRoles={['manager']} />}>
         <Route path="/manager/dashboard" element={<Dashboard />} />
         <Route path="/manager/workers" element={<Workers />} />
          <Route path="/manager/inventory" element={<Inventory />} />
         <Route path="/manager/users" element={<Users />} />
         <Route path="/manager/assignment" element={<Assignment />} />
         <Route path="/manager/orders" element={<Orders />} />
+      {/* Manager Routes */}
+      <Route element={<PrivateRoute allowedRoles={['manager']} />}>
       </Route>
 
       {/* Worker Routes */}
