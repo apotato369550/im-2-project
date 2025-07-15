@@ -5,7 +5,8 @@ import {
   UserCheck, 
   ClipboardList, 
   ShoppingCart, 
-  LogOut 
+  LogOut,
+  AirVent 
 } from "lucide-react";
 
 const sidebarItems = [
@@ -34,6 +35,11 @@ const sidebarItems = [
     url: "/manager/orders",
     icon: ShoppingCart,
   },
+  {
+    title: "Inventory",
+    url: "/manager/inventory",
+    icon: AirVent,
+  }
 ];
 
 const Sidebar = ({ onLogout }) => {
@@ -55,7 +61,7 @@ const Sidebar = ({ onLogout }) => {
           </div>
         </div>
       </div>
-
+ 
       {/* Navigation */}
       <div className="flex-1 p-4 overflow-y-auto">
         <div className="mb-6">
