@@ -19,21 +19,25 @@ const DashboardPage = () => {
 
   const cardData = [
 {
+    index: 0,
     title: "Total Workers",
     amount: 24,
     icon: UserCheck,
 },
 {
+  index: 1,
   title: "Total Users",
   amount: 56,
   icon: Users,
 },
 {
+  index: 2,
   title: "Assignments",
   amount: 32,
   icon: Clipboard,
 },
 {
+  index: 3,
   title: "Orders",
   amount: 75,
   icon: ShoppingCart
@@ -95,8 +99,13 @@ const recentUpdates = [
         {/* this is for the cards */}
         <div>
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {cardData.map((_, index) => (
-              <CardHolderSm key={index} cardIndex={index} />
+            {cardData.map((card) => (
+              <CardHolderSm 
+              key={card.index} 
+              title={card.title} 
+              amount={card.amount}
+              icon={card.icon}
+              />
             ))}
           </div>
 

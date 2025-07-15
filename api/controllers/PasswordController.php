@@ -69,11 +69,6 @@ Class PasswordController{
         $headers = getallheaders();
         $authHeader = $headers['Authorization'];
         list($type, $token) = explode(" ", $authHeader, 2);
-
-        if ($type !== 'Bearer' || empty($token)) {
-            ErrorHelper::sendError(401, "Invalid Authorization header format");
-        }
-
         $password = new Password();
         if ($password->checkTokenUsed($token)) {
             ErrorHelper::sendError(401, "This token has already been used");

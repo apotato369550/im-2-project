@@ -18,7 +18,7 @@ const [user, setUser] = useState(null)
         if(decodedToken.exp * 1000 < Date.now()){
           console.log("Token expired");
           localStorage.removeItem('user_data');
-          setUser(null);
+          setUser(null);  
         }else{
           setUser(firstName);
         }
@@ -54,7 +54,9 @@ const [user, setUser] = useState(null)
             </Link>
              {user ? (
               <div className="flex items-center space-x-2 text-cbvt-navy">
-                <FaUserCircle className="text-3xl" />
+                <Link to="/clientdashboard">
+                  <FaUserCircle className="text-3xl" />
+                </Link>
                 <span className="flex gap-5 text-xl font-alegreya-sans-sc capitalize cursor-pointer">
                   {user}
                     <LogOut className='cursor-pointer' onClick={handleLogout}/>

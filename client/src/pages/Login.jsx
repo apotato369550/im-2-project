@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from 'react'
 import heroFill from "../assets/images/heroFill.png";
 import { Mail, KeyRound, Eye, EyeOff, Home as HomeIcon } from "lucide-react";
@@ -25,7 +25,7 @@ export default function Login() {
     e.preventDefault();
     axios.post("http://localhost/im-2-project/api/users/login", formData)
       .then((data) => {
-        localStorage.setItem("user_data", JSON.stringify(data.data));
+        localStorage.setItem("user_data", JSON.stringify(data.data)); 
         setError('');
         navigate("/");
       })

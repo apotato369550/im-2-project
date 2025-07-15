@@ -1,48 +1,31 @@
 import { Link, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, 
-  Users, 
-  UserCheck, 
-  ClipboardList, 
-  ShoppingCart, 
-  LogOut,
-  AirVent 
+  Briefcase, 
+  CheckSquare, 
+  User, 
+  LogOut 
 } from "lucide-react";
 
 const sidebarItems = [
   {
     title: "Dashboard",
-    url: "/manager/dashboard",
+    url: "/worker/dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "Workers",
-    url: "/manager/workers",
-    icon: UserCheck,
+    title: "Assignments",
+    url: "/worker/assignments",
+    icon: Briefcase,
   },
   {
-    title: "Users",
-    url: "/manager/users",
-    icon: Users,
+    title: "Tasks",
+    url: "/worker/tasks",
+    icon: CheckSquare,
   },
-  {
-    title: "Assignment",
-    url: "/manager/assignment",
-    icon: ClipboardList,
-  },
-  {
-    title: "Orders",
-    url: "/manager/orders",
-    icon: ShoppingCart,
-  },
-  {
-    title: "Inventory",
-    url: "/manager/inventory",
-    icon: AirVent,
-  }
 ];
 
-const Sidebar = ({ onLogout }) => {
+const WorkerSidebar = ({ onLogout }) => {
   const location = useLocation();
   
   // Automatically determine active item based on current URL
@@ -56,12 +39,12 @@ const Sidebar = ({ onLogout }) => {
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center gap-3">
           <div>
-            <h2 className="text-cbvt-navy font-khand text-3xl font-bold">Cebu Best Value</h2>
-            <p className="text-sm text-gray-500">Manager Portal</p>
+            <h2 className="text-cbvt-navy font-khand text-lg font-bold">Cebu Best Value</h2>
+            <p className="text-sm text-gray-500">Worker Portal</p>
           </div>
         </div>
       </div>
- 
+
       {/* Navigation */}
       <div className="flex-1 p-4 overflow-y-auto">
         <div className="mb-6">
@@ -87,6 +70,15 @@ const Sidebar = ({ onLogout }) => {
 
       {/* Footer */}
       <div className="p-4 border-t border-gray-200">
+        <div className="flex items-center space-x-3 mb-3">
+          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+            <User className="h-4 w-4 text-cbvt-hover-blue" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-medium text-gray-900">John Worker</p>
+            <p className="text-xs text-gray-600">Worker ID: W001</p>
+          </div>
+        </div>
         <button 
           onClick={onLogout}
           className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-cbvt-hover-blue hover:bg-blue-50 transition-colors"
@@ -99,4 +91,4 @@ const Sidebar = ({ onLogout }) => {
   );
 };
 
-export default Sidebar;
+export default WorkerSidebar;

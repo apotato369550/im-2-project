@@ -9,7 +9,7 @@ const ServiceCard = (prop) => {
     } else {
       navigate(`/order-form?service=${encodeURIComponent(prop.title)}`);
     }
-  };
+  }
   return (
     <>
         <div className="relative">

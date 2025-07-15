@@ -129,7 +129,7 @@ domain-name/im-2-project/api/{resource}/{method}/{id?}
   "user_email": "your_email",
   "user_password": "your_password",
   "user_name": "your_username",
-  "user_type": "{Client, Manager, Worker}"
+  "user_type": "{client, manager, worker}"
 }
 ```
 
@@ -161,7 +161,7 @@ Authorization: Bearer <JWT token>
     "user_id": 5,
     "user_name": "John Doe",
     "user_email": "John@example.com",
-    "user_type": "Client"
+    "user_type": "client"
 }
 ```
 ##### EXAMPLE API CALL FROM FRONT END
@@ -451,7 +451,7 @@ Content-Type: multipart/form-data
 | inverter    | YES               | Classifies if AC is such   |
 | brand       | Panasonic         | Brand of the AC Unit       |
 | horsepower  | 500cc             | Horsepower sa Ac           |
-| image       | (file upload)     | Image file for the item    |
+| image_path       | (file upload)     | Image file for the item    |
 
 ### **CHANGE IMAGE**
 **Endpoint:** `/im-2-project/api/items/upload-image`

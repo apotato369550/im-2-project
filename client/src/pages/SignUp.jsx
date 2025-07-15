@@ -1,18 +1,23 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import heroFill from "../assets/images/heroFill.png";
 import { Mail, KeyRound, Eye, EyeOff, Home as HomeIcon, User } from "lucide-react";
+import axios from 'axios';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
-    email: "",
+    user_email: "",
+    user_password: "",
     first_name: "",
     last_name: "",
-    password: "",
-    confirmPassword: "",
+    confirmPassword: ""
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [checkSame, setCheckSame] = useState('');
+  const [registerSuccess, setRegisterSuccess] = useState('');
+  const navigate = useNavigate();
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,14 +29,34 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const full_name = `${formData.first_name} ${formData.last_name}`.trim();
+    const user_full_name = `${formData.first_name} ${formData.last_name}`.trim();
 
-    const dataToSend = {
+    if(formData.user_password != formData.confirmPassword){
+      setCheckSame('Passwords do not match!');
+    }else{
+      setCheckSame('')
+      const dataToSend = {
       ...formData,
-      full_name,
-    };
-
-    console.log("Sign up submitted:", dataToSend);
+      user_full_name,
+      user_type: 'client'
+      };
+      
+      axios.post('http://localhost/im-2-project/api/users/register', dataToSend)
+      .then((response)=>{
+        if(response.status = 200){
+          setTimeout(()=>{
+            setRegisterSuccess('Registered successfully');
+          }, 2000)
+          console.log(response.status);
+          navigate("/login");
+        }else{
+          setRegisterSuccess('Something went wrong try again');
+        }
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+    }
   };
 
   return (
@@ -77,9 +102,9 @@ export default function SignUp() {
             <div className="relative">
               <input
                 type="email"
-                name="email"
+                name="user_email"
                 placeholder="email"
-                value={formData.email}
+                value={formData.user_email}
                 onChange={handleInputChange}
                 className="w-full h-[59px] px-16 py-4 bg-gray-200 rounded-full text-[21px] font-carme text-cbvt-navy placeholder-gray-400 border-0 focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
               />
@@ -118,9 +143,9 @@ export default function SignUp() {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                name="password"
+                name="user_password"
                 placeholder="password"
-                value={formData.password}
+                value={formData.user_password}
                 onChange={handleInputChange}
                 className="w-full h-[59px] px-16 py-4 bg-gray-200 rounded-full text-[21px] font-carme text-cbvt-navy placeholder-gray-400 border-0 focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
               />
@@ -163,6 +188,12 @@ export default function SignUp() {
                 )}
               </button>
             </div>
+            {/* Error message */}
+            {checkSame && (
+              <p className="text-red-500 text-sm text-center p-0 m-0">
+                {checkSame}
+              </p>
+            )}
             <button
               type="submit"
               className="w-full h-[50px] bg-cbvt-blue hover:scale-105 text-white rounded-full text-[24px] font-khand font-medium transition-all shadow-lg duration-300 ease-in-out mt-8"
@@ -170,6 +201,12 @@ export default function SignUp() {
               Sign Up
             </button>
           </form>
+          {registerSuccess && (
+              <p className="text-green-500 text-sm text-center p-0 m-0">
+                {registerSuccess}
+              </p>
+            )}
+
           {/* Login link for mobile */}
           <div className="lg:hidden text-center">
             <span className="text-cbvt-gray">Already have an account? </span>

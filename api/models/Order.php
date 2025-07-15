@@ -11,7 +11,10 @@ class Order{
     public function viewOrders(string $userId) : ?array
     {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("SELECT * FROM orders WHERE client_id = :userId");
+        $stmt = $db->prepare(
+            "SELECT * 
+            FROM orders
+            WHERE client_id = :userId");
         $stmt->execute(['userId' => $userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
@@ -57,5 +60,18 @@ class Order{
         ]);
 
         return $success ?: null;
+    }
+
+    public function deleteOrder($orderId){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare(
+            'UPDATE orders
+             SET is_removed = 1
+             WHERE order_id = :orderId');
+        $result = $stmt->execute([
+            "orderId" => $orderId
+        ]);
+
+        return $result;
     }
 }

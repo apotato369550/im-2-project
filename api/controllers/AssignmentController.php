@@ -100,7 +100,7 @@ class AssignmentController{
         }
 
         $missingFields = MissingRequiredFields::checkMissingFields($data, [
-            'assignment_status'
+            'assignment_status', 'order_id'
         ]);
 
         if(!empty($missingFields)){
@@ -116,6 +116,47 @@ class AssignmentController{
                 'worker_id' => $decoded->user_id,
                 'assignment_id' => $id,
                 'message' => 'The status for assignment no ' . $id . ' has been changed to ' . $data['assignment_status']
+            ];
+            $newUpdate  = $update->saveUpdate($updateData);
+            echo json_encode([
+                "message" => "Assignment status updated successfully"
+            ]);
+        }else{
+            ErrorHelper::sendError(408, "Error updating assignment status");
+        }
+
+        if($data['assignment_status'] === "Completed"){
+            $order = new OrderController();
+            $data['order_status'] = "Completed";
+            $orderComplete = $order->trackOrderStatus($data);
+            if($orderComplete){
+                echo json_encode([
+                "message" => "Order status updated successfully"
+                ]);
+            }
+        }
+    }
+    public function findAssignmentByOrderId($orderId){
+        $assignment = new Assignment();
+        $exists = $assignment->orderExist($orderId);
+        $canDelete = empty($exists);
+
+        return $canDelete; 
+    }
+
+    public function deleteAssignment($assignmentId){
+        $decoded = AuthMiddleware::verifyToken();
+        if(!$assignmentId){
+            ErrorHelper::sendError(401, "Please pass the assignmentID");
+        }
+
+        $assignment = new Assignment();
+        $deleteAssignment = $assignment->deleteAssignment($assignmentId);
+        if($deleteAssignment){
+            $update = new UpdateController();
+            $updateData = [
+                'worker_id' => $decoded->user_id,
+                'message' => 'Assignment no. ' . $assignmentId . ' has been deleted successfully'
             ];
             $newUpdate  = $update->saveUpdate($updateData);
             echo json_encode([
