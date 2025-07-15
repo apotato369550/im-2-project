@@ -174,7 +174,6 @@ const ClientDashboard = () => {
                                                 <div className="flex-1">
                                                     <div className="flex justify-between items-start">
                                                         <div className="flex-1">
-                                                            <p className="text-cbvt-navy font-semibold text-sm">{update.status}</p>
                                                             <p className="text-cbvt-dark-gray text-xs mt-1">{update.message}</p>
                                                         </div>
                                                         <span className="text-gray-500 text-xs ml-2">{update.timestamp}</span>
@@ -243,9 +242,6 @@ const ClientDashboard = () => {
                                     <div className="flex gap-2">
                                         <button className="flex-1 bg-cbvt-blue text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
                                             Approve
-                                        </button>
-                                        <button className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg text-sm font-semibold hover:bg-gray-400 transition-colors">
-                                            Renegotiate
                                         </button>
                                         <button className="flex-1 bg-red-100 text-red-700 py-2 px-4 rounded-lg text-sm font-semibold hover:bg-red-200 transition-colors">
                                             Decline
