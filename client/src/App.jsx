@@ -9,6 +9,7 @@ import Workers from "./pages/manager/Workers.jsx";
 import Users from "./pages/manager/Users.jsx";
 import Assignment from "./pages/manager/Assignment.jsx";
 import Orders from "./pages/manager/Orders.jsx";
+import Inventory from "./pages/manager/Inventory.jsx";
 import WorkerDashboard from "./pages/worker/WorkerDashboard.jsx";
 import WorkerAssignments from "./pages/worker/WorkerAssignments.jsx";
 import Tasks from "./pages/worker/Tasks.jsx";
@@ -16,6 +17,8 @@ import Contact from "./pages/Contact.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import OrderForm from "./pages/OrderForm.jsx";
 // import { ForgetPasswordTestingSpace, ChangePasswordTestingSpace } from './testing/AssignmentCreationTestingSpace.jsx'
+import ClientDashboard from "./pages/ClientDashboard.jsx";
+
 import PrivateRoute from "./security/PrivateRoute";
 
 const App = () => (
@@ -36,6 +39,7 @@ const App = () => (
       <Route element={<PrivateRoute allowedRoles={['manager']} />}>
         <Route path="/manager/dashboard" element={<Dashboard />} />
         <Route path="/manager/workers" element={<Workers />} />
+         <Route path="/manager/inventory" element={<Inventory />} />
         <Route path="/manager/users" element={<Users />} />
         <Route path="/manager/assignment" element={<Assignment />} />
         <Route path="/manager/orders" element={<Orders />} />

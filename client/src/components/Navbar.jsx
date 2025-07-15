@@ -12,6 +12,7 @@ const [user, setUser] = useState(null)
     if(userData){
       try{
         const parsed= JSON.parse(userData);
+        console.log(parsed)
         const firstName = parsed.user_full_name.split(" ")[0];
         const decodedToken = jwtDecode(parsed.token);
 
@@ -54,7 +55,9 @@ const [user, setUser] = useState(null)
             </Link>
              {user ? (
               <div className="flex items-center space-x-2 text-cbvt-navy">
-                <FaUserCircle className="text-3xl" />
+                <Link to="/clientdashboard">
+                  <FaUserCircle className="text-3xl" />
+                </Link>
                 <span className="flex gap-5 text-xl font-alegreya-sans-sc capitalize cursor-pointer">
                   {user}
                     <LogOut className='cursor-pointer' onClick={handleLogout}/>
