@@ -17,8 +17,11 @@ const OrdersPage = () => {
   //filter function
    const [sortOption, setSortOption] = useState('default');
 
+   const [orders, setOrders] = useState([]); // Add this state for managing orders
+ 
+
   const orderData=[
-    {
+  {
     OrderID: 111,
     Title: "AC Installation",
     Description: "Split Type AC - Inverter 1.5 HP",
@@ -26,7 +29,8 @@ const OrdersPage = () => {
     Quantity: "1 Unit",
     Amount: "Php 35,000.00",
     OrderDate: "8/13/2025",
-    DeliveryDate: "8/27/2025"
+    DeliveryDate: "8/27/2025",
+    order_status: "Quotation Sent" // Waiting for customer approval
   },
   {
     OrderID: 112,
@@ -36,7 +40,8 @@ const OrdersPage = () => {
     Quantity: "1 Unit",
     Amount: "Php 4,500.00",
     OrderDate: "8/15/2025",
-    DeliveryDate: "8/17/2025"
+    DeliveryDate: "8/17/2025",
+    order_status: "Quotation Confirmed" // Customer approved, work scheduled
   },
   {
     OrderID: 113,
@@ -46,7 +51,8 @@ const OrdersPage = () => {
     Quantity: "2 Units",
     Amount: "Php 6,000.00",
     OrderDate: "8/10/2025",
-    DeliveryDate: "8/12/2025"
+    DeliveryDate: "8/12/2025",
+    order_status: "Completed" // Service finished
   },
   {
     OrderID: 114,
@@ -56,7 +62,8 @@ const OrdersPage = () => {
     Quantity: "3 Units",
     Amount: "Php 42,000.00",
     OrderDate: "8/5/2025",
-    DeliveryDate: "8/20/2025"
+    DeliveryDate: "8/20/2025",
+    order_status: "Pending" // New request, not yet processed
   },
   {
     OrderID: 115,
@@ -66,7 +73,8 @@ const OrdersPage = () => {
     Quantity: "1 Unit",
     Amount: "Php 2,500.00",
     OrderDate: "8/18/2025",
-    DeliveryDate: "8/19/2025"
+    DeliveryDate: "8/19/2025",
+    order_status: "Quotation Pending" // Technician preparing estimate
   },
   {
     OrderID: 116,
@@ -76,7 +84,8 @@ const OrdersPage = () => {
     Quantity: "1 Unit",
     Amount: "Php 52,000.00",
     OrderDate: "8/20/2025",
-    DeliveryDate: "9/5/2025"
+    DeliveryDate: "9/5/2025",
+    order_status: "Quotation Rejected" // Customer declined the quote
   },
   {
     OrderID: 117,
@@ -86,7 +95,8 @@ const OrdersPage = () => {
     Quantity: "1 Unit",
     Amount: "Php 3,200.00",
     OrderDate: "8/12/2025",
-    DeliveryDate: "8/14/2025"
+    DeliveryDate: "8/14/2025",
+    order_status: "Cancelled" // Order was cancelled
   },
   {
     OrderID: 118,
@@ -96,7 +106,8 @@ const OrdersPage = () => {
     Quantity: "1 Unit",
     Amount: "Php 28,000.00",
     OrderDate: "8/8/2025",
-    DeliveryDate: "8/22/2025"
+    DeliveryDate: "8/22/2025",
+    order_status: "Quotation Confirmed" // Approved and scheduled
   },
   {
     OrderID: 119,
@@ -106,7 +117,8 @@ const OrdersPage = () => {
     Quantity: "1 Unit",
     Amount: "Php 1,500.00",
     OrderDate: "8/22/2025",
-    DeliveryDate: "8/23/2025"
+    DeliveryDate: "8/23/2025",
+    order_status: "Pending" // New request
   },
   {
     OrderID: 120,
@@ -116,31 +128,87 @@ const OrdersPage = () => {
     Quantity: "1 Unit",
     Amount: "Php 32,000.00",
     OrderDate: "8/25/2025",
-    DeliveryDate: "9/10/2025"
+    DeliveryDate: "9/10/2025",
+    order_status: "Quotation Sent" // Waiting for customer response
   }
 ];
   
 
-   // Initialize with all workers on first render
-   useEffect(() => {
-     setOutput(orderData);
-   }, []);
+  // Initialize with orderData
+  useEffect(() => {
+    setOrders(orderData);
+    setOutput(orderData); // Initialize output with the same data
+  }, []);
+
+  // Handle status updates
+  const handleStatusUpdate = (orderId, newStatus) => {
+    console.log('Updating status for order:', orderId, 'to:', newStatus);
+    setOrders(prevOrders => 
+      prevOrders.map(order => 
+        order.OrderID === orderId 
+          ? { ...order, order_status: newStatus } 
+          : order
+      )
+    );
+    // Also update the output to reflect changes immediately
+    setOutput(prevOutput => 
+      prevOutput.map(order => 
+        order.OrderID === orderId 
+          ? { ...order, order_status: newStatus } 
+          : order
+      )
+    );
+  };
+
+  // Handle order deletion
+  const handleDeleteOrder = (orderId) => {
+    console.log('Deleting order:', orderId);
+    const confirmDelete = window.confirm('Are you sure you want to delete this order? This action cannot be undone.');
+    
+    if (confirmDelete) {
+      setOrders(prevOrders => prevOrders.filter(order => order.OrderID !== orderId));
+      setOutput(prevOutput => prevOutput.filter(order => order.OrderID !== orderId));
+    }
+  };
+
+  // Handle order editing
+  const handleEditOrder = (orderId, updatedOrder) => {
+    console.log('Editing order:', orderId, 'with data:', updatedOrder);
+    setOrders(prevOrders => 
+      prevOrders.map(order => 
+        order.OrderID === orderId 
+          ? { ...order, ...updatedOrder } 
+          : order
+      )
+    );
+    // Also update the output to reflect changes immediately
+    setOutput(prevOutput => 
+      prevOutput.map(order => 
+        order.OrderID === orderId 
+          ? { ...order, ...updatedOrder } 
+          : order
+      )
+    );
+  };
  
  
-  // Combined filter and sort effect
-   useEffect(() => {
-     // Apply search filter
-     let results = orderData.filter(data =>
-       data.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    data.Description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    data.Customer.toLowerCase().includes(searchQuery.toLowerCase())
-     );
- 
-     // Apply sorting
-     results = sortData(results, sortOption);
-     
-     setOutput(results);
-   }, [searchQuery, sortOption]); // Add sortOption to dependencies
+   // Combined filter and sort effect
+  useEffect(() => {
+    // Apply search filter to the main orders array
+    let results = orders.filter(order =>
+      order.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.Description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.Customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.order_status.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Apply sorting
+    results = sortData(results, sortOption);
+    
+    setOutput(results);
+  }, [searchQuery, sortOption, orders]); 
+
+
  
  
  // Sorting function
@@ -192,10 +260,7 @@ const OrdersPage = () => {
                 Track and manage customer orders.
               </p> 
             </div>
-            <button className='flex items-center bg-cbvt-navy h-[40px] px-4 rounded-2xl text-white mr-10 '>
-              <Plus className='h-3 w-3 mr-2' />
-              <span className='text-xs'>Create Order</span>
-            </button>
+      
           </div>
 
 
@@ -226,17 +291,21 @@ const OrdersPage = () => {
         <div className='flex-1 overflow-y-auto'>
             <div className='grid grid-cols-2 gap-5 p-8 pb-16'>
                 {output.map((order) => (
-                    <OrdersCard  //OrderID, Title, Description, Customer, Amount, OrderDate, DeliveryDate
-                        key={order.OrderID}
-                        Title={order.Title}
-                        Description={order.Description}
-                        Customer={order.Customer}
-                        Quantity={order.Quantity}
-                        Amount={order.Amount}
-                        OrderDate={order.OrderDate}
-                        DeliveryDate={order.DeliveryDate}
-
-                    />
+                    <OrdersCard
+              key={order.OrderID}
+              OrderID={order.OrderID}
+              Title={order.Title}
+              Description={order.Description}
+              Customer={order.Customer}
+              Quantity={order.Quantity}
+              Amount={order.Amount}
+              OrderDate={order.OrderDate}
+              DeliveryDate={order.DeliveryDate}
+              order_status={order.order_status}
+              onStatusUpdate={handleStatusUpdate}
+              onDelete={handleDeleteOrder}
+              onEdit={handleEditOrder}
+            />
 
                 ))}
             </div>
