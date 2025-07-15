@@ -8,9 +8,10 @@ import axios from 'axios';
 const WorkersPage = () => {
   const [activeItem, setActiveItem] = useState('Workers');
   const [searchQuery, setSearchQuery] = useState('');
+  const [workerData, setWorkerData] = useState([]);
 
   //
-
+  /*
   const workerData = [
     {
       Name: "John Doe",
@@ -61,21 +62,65 @@ const WorkersPage = () => {
       CompletedTasks: 27,
     }
   ];
+  */
 
   useEffect(() => {
     console.log("Works");
-    const userData = JSON.parse(localStorage.getItem('user_data'));
-    console.log(userData)
-    axios.get("http://localhost/im-2-project/api/users/profile", {
-      headers: {
-        Authorization: "Bearer " + userData.token
-      }
-    }).then(response => {
-      console.log(response)
-    }).catch(error => {
-      console.log(error.response.data)
-    })
-  }, [])
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    console.log(userData);
+    axios
+      .get("http://localhost/im-2-project/api/users/fetch-list", {
+        headers: {
+          Authorization: "Bearer " + userData.token,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        /*
+        format of data from api:
+        [
+          {
+              "image_path": null
+              "order_count": 0
+              "total_spent": "0.000"
+              "user_email": "miggycarumba912@gmail.com"
+              "user_full_name": "Jose Carumba"
+              "user_id": 12
+              "user_type": "worker"
+          }
+        ]
+
+        format i want it turned into:
+        [
+          {
+            Name: "Jhen Dab",
+            Position: "Senior Technician",
+            PhoneNumber: "+63 912 345 6789",
+            Email: "john.doe@gmail.com",
+          }
+      ]
+          ALSO! VERY IMPORTAN! Render/include only the ones where user_type: "worker"
+          save it to a const variable
+        */
+          console.log("Raw response:", response.data);
+
+          // 🔧 Transform + filter the data
+          const workersOnly = response.data
+            .filter((user) => user.user_type === "worker")
+            .map((user) => ({
+              Name: user.user_full_name,
+              Position: "Senior Technician", // placeholder
+              PhoneNumber: "+63 912 345 6789", // placeholder
+              Email: user.user_email,
+            }));
+
+          console.log("Formatted workers:", workersOnly);
+          setWorkerData(workersOnly)
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+      });
+  }, []);
 
 
   const filteredWorkers = workerData.filter(worker =>
