@@ -67,37 +67,61 @@ const AssignmentPage = () => {
         .then((response) => {
           console.log("Data from API");
           console.log(response);
-          /*
-          format of data from api:
-          [
+            /*
+            format of data from api:
+            [
             {
-              assignment_date_created: "2025-07-08",
-              assignment_details:  "A lot has happened lately",
-              assignment_due: "2026-01-23",
-              assignment_id:  3,
-              assignment_status: "Pending",
-              location: "somewhere",
-              service_name: "Retail"
+              "Location": "somewhere",
+              "assignedWorker": null,
+              "assignedWorkerId": null,
+              "assignment_date_created": "2025-07-08",
+              "assignment_details": "A lot has happened lately",
+              "assignment_due": "2026-01-23",
+              "assignment_id": 3,
+              "assignment_status": "Pending",
+              "clientId": 6,
+              "clientName": "Jhanell Mingo",
+              "service_name": "Retail"
             }
-          ]
-          format i want it turned into:
-          [
+            ]
+            format i want it turned into:
+            [
             {
-              AssignmentID: 1114,
-              Title: "AC Maintenance",
-              Description: "Install split-type air conditioning unit in master bedroom",
-              AssignedPerson: "John Doe",
-              CustomerName: "Jhen Aloyon",
-              Location: "Talisay, Cebu",
-              DueDate: "8/13/2025",
-            },
-        ]
-        // map service_name to Title
+              "AssignmentID": 1114,
+              "Title": "AC Maintenance",
+              "Description": "Install split-type air conditioning unit in master bedroom",
+              "AssignedPerson": "John Doe",
+              "CustomerName": "Jhen Aloyon",
+              "Location": "Talisay, Cebu",
+              "DueDate": "8/13/2025"
+            }
+            ]
+            // map service_name to Title
 
-        // assignment title/type
-        // customer name
-        // assigned worker/person
-          */
+            // assignment title/type
+            // customer name
+            // assigned worker/person
+            */
+           
+            const formattedAssignments = response.data.map((assignment) => ({
+              AssignmentID: assignment.assignment_id,
+              Title: assignment.service_name || "Untitled",
+              Description: assignment.assignment_details || "No description",
+              AssignedPerson: assignment.assignedWorker ?? "None assigned",
+              CustomerName: assignment.clientName || "Unknown",
+              Location: assignment.Location || "N/A",
+              DueDate: new Date(assignment.assignment_due).toLocaleDateString(
+                "en-PH",
+                {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                }
+              ),
+            }));
+
+            console.log("Formatted Assignments:", formattedAssignments);
+            setAssignmentData(formattedAssignments)
         })
         .catch((error) => {
           console.log(error.response.data);
