@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import {RecentUpdates} from "../../components/RecentUpdates";
@@ -11,39 +11,30 @@ import {
   Circle,
   Plus,
 } from "lucide-react";
+import axios from 'axios';
 
+function getRelativeTime(dateString) {
+  const now = new Date();
+  const then = new Date(dateString);
+  const diffMs = now - then;
+  const sec = Math.floor(diffMs / 1000);
+  const min = Math.floor(sec / 60);
+  const hr = Math.floor(min / 60);
+  const day = Math.floor(hr / 24);
+
+  if (sec < 60) return `${sec} seconds ago`;
+  if (min < 60) return `${min} minutes ago`;
+  if (hr < 24) return `${hr} hours ago`;
+  return `${day} days ago`;
+}
 
 
 const DashboardPage = () => {
   const [activeItem, setActiveItem] = useState('Dashboard');
+  const [cardData, setCardData] = useState([]);
+  const [recentUpdates, setRecentUpdates] = useState([]);
 
-  const cardData = [
-{
-    index: 0,
-    title: "Total Workers",
-    amount: 24,
-    icon: UserCheck,
-},
-{
-  index: 1,
-  title: "Total Users",
-  amount: 56,
-  icon: Users,
-},
-{
-  index: 2,
-  title: "Assignments",
-  amount: 32,
-  icon: Clipboard,
-},
-{
-  index: 3,
-  title: "Orders",
-  amount: 75,
-  icon: ShoppingCart
-}
-];
-
+  /*
 const recentUpdates = [
   {
     updateId: 111,
@@ -64,6 +55,90 @@ const recentUpdates = [
     timeAgo:"7 hours ago",
   }
 ];
+*/
+
+
+useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    const headers = {
+      Authorization: "Bearer " + userData.token,
+    };
+
+    const fetchAll = async () => {
+      try {
+        const [usersRes, assignmentsRes, ordersRes] = await Promise.all([
+          axios.get("http://localhost/im-2-project/api/users/fetch-list", { headers }),
+          axios.get("http://localhost/im-2-project/api/assignments/fetch-list", { headers }),
+          axios.get("http://localhost/im-2-project/api/orders/fetch-list", { headers }),
+        ]);
+
+        const totalUsers = usersRes.data.length;
+        const totalWorkers = usersRes.data.filter((u) => u.user_type === "worker").length;
+        const totalAssignments = assignmentsRes.data.length;
+        const totalOrders = ordersRes.data.length;
+
+        setCardData([
+          {
+            index: 0,
+            title: "Total Workers",
+            amount: totalWorkers,
+            icon: UserCheck,
+          },
+          {
+            index: 1,
+            title: "Total Users",
+            amount: totalUsers,
+            icon: Users,
+          },
+          {
+            index: 2,
+            title: "Assignments",
+            amount: totalAssignments,
+            icon: Clipboard,
+          },
+          {
+            index: 3,
+            title: "Orders",
+            amount: totalOrders,
+            icon: ShoppingCart,
+          },
+        ]);
+      } catch (err) {
+        console.error("Dashboard data fetch error:", err.response?.data || err.message);
+      }
+    };
+
+    fetchAll();
+  }, []);
+
+  useEffect(() => {
+  const userData = JSON.parse(localStorage.getItem("user_data"));
+  console.log("Fetching updates for:", userData);
+
+  axios
+    .get("http://localhost/im-2-project/api/updates", {
+      headers: {
+        Authorization: "Bearer " + userData.token,
+      },
+    })
+    .then((response) => {
+      console.log("Raw Updates:", response.data);
+
+      const formattedUpdates = response.data.map((update) => ({
+        updateId: update.update_id,
+        title: `${update.user_full_name} updated an assignment`,
+        description: update.update_message || "No details provided",
+        timeAgo: update.date_last_update,
+      }));
+
+      console.log("Formatted Updates:", formattedUpdates);
+
+      setRecentUpdates(formattedUpdates);
+    })
+    .catch((error) => {
+      console.error("Error fetching updates:", error.response?.data || error.message);
+    });
+}, []);
 
 
   

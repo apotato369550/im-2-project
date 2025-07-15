@@ -46,14 +46,6 @@ export const OrdersCard = ({OrderID, Title, Description, Customer, Quantity, Amo
                         <span className="text-cbvt-hover-blue">{OrderDate}</span>
                     </p>
                      </div>
-
-                <div className="flex flex-row">
-                    <Calendar className="h-4 w-4 mb-3 text-gray-700 mr-4"/>
-                    <p className="mt-[-4px]">
-                        <span className="text-cbvt-dark-gray">Delivery Date: </span>
-                        <span className="text-cbvt-hover-blue">{DeliveryDate}</span>
-                    </p>
-                     </div>
     
                  </div>
 

@@ -9,49 +9,7 @@ const InventoryPage = () => {
   const [activeItem, setActiveItem] = useState("Inventory");
   const [searchQuery, setSearchQuery] = useState("");
   const [itemData, setItemData] = useState([])
-  /*
-  const itemData=[
   
-  {
-    "item_id": 1001,
-    "supplier_id": 42,
-    "manager_id": 5,
-    "model": "ArcticCool Pro X",
-    "image_path": "/inventory/arcticcool_prox.jpg",
-    "type": "Split AC",
-    "inverter": true,
-    "horsepower": 1.5,
-    "brand": "ArcticCool",
-    "is_removed": false
-  },
-  {
-    "item_id": 1002,
-    "supplier_id": 17,
-    "manager_id": 3,
-    "model": "FrostMaster Window",
-    "image_path": "/inventory/frostmaster_window.jpg",
-    "type": "Window AC",
-    "inverter": false,
-    "horsepower": 2.0,
-    "brand": "Glacial",
-    "is_removed": false
-  },
-  {
-    "item_id": 1003,
-    "supplier_id": 89,
-    "manager_id": 5,
-    "model": "EcoSilent Inverter",
-    "image_path": "/inventory/ecosilent_inverter.jpg",
-    "type": "Cassette",
-    "inverter": true,
-    "horsepower": 2.5,
-    "brand": "BreezeTech",
-    "is_removed": true,
-    "removal_reason": "Discontinued model"
-  }
-
-];
-    */
   useEffect(() => {
     console.log("Works");
     const userData = JSON.parse(localStorage.getItem("user_data"));
@@ -65,40 +23,7 @@ const InventoryPage = () => {
       .then((response) => {
         console.log("Data from API");
         console.log(response);
-        /*
-      format of API
-      [
-        {
-          "brand": "Panasonic",
-          "horsepower": "500",
-          "image_path": "uploads/686c7eb78ea88_1801000705.webp",
-          "inverter": "YES",
-          "is_removed": 0,
-          "item_id": 3,
-          "manager_id": 1,
-          "model": "P3120",
-          "price": "20000.00",
-          "supplier_id": 1,
-          "type": "SPLIT"
-        }
-      ]
 
-      format of data needed:
-        {
-            "item_id": 1003,
-            "supplier_id": 89,
-            "manager_id": 5,
-            "model": "EcoSilent Inverter",
-            "image_path": "/inventory/ecosilent_inverter.jpg",
-            "type": "Cassette",
-            "inverter": true,
-            "horsepower": 2.5,
-            "brand": "BreezeTech",
-            "is_removed": true,
-          }
-
-
-      */
         console.log("Data from API:", response.data);
 
         const formattedItems = response.data.map((item) => ({
