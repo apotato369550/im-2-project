@@ -6,6 +6,7 @@ import {
   validateHomeContactForm,
   getFieldError
 } from "../../lib/validation.js";
+import axios from 'axios';
 
 const ContactForm = ({ 
   topMargin = "mt-76", 
@@ -47,29 +48,31 @@ const ContactForm = ({
       return;
     }
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsSubmitting(true);
 
-      console.log("Form submitted:", formData);
-      setSubmitSuccess(true);
-      setFormData({ name: "", email: "", message: "" });
-      setErrors([]);
-
-      // Hide success message after 5 seconds
-      setTimeout(() => setSubmitSuccess(false), 5000);
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setErrors([
-        {
-          field: "general",
-          message: "Failed to send message. Please try again.",
-        },
-      ]);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  axios.post('http://localhost/im-2-project/api/feedbacks/create', formData)
+  .then(() => {
+    setSubmitSuccess(true);
+    setFormData({ name: "", email: "", message: "" });
+    console.log("Form submitted:", formData);
+    setErrors([]);
+    
+    // Hide success message after 5 seconds
+    setTimeout(() => setSubmitSuccess(false), 5000);
+  })
+  .catch((error) => {
+    console.error("Error submitting form:", error);
+    setErrors([
+      {
+        field: "general",
+        message: "Failed to send message. Please try again.",
+      },
+    ]);
+  })
+  .finally(() => {
+    setIsSubmitting(false);
+  });
+};
 
   return (
     <>

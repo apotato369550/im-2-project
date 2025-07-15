@@ -31,7 +31,7 @@ Class UpdateController{
         $decoded = AuthMiddleware::verifyToken();
         $update = new Update();
         $recentUpdates = $update->getRecentUpdates();
-
+        echo json_encode($recentUpdates ?: []);
     }
 
 }

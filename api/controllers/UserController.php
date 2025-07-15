@@ -22,13 +22,16 @@ class UserController{
             $payload = [
                 "user_id" => $existingUser['user_id'],
                 "user_email" => $existingUser['user_email'],
-                "user_full_name" => $existingUser['user_full_name'],
+                // "user_full_name" => $existingUser['user_full_name'],
+                // "user_type" => $existingUser['user_type'],
                 "exp" => time() + 7200
             ];
             $jwt = JWT::encode($payload, JWT_SECRET, 'HS256');
             echo json_encode([
                 "message" => "Login successful",
+                "user_id" => $existingUser['user_id'],
                 "user_full_name" => $existingUser['user_full_name'],
+                "user_email"=> $existingUser['user_email'],
                 "user_type" => $existingUser['user_type'],
                 "token" => $jwt
             ]);
@@ -97,6 +100,21 @@ class UserController{
         }else{
             ErrorHelper::sendError(404, "User not Found");
         }
+    }
+
+    public function fetchAllUsers(){
+        $decoded = AuthMiddleware::verifyToken();
+        $user = new User();
+        $userList = $user->fetchAllUser();
+        if($userList){
+            echo json_encode($userList);
+        }else{
+            ErrorHelper::sendError(401, "Bad Request");
+        }
+    }
+
+    public function viewQuotations(){
+        
     }
     
 

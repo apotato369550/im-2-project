@@ -52,7 +52,7 @@ const Catalog = () => {
   const [filters, setFilters] = useState({
     type: "all",
     brand: "any",
-    hp: "any",
+    horsepower: "any",
     inverter: "all"
   });
   const [sortBy, setSortBy] = useState("default");
@@ -67,7 +67,6 @@ const Catalog = () => {
         image_path: `http://localhost/im-2-project/${product.image_path.replace(/^(\.\.\/)+/, '')}`
       }));
       setItemList(updatedProducts);
-      console.log(updatedProducts);  
     })
     .catch((e)=>{
       console.log(e);
@@ -86,15 +85,29 @@ const Catalog = () => {
     }));
   };
 
+  const handleModalRequestClick = () => {
+    handleCloseModal();
+    navigate(`/order-form?service=Retail&item_id=${selectedProduct.item_id}`, {
+      state: { 
+        selectedProduct: selectedProduct
+      }
+    });
+  };
+
   const handleSortChange = (value) => {
     setSortBy(value);
   };
 
-  const handleRequestClick = (product, e) => {
+  const handleRequestClick = (prod, e) => {
     e.stopPropagation();
-    const unitName = `${product.brand} ${product.model} - ${product.hp} ${product.type}`;
-    navigate(`/order-form?unit=${encodeURIComponent(unitName)}`);
+    navigate(`/order-form?service=Retail&item_id=${prod.item_id}`, {
+    state: { 
+      selectedProduct: prod
+    }
+    });
   };
+
+
 
   const handleCloseModal = () => {
     setmodalIsOpen(false);
@@ -370,7 +383,7 @@ const Catalog = () => {
 
                         <button
                           className="bg-cbvt-navy text-white px-4 py-1 rounded-full text-[10px] font-carme hover:bg-opacity-90 transition-all capitalize"
-                          onClick={(e) => handleRequestClick(prod, e)}
+                          onClick={(e)=>{handleRequestClick(prod, e)}}
                         >
                           request
                         </button>
@@ -448,15 +461,7 @@ const Catalog = () => {
                 </div>
               </div>
               <button 
-                onClick={() => {
-                  handleCloseModal();
-                  navigate('/order-form', { 
-                    state: { 
-                      selectedProduct: selectedProduct,
-                      serviceType: 'quotation'
-                    }
-                  });
-                }}
+                onClick={handleModalRequestClick}
                 className="bg-cbvt-navy text-white px-10 py-2 rounded-full text-lg font-carme transition-colors cursor-pointer capitalize"
               >
                 request

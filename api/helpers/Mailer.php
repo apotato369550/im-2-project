@@ -20,10 +20,15 @@ class Mailer{
         $this->mail->setFrom(EMAIL_NAME, 'Cebu Best Value');
     }
 
-    public function send($to, $subject, $body, $altBody = '') {
+    public function send($to, $subject, $body, $altBody = '', $replyToEmail = null, $replyToName = null) {
         try {
             $this->mail->clearAllRecipients();
             $this->mail->addAddress($to);
+
+            if($replyToEmail){
+                $this->mail->addReplyTo($replyToEmail, $replyToName ?: $replyToEmail);
+            }
+
             $this->mail->isHTML(true);
             $this->mail->Subject = $subject;
             $this->mail->Body    = $body;
