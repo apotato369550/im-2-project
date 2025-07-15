@@ -86,6 +86,6 @@ Class Item{
             'image_path' => $imagePath
         ]);
         return $db->lastInsertId();
-
     }
+
 }

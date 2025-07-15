@@ -135,7 +135,35 @@ class AssignmentController{
                 ]);
             }
         }
-        
+    }
+    public function findAssignmentByOrderId($orderId){
+        $assignment = new Assignment();
+        $exists = $assignment->orderExist($orderId);
+        $canDelete = empty($exists);
 
+        return $canDelete; 
+    }
+
+    public function deleteAssignment($assignmentId){
+        $decoded = AuthMiddleware::verifyToken();
+        if(!$assignmentId){
+            ErrorHelper::sendError(401, "Please pass the assignmentID");
+        }
+
+        $assignment = new Assignment();
+        $deleteAssignment = $assignment->deleteAssignment($assignmentId);
+        if($deleteAssignment){
+            $update = new UpdateController();
+            $updateData = [
+                'worker_id' => $decoded->user_id,
+                'message' => 'Assignment no. ' . $assignmentId . ' has been deleted successfully'
+            ];
+            $newUpdate  = $update->saveUpdate($updateData);
+            echo json_encode([
+                "message" => "Assignment status updated successfully"
+            ]);
+        }else{
+            ErrorHelper::sendError(408, "Error updating assignment status");
+        }
     }
 }
