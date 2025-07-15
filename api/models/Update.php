@@ -16,16 +16,16 @@ class Update{
         return $result ?: null;
     }
 
-    public function renderUpdates(){
-        $db = DBHelper::getConnection();
-        $stmt = $db->prepare('
-            SELECT up.*, us.user_full_name
-            FROM updates up
-            JOIN users us ON us.user_id = up.worker_id
-        ');
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;;
-    }
+        public function renderUpdates(){
+            $db = DBHelper::getConnection();
+            $stmt = $db->prepare('
+                SELECT up.*, us.user_full_name
+                FROM updates up
+                LEFT JOIN users us ON us.user_id = up.worker_id
+            ');
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: null;;
+        }
 
     public function retrieveUserUpdates($client_id){
         $db = DBHelper::getConnection();
@@ -45,9 +45,9 @@ class Update{
         $stmt = $db->prepare(
             'SELECT up.*, us.user_full_name
             FROM updates up
-            JOIN users us ON us.user_id = up.worker_id
-            WHERE date_last_update >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)');
-        $stmt->execute();
+            LEFT JOIN users us ON us.user_id = up.worker_id
+            ORDER BY up.date_last_update DESC');
+        $result = $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 }

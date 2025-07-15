@@ -56,7 +56,7 @@ const Sidebar = ({ onLogout }) => {
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center gap-3">
           <div>
-            <h2 className="text-cbvt-navy font-khand text-lg font-bold">Cebu Best Value</h2>
+            <h2 className="text-cbvt-navy font-khand text-3xl font-bold">Cebu Best Value</h2>
             <p className="text-sm text-gray-500">Manager Portal</p>
           </div>
         </div>

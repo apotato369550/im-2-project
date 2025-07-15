@@ -28,9 +28,6 @@ export const CardHolderMd = ({Name, Position, PhoneNumber, Email}) => {
 
             <div className="border-t border-gray-300 my-4"></div>
 
-
-            
-
         </div>
 
 
