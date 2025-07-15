@@ -101,6 +101,21 @@ class UserController{
             ErrorHelper::sendError(404, "User not Found");
         }
     }
+
+    public function fetchAllUsers(){
+        $decoded = AuthMiddleware::verifyToken();
+        $user = new User();
+        $userList = $user->fetchAllUser();
+        if($userList){
+            echo json_encode($userList);
+        }else{
+            ErrorHelper::sendError(401, "Bad Request");
+        }
+    }
+
+    public function viewQuotations(){
+        
+    }
     
 
 }

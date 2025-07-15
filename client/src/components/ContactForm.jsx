@@ -77,25 +77,20 @@ const ContactForm = ({
   return (
     <>
       <section
-
-        className={`bg-cover bg-center bg-no-repeat w-full overflow-hidden ${height}`}
-        style={{ backgroundImage: `url(${contactUsBg})`,
-        backgroundSize: backgroundSize
-       }}
+        className={`bg-cover bg-center bg-no-repeat w-full overflow-hidden min-h-[700px] my-12 md:my-20`}
+        style={{ backgroundImage: `url(${contactUsBg})`, backgroundSize: backgroundSize }}
       >
-        <div className={`relative ${topMargin} mx-32 z-10`}>
-          <div className="grid gap-8 grid-cols-2 items-start">
+        <div className={`relative mx-auto max-w-6xl w-full px-4 md:px-8 z-10`}>
+          <div className="grid gap-6 md:gap-12 grid-cols-1 md:grid-cols-2 items-start">
             {/* Contact Info */}
-            <div className={`text-white order-1 w-full pl-24 ${topPadding}`}>
+            <div className={`text-white order-1 w-full pl-0 md:pl-12 pt-10 md:pt-20`}>
               <p className="text-lg font-alegreya-sans-sc font-bold text-cbvt-light-blue uppercase tracking-[8px] mb-6">
                 Contact us
               </p>
-
-              <h3 className="text-8xl font-khand font-bold text-cbvt-navy capitalize leading-none mb-16">
+              <h3 className="text-5xl md:text-8xl font-khand font-bold text-cbvt-navy capitalize leading-none mb-10 md:mb-16">
                 Get in touch
               </h3>
-
-              <div className="space-y-12">
+              <div className="space-y-8 md:space-y-12">
                 {/* Location */}
                 <div className="flex items-center space-x-4">
                   <svg
@@ -114,7 +109,6 @@ const ContactForm = ({
                     President Magsaysay Villa Aurora Kasambagan, Cebu City
                   </p>
                 </div>
-
                 {/* Email */}
                 <div className="flex items-center space-x-4">
                   <svg
@@ -133,7 +127,6 @@ const ContactForm = ({
                     cebubestvaluetradingcorp@yahoo.com.ph
                   </p>
                 </div>
-
                 {/* Phone */}
                 <div className="flex items-center space-x-4">
                   <svg
@@ -154,24 +147,17 @@ const ContactForm = ({
                 </div>
               </div>
             </div>
-
             {/* Contact Form */}
-            <div className="bg-cbvt-navy rounded-[30px] md:rounded-[57px] p-6 md:p-12 relative overflow-hidden order-1 lg:order-2">
+            <div className="bg-cbvt-navy rounded-[24px] md:rounded-[40px] p-4 md:p-8 max-w-xl w-full mx-auto relative overflow-hidden order-1 lg:order-2">
               <div className="absolute inset-0 bg-gradient-to-br from-cbvt-navy/90 to-cbvt-navy opacity-90"></div>
-
               <div className="relative z-10">
-                <h4 className="text-2xl md:text-3xl lg:text-[48px] font-khand font-bold text-cbvt-cream text-center capitalize leading-tight mb-4">
+                <h4 className="text-2xl md:text-3xl lg:text-[40px] font-khand font-bold text-cbvt-cream text-center capitalize leading-tight mb-4">
                   You have a question?
                 </h4>
-
-                <p className="text-base md:text-lg lg:text-[20px] font-carme text-white text-center mb-8 md:mb-12">
+                <p className="text-base md:text-lg lg:text-[20px] font-carme text-white text-center mb-6 md:mb-10">
                   Feel free to drop a message down below!
                 </p>
-
-                <form
-                  onSubmit={handleSubmit}
-                  className="space-y-6"
-                >
+                <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
                   {/* Success Message */}
                   {submitSuccess && (
                     <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-full text-center">

@@ -67,6 +67,50 @@ Class ItemController{
         }
     }
 
+    public function updateItemDetails($itemId) {
+        $decoded = AuthMiddleware::verifyToken(); // Require authentication
+        $data = $_POST;
+        if (
+            !isset($data['supplier_id']) ||
+            !isset($data['model']) ||
+            !isset($data['price']) ||
+            !isset($data['type']) ||
+            !isset($data['inverter']) ||
+            !isset($data['horsepower']) ||
+            !isset($data['brand']) ||
+            !isset($_FILES['image'])
+        ) {
+            echo json_encode(['error' => 'Missing required fields']);
+            return;
+        }
+        $uploadDir = __DIR__ . '/../../uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $filename = uniqid() . '_' . basename($_FILES['image']['name']);
+        $targetFile = $uploadDir . $filename;
+
+
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+            $itemModel = new Item();
+            $itemId = $itemModel->editItemDetails(
+                $itemId,
+                $data['type'],
+                $data['inverter'],
+                $data['horsepower'],
+                $data['brand'],
+                $data['supplier_id'],
+                $data['model'],
+                $data['price'],
+                'uploads/' . $filename
+            );
+            echo json_encode(['message' => 'Item created', 'item_id' => $itemId, 'image_path' => 'uploads/' . $filename]);
+        } else {
+            echo json_encode(['error' => 'Failed to upload image']);
+        }
+    }  
+
     public function getAllItems() {
         $itemModel = new Item();
         $items = $itemModel->getAllItems();
@@ -84,7 +128,7 @@ Class ItemController{
     }
 
     public function deleteItem($itemId) {
-        $decoded = AuthMiddleware::verifyToken(); // Require authentication
+        $decoded = AuthMiddleware::verifyToken();
         $itemModel = new Item();
         $deleted = $itemModel->deleteItem($itemId);
         if ($deleted) {

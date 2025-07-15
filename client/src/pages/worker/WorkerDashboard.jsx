@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import WorkerSidebar from "../../components/WorkerSidebar";
 import {RecentNewAssignments} from "../../components/RecentNewAssignments";
 import { CardHolderSm } from "../../components/CardHolderSm";
+import { ToDo } from '../../components/ToDo';
 import { 
   Briefcase,
   Calendar,
@@ -47,6 +48,23 @@ const recentNewAssignments = [
     title:"AC Check-Up",
     location:"Banilad",
     timeAgo:"7 hours ago",
+  }
+];
+
+const toDO = [
+  {
+    assignmentID: 111,
+    title: "AC Installation",
+  },
+
+  {
+    assignmentID: 112,
+    title: "AC Maintenance",
+  },
+
+  {
+    assignmentID: 113,
+    title: "AC Check-up",
   }
 ];
 
@@ -124,25 +142,17 @@ const recentNewAssignments = [
 
 
 
-             {/* container for quick actions */}
-                <div>
+             {/* container for To do list*/}
                     <div className='bg-white h-[245px] w-[376px] shadow-lg rounded-xl border border-gray-200 p-8'>
-                        <p className='text-cbvt-navy font-alegreya-sans-sc font-semibold tracking-wide  text-xl mb-5'>Today's Schedule</p>
-
-                        <div className='flex items-center bg-white h-[38px] w-[310px] rounded-2xl border border-gray-200 mb-3'>
-                            <Square className='h-3 w-3 ml-3'/>
-                            <p className='ml-2'>AC Maintenance</p>
-                        </div>
-
-                        <div className='flex items-center bg-white h-[38px] w-[310px] rounded-2xl border border-gray-200 mb-3'>
-                            <Square className='h-3 w-3 ml-3'/>
-                            <p className='ml-2'>AC Repair</p>
-                        </div>  
-
-                        <div className='flex items-center bg-white h-[38px] w-[310px] rounded-2xl border border-gray-200'>
-                            <Square className='h-3 w-3 ml-3'/>
-                            <p className='ml-2'>AC Installation</p>
-                        </div>
+                        <p className='text-cbvt-navy font-alegreya-sans-sc font-semibold tracking-wide  text-xl mb-5'>To Do List:</p>
+                    {toDO.map((task)=> (
+                       <ToDo 
+                       key={task.assignmentID}
+                       title={task.title}
+                       />
+                    ))}
+                   
+                        
 
                     </div>
                 </div>
@@ -150,7 +160,7 @@ const recentNewAssignments = [
            
           
        </div>
-    </div>
+
    
   );
 };
