@@ -10,8 +10,6 @@ export const ItemCard = ({
   inverter,
   supplier_id,
   is_removed,
-  onEdit,
-  onDelete
 }) => {
   if (is_removed) return null;
 

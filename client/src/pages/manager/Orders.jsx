@@ -1,56 +1,163 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter} from "lucide-react";
 import { OrdersCard } from "../../components/OrdersCard";
+import SortingDropdown from '../../components/SortingDropdown';
 
 const OrdersPage = () => {
   const [activeItem, setActiveItem] = useState('Orders');
+  
+
+        //search function
+  const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [output, setOutput] = useState([]);
+
+  //filter function
+   const [sortOption, setSortOption] = useState('default');
 
   const orderData=[
     {
-        OrderID:111, 
-        Title: "AC Installation", 
-        Description:"Split Type AC - Inverter 1.5 HP", 
-        Customer: "Jhen Aloyon",
-        Quantity:"1 Unit",
-        Amount: "Php 35,000.00", 
-        OrderDate:"8/13/2025", 
-        DeliveryDate:"8/27/2025",  
-    },
-    {
-        OrderID:111, 
-        Title: "AC Installation", 
-        Description:"Split Type AC - Inverter 1.5 HP", 
-        Customer: "Jhen Aloyon",
-        Quantity:"1 Unit",
-        Amount: "Php 35,000.00", 
-        OrderDate:"8/13/2025", 
-        DeliveryDate:"8/27/2025",  
-    },
-    {
-        OrderID:111, 
-        Title: "AC Installation", 
-        Description:"Split Type AC - Inverter 1.5 HP", 
-        Customer: "Jhen Aloyon",
-        Quantity:"1 Unit",
-        Amount: "Php 35,000.00", 
-        OrderDate:"8/13/2025", 
-        DeliveryDate:"8/27/2025",  
-    },
-    {
-        OrderID:111, 
-        Title: "AC Installation", 
-        Description:"Split Type AC - Inverter 1.5 HP", 
-        Customer: "Jhen Aloyon",
-        Quantity:"1 Unit",
-        Amount: "Php 35,000.00", 
-        OrderDate:"8/13/2025", 
-        DeliveryDate:"8/27/2025",  
-    },
+    OrderID: 111,
+    Title: "AC Installation",
+    Description: "Split Type AC - Inverter 1.5 HP",
+    Customer: "Jhen Aloyon",
+    Quantity: "1 Unit",
+    Amount: "Php 35,000.00",
+    OrderDate: "8/13/2025",
+    DeliveryDate: "8/27/2025"
+  },
+  {
+    OrderID: 112,
+    Title: "AC Repair",
+    Description: "Fix gas leak in Window Type 1.0 HP",
+    Customer: "Carlos Reyes",
+    Quantity: "1 Unit",
+    Amount: "Php 4,500.00",
+    OrderDate: "8/15/2025",
+    DeliveryDate: "8/17/2025"
+  },
+  {
+    OrderID: 113,
+    Title: "AC Cleaning",
+    Description: "Chemical wash for Split Type 2.0 HP",
+    Customer: "Maria Gonzales",
+    Quantity: "2 Units",
+    Amount: "Php 6,000.00",
+    OrderDate: "8/10/2025",
+    DeliveryDate: "8/12/2025"
+  },
+  {
+    OrderID: 114,
+    Title: "AC Installation",
+    Description: "Window Type AC - Standard 0.5 HP",
+    Customer: "Robert Tan",
+    Quantity: "3 Units",
+    Amount: "Php 42,000.00",
+    OrderDate: "8/5/2025",
+    DeliveryDate: "8/20/2025"
+  },
+  {
+    OrderID: 115,
+    Title: "AC Maintenance",
+    Description: "Annual check-up for Split Type 1.5 HP",
+    Customer: "Anna Lim",
+    Quantity: "1 Unit",
+    Amount: "Php 2,500.00",
+    OrderDate: "8/18/2025",
+    DeliveryDate: "8/19/2025"
+  },
+  {
+    OrderID: 116,
+    Title: "AC Installation",
+    Description: "Split Type AC - Inverter 2.5 HP",
+    Customer: "David Sy",
+    Quantity: "1 Unit",
+    Amount: "Php 52,000.00",
+    OrderDate: "8/20/2025",
+    DeliveryDate: "9/5/2025"
+  },
+  {
+    OrderID: 117,
+    Title: "AC Repair",
+    Description: "Replace capacitor in Window Type 1.0 HP",
+    Customer: "Linda Chan",
+    Quantity: "1 Unit",
+    Amount: "Php 3,200.00",
+    OrderDate: "8/12/2025",
+    DeliveryDate: "8/14/2025"
+  },
+  {
+    OrderID: 118,
+    Title: "AC Installation",
+    Description: "Split Type AC - Standard 1.0 HP",
+    Customer: "Marco Villaverde",
+    Quantity: "1 Unit",
+    Amount: "Php 28,000.00",
+    OrderDate: "8/8/2025",
+    DeliveryDate: "8/22/2025"
+  },
+  {
+    OrderID: 119,
+    Title: "AC Cleaning",
+    Description: "Basic cleaning for Window Type 0.5 HP",
+    Customer: "Sophia Rodriguez",
+    Quantity: "1 Unit",
+    Amount: "Php 1,500.00",
+    OrderDate: "8/22/2025",
+    DeliveryDate: "8/23/2025"
+  },
+  {
+    OrderID: 120,
+    Title: "AC Installation",
+    Description: "Split Type AC - Inverter 1.0 HP",
+    Customer: "Michael Ong",
+    Quantity: "1 Unit",
+    Amount: "Php 32,000.00",
+    OrderDate: "8/25/2025",
+    DeliveryDate: "9/10/2025"
+  }
 ];
   
+
+   // Initialize with all workers on first render
+   useEffect(() => {
+     setOutput(orderData);
+   }, []);
+ 
+ 
+  // Combined filter and sort effect
+   useEffect(() => {
+     // Apply search filter
+     let results = orderData.filter(data =>
+       data.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    data.Description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    data.Customer.toLowerCase().includes(searchQuery.toLowerCase())
+     );
+ 
+     // Apply sorting
+     results = sortData(results, sortOption);
+     
+     setOutput(results);
+   }, [searchQuery, sortOption]); // Add sortOption to dependencies
+ 
+ 
+ // Sorting function
+   const sortData = (data, option) => {
+     const sorted = [...data];
+     switch(option) {
+       case 'name-asc':
+         return sorted.sort((a, b) => a.Title.localeCompare(b.Title));
+       case 'name-desc':
+         return sorted.sort((a, b) => b.Title.localeCompare(a.Title));
+       default:
+         return data;
+     }
+   };
+
+
+
 
   const filteredOrders = orderData.filter(order =>
     order.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -106,10 +213,9 @@ const OrdersPage = () => {
               />
             </div>
           </div>
-          <div className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
-            <Filter className='h-3 w-3 ml-3 text-gray-500'/>
-            <p className='text-gray-500 ml-2'>Filter</p>
-        </div>
+            <SortingDropdown 
+            onSortChange={(sortValue) => setSortOption(sortValue)}
+          />
         </div>
 
 
@@ -119,7 +225,7 @@ const OrdersPage = () => {
         
         <div className='flex-1 overflow-y-auto'>
             <div className='grid grid-cols-2 gap-5 p-8 pb-16'>
-                {orderData.map((order) => (
+                {output.map((order) => (
                     <OrdersCard  //OrderID, Title, Description, Customer, Amount, OrderDate, DeliveryDate
                         key={order.OrderID}
                         Title={order.Title}

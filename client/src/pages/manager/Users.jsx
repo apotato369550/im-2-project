@@ -1,12 +1,19 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter} from "lucide-react";
 import { CustomerCard } from "../../components/CustomerCard";
+import SortingDropdown from "../../components/SortingDropdown";
 
 const UsersPage = () => {
   const [activeItem, setActiveItem] = useState('Users');
+
+    //search function
+  const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [output, setOutput] = useState([]);
+
+  //filter function
+   const [sortOption, setSortOption] = useState('default');
 
   const customerData=[
     {
@@ -35,7 +42,7 @@ const UsersPage = () => {
     },
     {
         Name:"Jon Aloyon",
-        DateJoined: "2/14/2023",
+        DateJoined: "2/18/2023",
         Address:"Cebu City",
         Email: "jhen.aloyon@gmail.com",
         Orders: 5,
@@ -61,10 +68,41 @@ const UsersPage = () => {
 ];
   
 
-  const filteredCustomers = customerData.filter(customer =>
-    customer.Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    customer.Email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+   // Initialize with all workers on first render
+   useEffect(() => {
+     setOutput(customerData);
+   }, []);
+ 
+ 
+  // Combined filter and sort effect
+   useEffect(() => {
+     // Apply search filter
+     let results = customerData.filter(customer =>
+       customer.Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       customer.DateJoined.toLowerCase().includes(searchQuery.toLowerCase())||
+       customer.Address.toLowerCase().includes(searchQuery.toLowerCase())
+     );
+ 
+     // Apply sorting
+     results = sortData(results, sortOption);
+     
+     setOutput(results);
+   }, [searchQuery, sortOption]); // Add sortOption to dependencies
+ 
+ 
+ // Sorting function
+   const sortData = (data, option) => {
+     const sorted = [...data];
+     switch(option) {
+       case 'name-asc':
+         return sorted.sort((a, b) => a.Name.localeCompare(b.Name));
+       case 'name-desc':
+         return sorted.sort((a, b) => b.Name.localeCompare(a.Name));
+       default:
+         return data;
+     }
+   };
+   
 
   const handleLogout = () => {
     console.log('Logging out...');
@@ -92,10 +130,7 @@ const UsersPage = () => {
                 Manage customer information.
               </p>
             </div>
-            <button className='flex items-center bg-cbvt-navy h-[40px] px-4 rounded-2xl text-white mr-10 '>
-              <Plus className='h-3 w-3 mr-2' />
-              <span className='text-xs'>Add New User</span>
-            </button>
+
           </div>
 
 
@@ -113,10 +148,9 @@ const UsersPage = () => {
               />
             </div>
           </div>
-          <div className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
-            <Filter className='h-3 w-3 ml-3 text-gray-500'/>
-            <p className='text-gray-500 ml-2'>Filter</p>
-        </div>
+            <SortingDropdown 
+            onSortChange={(sortValue) => setSortOption(sortValue)}
+          />
         </div>
 
         
@@ -128,7 +162,7 @@ const UsersPage = () => {
         {/* Cumstomers Grid */}
         <div className="flex-1 overflow-y-auto px-8 pb-8">
           <div className="grid grid-cols-3 gap-5 mt-5">
-            {customerData.map((customer) => (
+            {output.map((customer) => (
             <CustomerCard
             key={customer.Name} //Name, Address, DateJoined, Email, Orders, TotalSpent
             Name={customer.Name}
