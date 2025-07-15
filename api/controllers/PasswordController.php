@@ -26,7 +26,7 @@ Class PasswordController{
         $subject = "Cebu Best Value: Account Forget Password Link";
         $body = "Hi {$exists['user_full_name']},<br><br>" .
         "Click the link below to reset your password:<br>" .
-        "<a href='http://localhost/password/changePassword?token={$jwt}'>Reset Password</a><br><br>" .
+        "<a href='http://localhost:5173/reset-password?token={$jwt}'>Reset Password</a><br><br>" .
         "If you didn’t request this, please ignore this email.";
 
         if ($mail->send($exists['user_email'], $subject, $body)) {
