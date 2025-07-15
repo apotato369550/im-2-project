@@ -54,26 +54,55 @@ const AssignmentPage = () => {
   ];
   */
 
-  useEffect(() => {
-    console.log("Works");
-    const userData = JSON.parse(localStorage.getItem('user_data'));
-    console.log(userData)
-    axios.get("http://localhost/im-2-project/api/assignments/fetch-list", {
-      headers: {
-        Authorization: "Bearer " + userData.token
-      }
-    }).then(response => {
-      const data = response.data.data
-      console.log(response)
+    useEffect(() => {
+      console.log("Works");
+      const userData = JSON.parse(localStorage.getItem("user_data"));
+      console.log(userData);
+      axios
+        .get("http://localhost/im-2-project/api/assignments/fetch-list", {
+          headers: {
+            Authorization: "Bearer " + userData.token,
+          },
+        })
+        .then((response) => {
+          console.log("Data from API");
+          console.log(response);
+          /*
+          format of data from api:
+          [
+            {
+              assignment_date_created: "2025-07-08",
+              assignment_details:  "A lot has happened lately",
+              assignment_due: "2026-01-23",
+              assignment_id:  3,
+              assignment_status: "Pending",
+              location: "somewhere",
+              service_name: "Retail"
+            }
+          ]
+          format i want it turned into:
+          [
+            {
+              AssignmentID: 1114,
+              Title: "AC Maintenance",
+              Description: "Install split-type air conditioning unit in master bedroom",
+              AssignedPerson: "John Doe",
+              CustomerName: "Jhen Aloyon",
+              Location: "Talisay, Cebu",
+              DueDate: "8/13/2025",
+            },
+        ]
+        // map service_name to Title
 
-      // convert here using: setAssignmentData() <- useState
-
-
-
-    }).catch(error => {
-      console.log(error.response.data)
-    })
-  }, [])
+        // assignment title/type
+        // customer name
+        // assigned worker/person
+          */
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+        });
+    }, []);
 
   const filteredAssignments = assignmentData.filter(assignment =>
     assignment.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||

@@ -46,14 +46,6 @@ export const AssignmentCard = ({AssignmentID, Title, Description, AssignedPerson
                         <span className="text-cbvt-hover-blue">{DueDate}</span>
                     </p>
                      </div>
-
-                <div className="flex flex-row">
-                    <Clock className="h-4 w-4 mb-3 text-gray-700 mr-4"/>
-                    <p className="mt-[-4px]">
-                        <span className="text-cbvt-dark-gray">Estimated time: </span>
-                        <span className="text-cbvt-hover-blue">{EstimatedTime}</span>
-                    </p>
-                     </div>
     
                  </div>
 
