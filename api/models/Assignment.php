@@ -10,11 +10,17 @@ class Assignment{
                     a.assignment_status,
                     a.assignment_due,
                     a.assignment_date_created,
+                    u.user_id as clientId,
+                    u.user_full_name as clientName,
+                    w.user_id as assignedWorkerId,
+                    w.user_full_name as assignedWorker,
                     s.service_type as service_name,
-                    o.address as location
+                    o.address as Location
              FROM assignments a
              JOIN service s ON a.service_id = s.service_id
              JOIN orders o ON o.order_id = a.order_id
+             LEFT JOIN users u ON u.user_id = o.client_id
+             LEFT JOIN users w ON w.user_id = a.worker_id
              WHERE a.is_removed <> :isRemoved");
         $stmt->execute([
             "isRemoved" => 1
