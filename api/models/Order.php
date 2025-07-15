@@ -3,8 +3,32 @@
 class Order{
     public function fetchList() {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("SELECT * FROM orders");
-        $stmt->execute();
+        $stmt = $db->prepare(
+        "SELECT o.order_id,
+                o.concern,
+                o.order_status,
+                o.phone_number,
+                o.address,
+                o.order_date_created,
+                u.user_id,
+                u.user_full_name,
+                u.user_email,
+                s.service_id,
+                s.service_type, 
+                s.service_details, 
+                i.item_id,
+                i.model,
+                i.type,
+                i.inverter,
+                i.brand, 
+                q.total_payment
+            FROM orders o 
+            JOIN users u ON o.client_id = u.user_id
+            JOIN service s ON o.service_id = s.service_id
+            LEFT JOIN items i ON i.item_id = o.item_id
+            LEFT JOIN quotation q ON q.order_id = o.order_id AND q.quotation_status = :status 
+        ");
+        $stmt->execute(["status"=> "Approved"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
