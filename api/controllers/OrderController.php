@@ -1,8 +1,6 @@
     
 <?php
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\KEY;
 
 class OrderController{
     public function fetchList() {

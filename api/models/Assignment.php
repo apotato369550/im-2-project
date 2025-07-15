@@ -105,7 +105,7 @@ class Assignment{
             WHERE order_id = :orderId
         ');
         $stmt->execute([
-            "orderID" => $orderId
+            "orderId" => $orderId
         ]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
