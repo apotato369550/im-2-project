@@ -30,18 +30,20 @@ $router = new Router();
 /**********************************
  *          GET ENDPOINTS
  *********************************/
-$router->get('/im-2-project/api/user/profile', 'UserController@profile');
+$router->get('/im-2-project/api/users/profile', 'UserController@profile');
+$router->get('/im-2-project/api/users/fetch-list', 'UserController@fetchAllUsers');
 
 
 /**********************************
  *          POST ENDPOINTS
  *********************************/
-$router->post('/im-2-project/api/user/login', 'UserController@login');
-$router->post('/im-2-project/api/user/register', 'UserController@register');
+$router->post('/im-2-project/api/users/login', 'UserController@login');
+$router->post('/im-2-project/api/users/register', 'UserController@register');
+$router->post('/im-2-project/api/users/update-profile', 'UserController@updateProfilePicture');
 
 
 /**************************************************************************
- *                          ASSIGNMENT    ROUTES
+ *                          ASSIGNMENTs    ROUTES
  *************************************************************************/
 
 
@@ -86,7 +88,12 @@ $router->post('/im-2-project/api/orders/create', 'OrderController@createOrder');
 /**********************************
  *          PUT ENDPOINTS
  *********************************/
-$router->put('/im-2-project/api/orders/edit/{id}', 'OrderController@editOrder');
+$router->put('/im-2-project/api/orders/edit/{id}', 'OrderController@editOrderStatus');
+
+/**********************************
+ *          DELETE ENDPOINTS
+ *********************************/
+$router->delete('/im-2-project/api/orders/delete/{id}', 'OrderController@deleteOrder');
 
 
 /**************************************************************************
@@ -179,6 +186,24 @@ $router->delete('/im-2-project/api/items/delete/{itemId}', 'ItemController@delet
  *********************************/
 $router->get('/im-2-project/api/updates/{client_id}', 'UpdateController@getClientUpdates');
 $router->get('/im-2-project/api/updates', 'UpdateController@fetchUpdates');
+$router->get('/im-2-project/api/updates/recent', 'UpdateController@recentUpdates');
+
+
+/**************************************************************************
+ *                          PASSWORD    ROUTES
+ *************************************************************************/
+/**********************************
+ *          POST ENDPOINTS
+ *********************************/
+$router->post('/im-2-project/api/passwords/forget', 'PasswordController@forgetPassword');
+$router->post('/im-2-project/api/passwords/verify', 'PasswordController@verifyDBToken');
+$router->post('/im-2-project/api/passwords/change', 'PasswordController@newPassword');
+
+
+/**************************************************************************
+ *                          PASSWORD    ROUTES
+ *************************************************************************/
+$router->post('/im-2-project/api/feedbacks/create', 'FeedbackController@feedback');
 
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

@@ -41,9 +41,12 @@ Class Quotation{
         $stmt = $db->prepare("
             SELECT q.* FROM quotation q
             INNER JOIN orders o ON q.order_id = o.order_id
-            WHERE o.client_id = :user_id
+            WHERE o.client_id = :user_id AND quotation_status <> :quotationStatus
         ");
-        $stmt->execute(['user_id' => $userId]);
+        $stmt->execute([
+            'user_id' => $userId,
+            'quotation_status' => 'Declined'
+        ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 

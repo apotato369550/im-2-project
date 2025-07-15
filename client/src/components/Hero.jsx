@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import heroFill from "../assets/images/heroFill.png"; 
 import aircon from "../assets/images/aircon.png"  
 import "slick-carousel/slick/slick.css";
@@ -75,8 +76,9 @@ const Hero = () => {
             </div>
           </div>
           
-          <div className="knowMore w-[26rem] h-[9.5rem] flex justify-center items-center absolute right-0 bottom-0 bg-cbvt-light-cream border-t-[12px] border-l-[12px] border-r-6 border-white rounded-tl-4xl rounded-b-4xl p-1 rounded-tr-4xl">
-            <div className="relative flex flex-col px-8 py-6 hover:scale-105 cursor-pointer transition-transform duration-200 ease-in-out *:bg-cbvt-light-cream">
+          {/* Know More Card */}
+          <Link to="/about" className="knowMore w-[26rem] h-[9.5rem] flex justify-center items-center absolute right-0 bottom-0 bg-cbvt-light-gray border-t-[12px] border-l-[12px] border-r-6 border-white rounded-tl-4xl rounded-b-4xl p-1 rounded-tr-4xl cursor-pointer">
+            <div className="relative flex flex-col px-8 py-6 hover:scale-105 transition-transform duration-200 ease-in-out *:bg-cbvt-light-cream">
               <div className="flex items-center space-x-2 md:space-x-50">
                 <span className="text-sm md:text-xl font-alegreya-sans-sc font-bold text-cbvt-navy capitalize">
                   know more
@@ -97,21 +99,17 @@ const Hero = () => {
               
               <div className="flex flex-row space-x-4">
                 <div className="flex -space-x-2 mt-2 md:mt-4">
-                  {/* Repair Icon */}
                   <div className="w-8 h-8 md:w-12 md:h-12 bg-cbvt-blue rounded-full border-2 border-white flex items-center justify-center">
                     <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clipRule="evenodd" />
                     </svg>
                   </div>
-
-                  {/* Installation Icon */}
                   <div className="w-8 h-8 md:w-12 md:h-12 bg-cbvt-blue rounded-full border-2 border-white flex items-center justify-center">
                     <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
                     </svg>
                   </div>
 
-                  {/* Retail/Shopping Icon */}
                   <div className="w-8 h-8 md:w-12 md:h-12 bg-cbvt-blue rounded-full border-2 border-white flex items-center justify-center">
                     <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 2L3 7v11a2 2 0 002 2h10a2 2 0 002-2V7l-7-5zM8 15a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm1-9a1 1 0 000 2h2a1 1 0 100-2H9z" clipRule="evenodd" />
@@ -129,7 +127,7 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
           {/* Hero Image */}
             <div className="absolute top-30 right-[-60px] mt-10">

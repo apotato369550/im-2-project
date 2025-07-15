@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 07, 2025 at 09:58 AM
+-- Generation Time: Jul 14, 2025 at 05:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -35,8 +35,17 @@ CREATE TABLE `assignments` (
   `assignment_details` varchar(255) DEFAULT NULL,
   `assignment_status` varchar(255) DEFAULT NULL,
   `assignment_due` varchar(255) NOT NULL,
-  `assignment_date_created` varchar(255) DEFAULT NULL
+  `assignment_date_created` varchar(255) DEFAULT NULL,
+  `is_removed` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `assignments`
+--
+
+INSERT INTO `assignments` (`assignment_id`, `service_id`, `worker_id`, `order_id`, `assignment_details`, `assignment_status`, `assignment_due`, `assignment_date_created`, `is_removed`) VALUES
+(3, 3, NULL, 4, 'A lot has happened lately', 'Pending', '2026-01-23', '2025-07-08', 0),
+(4, 3, NULL, 5, 'this client needs cleaning and repairing', 'Completed', '2025-12-01', '2025-07-08', 0);
 
 -- --------------------------------------------------------
 
@@ -54,8 +63,18 @@ CREATE TABLE `items` (
   `inverter` varchar(20) DEFAULT NULL,
   `horsepower` varchar(100) DEFAULT NULL,
   `brand` varchar(100) DEFAULT NULL,
-  `image_path` varchar(200) DEFAULT NULL
+  `image_path` varchar(200) DEFAULT NULL,
+  `is_removed` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `items`
+--
+
+INSERT INTO `items` (`item_id`, `supplier_id`, `manager_id`, `model`, `price`, `type`, `inverter`, `horsepower`, `brand`, `image_path`, `is_removed`) VALUES
+(3, 1, 1, 'P3120', 20000.00, 'SPLIT', 'YES', '500', 'Panasonic', 'uploads/686c7eb78ea88_1801000705.webp', 0),
+(5, 1, 1, 'P3100', 3000.00, 'SPLIT', 'YES', '300', 'Panasonic', 'uploads/686c7ef94fbf8_images.jfif', 0),
+(6, 1, 1, 'RKF71CVA', 80910.00, 'SPLIT', 'INT', '3HP', 'DAIKIN', 'uploads/687078f99fdd0_D-Smart-Queen-FTKC-AVA-with-CSPF-Label.png', 0);
 
 -- --------------------------------------------------------
 
@@ -73,8 +92,41 @@ CREATE TABLE `orders` (
   `address` varchar(255) NOT NULL,
   `service_id` int(11) NOT NULL,
   `order_date_created` varchar(255) DEFAULT NULL,
-  `item_id` int(11) DEFAULT NULL
+  `item_id` int(11) DEFAULT NULL,
+  `is_removed` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `client_id`, `manager_id`, `concern`, `order_status`, `phone_number`, `address`, `service_id`, `order_date_created`, `item_id`, `is_removed`) VALUES
+(4, 6, 1, 'ror', 'Completed', '092341551', 'somewhere', 3, '2025-07-08', NULL, 0),
+(5, 6, 1, 'Nag ice among aircon', 'Pending', '09235194824', 'G. Ouano St. Villamanga Opao M.C', 1, '2025-07-08', NULL, 0),
+(6, 13, 1, 'I wanna buy stscvsvsfd s', 'Pending', '09235194824', 'G. Ouano St. Villamanga Opao M.C', 3, '2025-07-14', 3, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_resets`
+--
+
+CREATE TABLE `password_resets` (
+  `reset_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `used` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `password_resets`
+--
+
+INSERT INTO `password_resets` (`reset_id`, `user_id`, `token`, `expires_at`, `used`) VALUES
+(1, 11, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMSwiZXhwIjoxNzUyMjMxMjE1fQ.5TaqMsF9UBLlcuoSs6grrau9g-UxuGk2RVGcneZctgs', '2025-07-11 12:53:35', 0),
+(2, 11, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMSwiZXhwIjoxNzUyMjMxNDA0fQ.fWcCZUvQr4lObG9I8paJmhEBpyW0YodLf5NraD47ol0', '2025-07-11 12:56:44', 0),
+(3, 11, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMSwiZXhwIjoxNzUyMjMyMDI5fQ.Gh3jR5GiNfm6kaT5ezRIsW4EEIwpvhmApLSaxhhqYGE', '2025-07-11 13:07:09', 1);
 
 -- --------------------------------------------------------
 
@@ -90,6 +142,13 @@ CREATE TABLE `quotation` (
   `quotation_status` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `quotation`
+--
+
+INSERT INTO `quotation` (`quotation_id`, `total_payment`, `description`, `order_id`, `quotation_status`) VALUES
+(1, 10000.000, 'this is the proposed amount that user will pay', 5, 'Approved');
+
 -- --------------------------------------------------------
 
 --
@@ -101,6 +160,15 @@ CREATE TABLE `service` (
   `service_details` varchar(255) DEFAULT NULL,
   `service_type` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `service`
+--
+
+INSERT INTO `service` (`service_id`, `service_details`, `service_type`) VALUES
+(1, 'Fast, reliable airconditioner fixes.', 'Repair'),
+(2, 'Expert airconditioner setup.', 'Installation'),
+(3, 'Top-brand units for sale.', 'Retail');
 
 -- --------------------------------------------------------
 
@@ -114,6 +182,13 @@ CREATE TABLE `supplier` (
   `contact_number` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `supplier`
+--
+
+INSERT INTO `supplier` (`supplier_id`, `company_name`, `contact_number`) VALUES
+(1, 'Panasonic', '092315194824');
+
 -- --------------------------------------------------------
 
 --
@@ -125,8 +200,19 @@ CREATE TABLE `updates` (
   `worker_id` int(11) DEFAULT NULL,
   `assignment_id` int(11) NOT NULL,
   `date_last_update` varchar(255) DEFAULT NULL,
-  `update_message` varchar(255) NOT NULL
+  `update_message` varchar(255) NOT NULL,
+  `is_read` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `updates`
+--
+
+INSERT INTO `updates` (`update_id`, `worker_id`, `assignment_id`, `date_last_update`, `update_message`, `is_read`) VALUES
+(1, 6, 1, '2025-07-08', 'Assignment has been created for order no 4', 0),
+(2, 6, 1, '2025-07-08', 'Assignment has been created for order no 5', 0),
+(3, 1, 4, '2025-07-14', 'The status for assignment no 4 has been changed to Completed', 0),
+(4, 1, 4, '2025-07-14', 'The status for assignment no 4 has been changed to Completed', 0);
 
 -- --------------------------------------------------------
 
@@ -139,17 +225,24 @@ CREATE TABLE `users` (
   `user_full_name` varchar(255) NOT NULL,
   `user_email` varchar(255) NOT NULL,
   `user_password` varchar(255) NOT NULL,
-  `user_type` varchar(255) NOT NULL
+  `user_type` varchar(255) NOT NULL,
+  `image_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `user_full_name`, `user_email`, `user_password`, `user_type`) VALUES
-(1, 'admin', 'admin@gmail.com', 'admin123', 'Manager'),
-(6, 'Jhanell Mingo', 'jhanell@example.com', '$2y$10$RdCHv2AF8T1FlRhYjvu3cuJE9e1rR7dKHTGfYqKUQ5073q3WvpjMu', 'Client'),
-(7, 'Heizel Lequin', 'heizel@example.com', '$2y$10$Jhsa8h5PTlVzPgeWGQXynulJyR4sOkX6/KeRASDs21NLNTHk/lut.', 'Client');
+INSERT INTO `users` (`user_id`, `user_full_name`, `user_email`, `user_password`, `user_type`, `image_path`) VALUES
+(1, 'Admin Owner', 'cebubestvalue4@gmail.com', '$2y$10$/KFFuAMyVlULrWVqcmnTjOuKax/5BaW8ABwMMLxryqxaCroVNhI0q', 'manager', NULL),
+(6, 'Jhanell Mingo', 'jhanell@example.com', '$2y$10$RdCHv2AF8T1FlRhYjvu3cuJE9e1rR7dKHTGfYqKUQ5073q3WvpjMu', 'client', NULL),
+(7, 'Heizel Lequin', 'heizel@example.com', '$2y$10$Jhsa8h5PTlVzPgeWGQXynulJyR4sOkX6/KeRASDs21NLNTHk/lut.', 'client', NULL),
+(9, 'Jose Carumba', 'jose@example.com', '$2y$10$SYer93gd6aK0wEnhs5xe8eVzlRBK4jcAsnsPqT34pdnTd7d0H74QK', 'client', NULL),
+(10, 'Nino Calunod', 'nino@example.com', '$2y$10$d2OO4wpjxWInOmhIgfawRuWULYC/.7iV.1E/cdg7igG1oNv0x2xNC', 'client', 'uploads/686f4e87ee4f2_monkeh.jpg'),
+(11, 'Jhanell R. Mingo', 'jhanell.mingo@gmail.com', '$2y$10$cuyS9xVyafWiTYG.Y1vDguHw0lCBDgsYsoIR9w2fiSgVi1gFKKvE6', 'client', NULL),
+(12, 'Jose Carumba', 'miggycarumba912@gmail.com', '$2y$10$7Y4GdKaI6HSXtTgW2ho.wuy.oKmlE0L9NSNjwEjnx1.YaZ8PBZ7li', 'client', NULL),
+(13, 'Atheena Arcena', 'atheenaarcena2810@gmail.com', '$2y$10$t9xQwYFu/J5ih.H73SNrWeBihDautJm/Ro1dFxuplnY6B.dwuQQ0e', 'client', NULL),
+(14, 'haq buddu', 'haquidubuddu-7208@yopmail.com', '$2y$10$cmpvwRPpi/tb5TqK4BSm6etMXzVa5naaODNr9M4whD5DSOrwBTcDu', 'client', NULL);
 
 --
 -- Indexes for dumped tables
@@ -169,6 +262,7 @@ ALTER TABLE `assignments`
 --
 ALTER TABLE `items`
   ADD PRIMARY KEY (`item_id`),
+  ADD UNIQUE KEY `model` (`model`),
   ADD KEY `supplier_id` (`supplier_id`),
   ADD KEY `manager_id` (`manager_id`);
 
@@ -181,6 +275,12 @@ ALTER TABLE `orders`
   ADD KEY `manager_id` (`manager_id`),
   ADD KEY `service_id` (`service_id`),
   ADD KEY `item_id` (`item_id`);
+
+--
+-- Indexes for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD PRIMARY KEY (`reset_id`);
 
 --
 -- Indexes for table `quotation`
@@ -224,49 +324,55 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `assignments`
 --
 ALTER TABLE `assignments`
-  MODIFY `assignment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `assignment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  MODIFY `reset_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `quotation`
 --
 ALTER TABLE `quotation`
-  MODIFY `quotation_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `quotation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `service`
 --
 ALTER TABLE `service`
-  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `supplier`
 --
 ALTER TABLE `supplier`
-  MODIFY `supplier_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `supplier_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `updates`
 --
 ALTER TABLE `updates`
-  MODIFY `update_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `update_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables

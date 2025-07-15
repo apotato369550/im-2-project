@@ -22,11 +22,16 @@ Class UpdateController{
 
     public function getClientUpdates($client_id){
         $decoded = AuthMiddleware::verifyToken();
-        // Optionally, check if $decoded->user_id matches $client_id or has permission
         $update = new Update();
         $updates = $update->retrieveUserUpdates($client_id);
         echo json_encode($updates ?: []);
     }
 
-    //missing fetch all updates 
+    public function recentUpdates(){
+        $decoded = AuthMiddleware::verifyToken();
+        $update = new Update();
+        $recentUpdates = $update->getRecentUpdates();
+        echo json_encode($recentUpdates ?: []);
+    }
+
 }

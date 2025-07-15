@@ -1,4 +1,3 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Khand:wght@300;400;500;600;700&family=Carme:wght@400&family=Alegreya+Sans+SC:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
@@ -189,17 +188,14 @@
 }
 
 .bg-cbvt-light-cream {
-  background-color: rgb(247 247 250);
+  background-color: #F5EFEB;
 }
 
-<<<<<<< HEAD
 .bg-button-green{
   background-color: #366534;
 }
 
 
-=======
->>>>>>> 99b08fa96d9e60943f093719d332eef7ce18e012
 .card-border-cbvt{
   border-color: #E5E7EB;
 }
