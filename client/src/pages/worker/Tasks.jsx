@@ -1,13 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import WorkerSidebar from "../../components/WorkerSidebar";
 import { Plus, Search, Filter} from "lucide-react";
+import SortingDropdown from '../../components/SortingDropdown';
 import { TaskCard } from '../../components/TasksCard';
 
-const AssignmentPage = () => {
+const TasksPage = () => {
   const [activeItem, setActiveItem] = useState('My Tasks');
+  
+  //search function
+  const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
+  const [output, setOutput] = useState([]);
+
+  //filter function
+   const [sortOption, setSortOption] = useState('default');
 
   const workerTasks=[
     {
@@ -17,34 +25,70 @@ const AssignmentPage = () => {
         Location: "Talisay, Cebu",
         StartDate: "8/13/2025",               
         Notes: "Customer prefers installation in the afternoon. Parking available in basement.",
-        Price: "Php 5,000.00"  
+        Price: "Php 5,000.00",
+        is_removed: 0,
 
     },
 
     {
-        TaskID: 1111,
+        TaskID: 1311,
         Title: "AC Installation",
         Description: "Install split-type air conditioning unit in master bedroom",
         Location: "Talisay, Cebu",
         StartDate: "8/13/2025",               
         Notes: "Customer prefers installation in the afternoon. Parking available in basement.",
-        Price: "Php 5,000.00"  
+        Price: "Php 5,000.00",
+        is_removed: 1,  
 
     },
 
     {
-        TaskID: 1111,
-        Title: "AC Installation",
+        TaskID: 1151,
+        Title: "AC biot",
         Description: "Install split-type air conditioning unit in master bedroom",
         Location: "Talisay, Cebu",
         StartDate: "8/13/2025",               
         Notes: "Customer prefers installation in the afternoon. Parking available in basement.",
-        Price: "Php 5,000.00"  
+        Price: "Php 5,000.00",
+        is_removed: 0,  
 
     },
     
     
 ];
+
+
+// Filter out soft-deleted customers
+  const activeAssignments = workerTasks.filter(data => data.is_removed === 0);
+
+useEffect(() => {
+  setOutput(activeAssignments);
+}, [activeAssignments]); // Changed from workerTasks
+
+// 3. Fix the filter/sort effect:
+useEffect(() => {
+  let results = activeAssignments.filter(task =>
+    task.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    task.Location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    task.Description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+  results = sortData(results, sortOption);
+  setOutput(results);
+}, [searchQuery, sortOption, activeAssignments]);
+ 
+ // Sorting function
+   const sortData = (data, option) => {
+     const sorted = [...data];
+     switch(option) {
+       case 'name-asc':
+         return sorted.sort((a, b) => a.Title.localeCompare(b.Title));
+       case 'name-desc':
+         return sorted.sort((a, b) => b.Title.localeCompare(a.Title));
+       default:
+         return data;
+     }
+   };
   
 
   const filteredAssignments = workerTasks.filter(assignment =>
@@ -98,10 +142,9 @@ const AssignmentPage = () => {
               />
             </div>
           </div>
-          <button className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
-            <Filter className='h-3 w-3 ml-3 text-gray-500'/>
-            <p className='text-gray-500 ml-2'>Filter</p>
-        </button>
+           <SortingDropdown 
+            onSortChange={(sortValue) => setSortOption(sortValue)}
+          />
         </div>
 
 
@@ -111,7 +154,7 @@ const AssignmentPage = () => {
         
         <div className='flex-1 overflow-y-auto'>
             <div className='grid  gap-5 p-8 pb-16'>
-                {workerTasks.map((assignment) => (
+                {output.map((assignment) => (
                     <TaskCard  
                         key={assignment.TaskID}
                         Title={assignment.Title}
@@ -120,6 +163,7 @@ const AssignmentPage = () => {
                         Location={assignment.Location}
                         StartDate={assignment.StartDate}
                         Notes={assignment.Notes}
+                        is_removed={assignment.is_removed}
 
 
                     />
@@ -135,4 +179,4 @@ const AssignmentPage = () => {
   );
 };
 
-export default AssignmentPage;
+export default TasksPage;

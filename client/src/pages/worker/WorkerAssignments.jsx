@@ -1,3 +1,4 @@
+
   import { useState, useEffect } from 'react';
   import { Outlet, useNavigate } from 'react-router-dom';
   import WorkerSidebar from "../../components/WorkerSidebar";
@@ -54,9 +55,43 @@
 
       fetchAssignment();
       // fetchRecent();
+     setOutput(activeAssignments);
 
-    }, [])
+
+    }, [availableAssignments])
     
+
+ // Initialize with all workers on first rende 
+ 
+  // Combined filter and sort effect
+   useEffect(() => {
+     // Apply search filter
+     let results = activeAssignments.filter(assignment =>
+       assignment.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    assignment.CustomerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    assignment.Description.toLowerCase().includes(searchQuery.toLowerCase())
+     );
+ 
+     // Apply sorting
+     results = sortData(results, sortOption);
+     
+     setOutput(results);
+   }, [searchQuery, sortOption, availableAssignments]); 
+ 
+ // Sorting function
+   const sortData = (data, option) => {
+     const sorted = [...data];
+     switch(option) {
+       case 'name-asc':
+         return sorted.sort((a, b) => a.Title.localeCompare(b.Title));
+       case 'name-desc':
+         return sorted.sort((a, b) => b.Title.localeCompare(a.Title));
+       default:
+         return data;
+     }
+   };
+   
+
 
     // const filteredAssignments = availableAssignments.filter(assignment =>
     //   assignment.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -118,10 +153,12 @@
               <p className='text-gray-500 ml-2'>Filter</p>
           </div>
           </div>
-
-
+            <SortingDropdown 
+            onSortChange={(sortValue) => setSortOption(sortValue)}
+          />
+        
+        </div>
           </div>
-
           {/* Assignments Grid */}
           
           <div className='flex-1 overflow-y-auto'>
@@ -144,6 +181,7 @@
 
                   ))}
               </div>
+
 
           </div>
 
