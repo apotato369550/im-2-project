@@ -415,7 +415,7 @@ const Catalog = () => {
           shouldCloseOnOverlayClick={false}
           className="fixed inset-0 flex items-center justify-center p-4 z-50 border-none"
         >
-          <div className="max-w-5xl mx-auto bg-white rounded-[20px] border-2 p-8 flex flex-row items-center gap-10 shadow-lg relative">
+          <div className="max-w-5xl mx-auto bg-white rounded-[20px] p-8 flex flex-row items-center gap-10 shadow-lg relative">
             {/* Close Button */}
             <button
               onClick={() => setmodalIsOpen(false)}

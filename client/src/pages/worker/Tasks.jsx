@@ -19,7 +19,7 @@ const TasksPage = () => {
 
   const workerTasks=[
     {
-        TaskID: 1111,
+        TaskID: 1112,
         Title: "AC Installation",
         Description: "Install split-type air conditioning unit in master bedroom",
         Location: "Talisay, Cebu",
@@ -43,8 +43,8 @@ const TasksPage = () => {
     },
 
     {
-        TaskID: 1151,
-        Title: "AC biot",
+        TaskID: 1113,
+        Title: "AC Installation",
         Description: "Install split-type air conditioning unit in master bedroom",
         Location: "Talisay, Cebu",
         StartDate: "8/13/2025",               

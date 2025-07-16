@@ -46,7 +46,6 @@ const App = () => (
         <Route path="/manager/assignment" element={<Assignment />} />
         <Route path="/manager/orders" element={<Orders />} />
       </Route>
-
       {/* Worker Routes */}
 
         
@@ -54,6 +53,8 @@ const App = () => (
         <Route path="/worker/dashboard" element={<WorkerDashboard />} />
         <Route path="/worker/assignments" element={<WorkerAssignments />} />
         <Route path="/worker/tasks" element={<Tasks />} />
+      {/* Worker Routes */}
+      <Route element={<PrivateRoute allowedRoles={['worker']} />}>
       </Route>
 
       {/* Fallback */}

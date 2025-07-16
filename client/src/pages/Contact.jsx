@@ -22,7 +22,7 @@ const Contact = () => {
       {/* Contact Form Section */}
       <div id="contact">
         <ContactForm 
-          topMargin="mt-20" 
+          topMargin="mt-30" 
           topPadding="pt-8" 
           backgroundImage={contactUsBg}
           backgroundSize="cover"
