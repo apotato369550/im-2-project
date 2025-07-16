@@ -128,12 +128,11 @@ export default function Login() {
 
             {/* Remember Me and Forgot Password */}
             <div className="flex items-end justify-end">
-              <a
-                href="#"
+              <Link to = "/forget-password"
                 className="text-[14px] font-ibm-plex-sans text-cbvt-light-blue opacity-70 hover:underline transition-opacity"
               >
                 Forgot your password?
-              </a>
+              </Link>
             </div>
 
             {/* Error message */}

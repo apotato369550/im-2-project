@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import {RecentUpdates} from "../../components/RecentUpdates";
 import { CardHolderSm } from "../../components/CardHolderSm";
@@ -33,7 +33,7 @@ const DashboardPage = () => {
   const [activeItem, setActiveItem] = useState('Dashboard');
   const [cardData, setCardData] = useState([]);
   const [recentUpdates, setRecentUpdates] = useState([]);
-
+  const navigate = useNavigate();
   /*
 const recentUpdates = [
   {
@@ -142,10 +142,10 @@ useEffect(() => {
 
 
   
-  const handleLogout = () => {
-    console.log('Logging out...');
-   
-  };
+  const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">
