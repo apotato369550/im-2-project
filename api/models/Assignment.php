@@ -15,18 +15,28 @@ class Assignment{
                     w.user_id as assignedWorkerId,
                     w.user_full_name as assignedWorker,
                     s.service_type as service_name,
-                    o.address as Location
+                    o.address as Location,
+                    q.total_payment
              FROM assignments a
-             JOIN service s ON a.service_id = s.service_id
              JOIN orders o ON o.order_id = a.order_id
+             JOIN service s ON o.service_id = s.service_id
+             LEFT JOIN quotation q ON o.order_id = q.order_id
              LEFT JOIN users u ON u.user_id = o.client_id
-             LEFT JOIN users w ON w.user_id = a.worker_id
-             WHERE a.is_removed <> :isRemoved");
-        $stmt->execute([
-            "isRemoved" => 1
-        ]);
+             LEFT JOIN users w ON w.user_id = a.worker_id");
+        $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         return  $result;
+    }
+
+    public function getAvailableAssignments(){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("
+            SELECT  *
+            FROM assignments
+            WHERE worker_id IS NULL
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function viewAssignments(string $userId) : ?array
@@ -114,6 +124,29 @@ class Assignment{
             "orderId" => $orderId
         ]);
 
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
+
+    public function recentAssignments(){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare(
+            'SELECT a.assignment_id,
+                    a.assignment_details,
+                    a.assignment_status,
+                    a.assignment_due,
+                    a.assignment_date_created,
+                    u.user_id as clientId,
+                    u.user_full_name as clientName,
+                    s.service_type as service_name,
+                    o.address as Location,
+                    q.total_payment
+             FROM assignments a
+             JOIN orders o ON o.order_id = a.order_id
+             JOIN service s ON o.service_id = s.service_id
+             LEFT JOIN quotation q ON q.order_id = o.order_id
+             LEFT JOIN users u ON u.user_id = o.client_id
+             WHERE a.worker_id IS NULL AND assignment_date_created >= CURRENT_DATE - INTERVAL 7 DAY');
+        $result = $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 

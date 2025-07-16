@@ -50,9 +50,11 @@ $router->post('/im-2-project/api/users/update-profile', 'UserController@updatePr
 /**********************************
  *          GET ENDPOINTS
  *********************************/
+$router->get('/im-2-project/api/assignments/available', 'AssignmentController@availableAssignments');
+$router->get('/im-2-project/api/assignments/recent', 'AssignmentController@getRecentAssignments');
 $router->get('/im-2-project/api/assignments', 'AssignmentController@viewAssignments');
-$router->get('/im-2-project/api/assignments/{id}', 'AssignmentController@viewAssignment');
 $router->get('/im-2-project/api/assignments/fetch-list', 'AssignmentController@fetchList');
+$router->get('/im-2-project/api/assignments/{id}', 'AssignmentController@viewAssignment');
 
 
 /**********************************

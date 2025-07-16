@@ -1,3 +1,4 @@
+
 <?php
 
 class Update{
@@ -46,6 +47,7 @@ class Update{
             'SELECT up.*, us.user_full_name
             FROM updates up
             LEFT JOIN users us ON us.user_id = up.worker_id
+            WHERE up.date_last_update >= CURRENT_DATE - INTERVAL 7 DAY
             ORDER BY up.date_last_update DESC');
         $result = $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
