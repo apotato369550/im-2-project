@@ -16,7 +16,12 @@ const Home = () => {
       <Services/>
       <Brands/>
       <div id="contact">
-        <ContactForm/>
+        <ContactForm 
+          height="min-h-[800px]" 
+          topMargin="mt-20" 
+          topPadding="pt-8"
+          backgroundSize="cover"
+        />
       </div>
       <Footer/>
     </div>  
