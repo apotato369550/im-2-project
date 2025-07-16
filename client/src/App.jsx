@@ -15,7 +15,7 @@ import Tasks from "./pages/worker/Tasks.jsx";
 import Contact from "./pages/Contact.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import OrderForm from "./pages/OrderForm.jsx";
-// import { ForgetPasswordTestingSpace, ChangePasswordTestingSpace } from './testing/AssignmentCreationTestingSpace.jsx'
+import { ForgetPasswordTestingSpace, ChangePasswordTestingSpace } from './testing/AssignmentCreationTestingSpace.jsx'
 import PrivateRoute from "./security/PrivateRoute";
 
 const App = () => (
@@ -29,8 +29,8 @@ const App = () => (
       <Route path="/catalog" element={<Catalog />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/order-form" element={<OrderForm />} />
-      {/* <Route path="/forget-password" element={<ForgetPasswordTestingSpace />} />
-      <Route path="/reset-password" element={<ChangePasswordTestingSpace />} /> */}
+      <Route path="/forget-password" element={<ForgetPasswordTestingSpace />} />
+      <Route path="/reset-password" element={<ChangePasswordTestingSpace />} /> */
 
       {/* Manager Routes */}
       <Route element={<PrivateRoute allowedRoles={['manager']} />}>
