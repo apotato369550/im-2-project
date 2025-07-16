@@ -2,7 +2,13 @@ import { Link, useLocation } from "react-router-dom";
 import{User, Calendar, MapPin} from 'lucide-react';
 
 
-export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location, Notes}) => {
+export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location, Notes, is_removed}) => {
+
+    //doesnt render soft deleted items
+    if(is_removed === 1){
+        return null;
+    }
+
     return(
         //title
         <div className="border border-gray-200 shadow shadow-lg bg-white p-6 rounded-xl flex flex-col">

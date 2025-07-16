@@ -2,9 +2,16 @@ import { Link, useLocation } from "react-router-dom";
 import{User, MapPin, Calendar, Clock} from 'lucide-react';
 import ApplyModal from "./ApplyModal";
 
-export const AvailableAssignments = ({AssignmentID, Title, Description, AssignedPerson, CustomerName, Location, DueDate, EstimatedTime, Price}) => {
+export const AvailableAssignments = ({is_removed, AssignmentID, Title, Description, AssignedPerson, CustomerName, Location, DueDate, EstimatedTime, Price}) => {
+
+//dont render soft deleted assignments 
+if(is_removed === 1){
+    return null;
+}
 
     return(
+
+
         //main card
         <div className="bg-white h-[347px] w-[535px] border border-gray-200 rounded-xl shadow-lg p-8">
             
