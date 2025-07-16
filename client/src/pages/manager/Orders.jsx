@@ -1,56 +1,57 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter} from "lucide-react";
 import { OrdersCard } from "../../components/OrdersCard";
+import axios from 'axios';
 
 const OrdersPage = () => {
   const [activeItem, setActiveItem] = useState('Orders');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const orderData=[
-    {
-        OrderID:111, 
-        Title: "AC Installation", 
-        Description:"Split Type AC - Inverter 1.5 HP", 
-        Customer: "Jhen Aloyon",
-        Quantity:"1 Unit",
-        Amount: "Php 35,000.00", 
-        OrderDate:"8/13/2025", 
-        DeliveryDate:"8/27/2025",  
-    },
-    {
-        OrderID:111, 
-        Title: "AC Installation", 
-        Description:"Split Type AC - Inverter 1.5 HP", 
-        Customer: "Jhen Aloyon",
-        Quantity:"1 Unit",
-        Amount: "Php 35,000.00", 
-        OrderDate:"8/13/2025", 
-        DeliveryDate:"8/27/2025",  
-    },
-    {
-        OrderID:111, 
-        Title: "AC Installation", 
-        Description:"Split Type AC - Inverter 1.5 HP", 
-        Customer: "Jhen Aloyon",
-        Quantity:"1 Unit",
-        Amount: "Php 35,000.00", 
-        OrderDate:"8/13/2025", 
-        DeliveryDate:"8/27/2025",  
-    },
-    {
-        OrderID:111, 
-        Title: "AC Installation", 
-        Description:"Split Type AC - Inverter 1.5 HP", 
-        Customer: "Jhen Aloyon",
-        Quantity:"1 Unit",
-        Amount: "Php 35,000.00", 
-        OrderDate:"8/13/2025", 
-        DeliveryDate:"8/27/2025",  
-    },
-];
-  
+  const [orderData, setOrderData] = useState([]);
+
+  useEffect(() => {
+    console.log("Works");
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    console.log(userData);
+    axios
+      .get("http://localhost/im-2-project/api/orders/fetch-list", {
+        headers: {
+          Authorization: "Bearer " + userData.token,
+        },
+      })
+      .then((response) => {
+        console.log("Data from API");
+        console.log(response);
+
+        console.log("Data from API:", response.data);
+
+        const formattedOrders = response.data.map((order) => ({
+          OrderID: order.order_id,
+          Title: order.service_type || "Untitled Service",
+          Description: `${order.type ?? ""} ${order.model ?? ""} - ${order.inverter ?? ""} ${order.brand ?? ""}`.trim().replace(/\s+/g, ' '),
+          Customer: order.user_full_name || "Unknown",
+          Quantity: "1 Unit", // static unless you have quantity field
+          Amount: `Php ${parseFloat(order.total_payment || 0).toLocaleString("en-PH", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`,
+          OrderDate: new Date(order.order_date_created).toLocaleDateString("en-PH", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+          }),
+        }));
+
+        console.log("Formatted Orders:", formattedOrders);
+        setOrderData(formattedOrders)
+
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+      });
+  }, []);
 
   const filteredOrders = orderData.filter(order =>
     order.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
