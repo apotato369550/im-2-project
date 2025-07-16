@@ -10,6 +10,7 @@ export const ItemCard = ({
   inverter,
   supplier_id,
   is_removed,
+  suppliers, // This is the suppliers array passed from parent
   onEdit,
   onDelete
 }) => {
@@ -58,6 +59,12 @@ export const ItemCard = ({
       supplier_id
     });
     setIsOpen(true);
+  };
+
+  // Find supplier name by supplier_id
+  const getSupplierName = (supplierId) => {
+    const supplier = suppliers?.find(s => s.supplier_id === supplierId);
+    return supplier ? supplier.company_name : 'Unknown Supplier';
   };
 
   return (
@@ -138,21 +145,32 @@ export const ItemCard = ({
                   className="border rounded-lg p-2"
                   required
                 >
+                  <option value="">Select Type</option>
                   <option value="Split AC">Split AC</option>
                   <option value="Window AC">Window AC</option>
                   <option value="Cassette">Cassette</option>
                   <option value="Portable">Portable</option>
                 </select>
                 <label className='font-carme text-cbvt-navy'>Horsepower</label>
-                <input
-                  type="number"
-                  step="0.5"
+                <select
                   name="horsepower"
                   value={formData.horsepower}
                   onChange={handleInputChange}
                   className="border rounded-lg p-2"
                   required
-                />
+                >
+                  <option value="">Select HP</option>
+                  <option value="0.5">0.5 HP</option>
+                  <option value="0.75">0.75 HP</option>
+                  <option value="1.0">1.0 HP</option>
+                  <option value="1.5">1.5 HP</option>
+                  <option value="2.0">2.0 HP</option>
+                  <option value="2.5">2.5 HP</option>
+                  <option value="3.0">3.0 HP</option>
+                  <option value="3.5">3.5 HP</option>
+                  <option value="4.0">4.0 HP</option>
+                  <option value="5.0">5.0 HP</option>
+                </select>
               </div>
               <div className="w-1/2 flex flex-col gap-4">
                 <label className='font-carme text-cbvt-navy'>Model</label>
@@ -172,18 +190,25 @@ export const ItemCard = ({
                   className="border rounded-lg p-2"
                   required
                 >
+                  <option value="">Inverter?</option>
                   <option value="true">Yes</option>
                   <option value="false">No</option>
                 </select>
-                <label className='font-carme text-cbvt-navy'>Supplier ID</label>
-                <input
-                  type="text"
+                <label className='font-carme text-cbvt-navy'>Supplier</label>
+                <select
                   name="supplier_id"
                   value={formData.supplier_id}
                   onChange={handleInputChange}
                   className="border rounded-lg p-2"
                   required
-                />
+                >
+                  <option value="">Select Supplier</option>
+                  {suppliers?.map(supplier => (
+                    <option key={supplier.supplier_id} value={supplier.supplier_id}>
+                      {supplier.company_name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </form>
             <div className="bg-gray-50 px-4 py-3 flex justify-end gap-3 w-full">
@@ -225,6 +250,7 @@ export const ItemCard = ({
               <div className="text-center mb-6">
                 <p className="text-cbvt-dark-gray">Item: <span className="font-semibold">AC-{item_id}</span></p>
                 <p className="text-cbvt-dark-gray">{brand} {model}</p>
+                <p className="text-cbvt-dark-gray">Supplier: <span className="font-semibold">{getSupplierName(supplier_id)}</span></p>
               </div>
               <div className="bg-gray-50 px-4 py-3 flex justify-end gap-3">
                 <button

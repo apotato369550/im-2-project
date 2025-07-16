@@ -141,11 +141,14 @@ $router->get('/im-2-project/api/items/{itemId}', 'ItemController@getItem');
  *********************************/
 $router->post('/im-2-project/api/items/create', 'ItemController@createItem');
 $router->post('/im-2-project/api/items/upload-image', 'ItemController@uploadImage');
+$router->post('/im-2-project/api/items/edit-item/{id}', 'ItemController@updateItemDetails');
 
 /**********************************
  *          DELETE ENDPOINTS
  *********************************/
 $router->delete('/im-2-project/api/items/delete/{itemId}', 'ItemController@deleteItem');
+
+
 
 
 /**************************************************************************
@@ -168,7 +171,7 @@ $router->delete('/im-2-project/api/items/delete/{itemId}', 'ItemController@delet
  /**********************************
  *          GET ENDPOINTS
  *********************************/
- $router->post('/im-2-project/api/suppliers/fetch-list', 'SupplierController@getAllSupplier');
+ $router->get('/im-2-project/api/suppliers/fetch', 'SupplierController@getAllSupplier');
 
 
 

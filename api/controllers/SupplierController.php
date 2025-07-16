@@ -25,6 +25,7 @@ class SupplierController{
     }
 
     public function getAllSupplier(){
+        $decoded = AuthMiddleware::verifyToken();
         $supplier = new Supplier();
         $supplerList = $supplier->getAllSupplier();
         echo json_encode($supplerList ?: []);

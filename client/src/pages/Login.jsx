@@ -27,7 +27,13 @@ export default function Login() {
       .then((data) => {
         localStorage.setItem("user_data", JSON.stringify(data.data)); 
         setError('');
-        navigate("/");
+        if(data.data.user_type === "manager"){
+          navigate("/manager/dashboard");
+        }else if(data.data.user_type === "worker"){
+          navigate("/worker/dashboard");
+        }else{
+          navigate("/");
+        }
       })
       .catch((err) => {
         console.log(err);
