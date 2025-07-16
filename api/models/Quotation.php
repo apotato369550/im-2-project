@@ -3,7 +3,7 @@
 Class Quotation{
     public function fetchList() {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("SELECT * FROM quotation");
+        $stmt = $db->prepare("SELECT * FROM quotation WHERE quotation_status <> Declined");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
@@ -31,7 +31,7 @@ Class Quotation{
 
     public function viewQuotationsByOrder($orderId) {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("SELECT * FROM quotation WHERE order_id = :order_id");
+        $stmt = $db->prepare("SELECT * FROM quotation WHERE order_id = :order_id AND quotation_status <> Declined");
         $stmt->execute(['order_id' => $orderId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
@@ -76,7 +76,7 @@ Class Quotation{
 
     public function deleteQuotation($quotationId) {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("DELETE FROM quotation WHERE quotation_id = :quotation_id");
+        $stmt = $db->prepare("UPDATE quotation SET quotation_status = Declined WHERE quotation_id = :quotation_id");
         $success = $stmt->execute(['quotation_id' => $quotationId]);
         return $success;
     }

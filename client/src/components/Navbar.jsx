@@ -12,6 +12,7 @@ const [user, setUser] = useState(null)
     if(userData){
       try{
         const parsed= JSON.parse(userData);
+        console.log(parsed)
         const firstName = parsed.user_full_name.split(" ")[0];
         const decodedToken = jwtDecode(parsed.token);
 
