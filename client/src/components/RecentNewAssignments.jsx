@@ -1,4 +1,6 @@
 import { Briefcase } from 'lucide-react';
+import ApplyModal from './ApplyModal';
+
 
 export const RecentNewAssignments = ({ assignmentID, title, location, timeAgo }) => {
   return (
@@ -12,9 +14,9 @@ export const RecentNewAssignments = ({ assignmentID, title, location, timeAgo })
       <div className="flex-1 min-w-0"> 
         <div className="flex justify-between items-baseline gap-2">
           <p className="font-medium truncate">{title}</p>
-          <button className="bg-cbvt-navy text-white h-[30px] px-3 rounded-md text-sm flex-shrink-0 hover:bg-cbvt-hover-blue transition-colors">
-            Apply
-          </button>
+        
+          <ApplyModal />
+
         </div>
         
         <div className="mt-1">
