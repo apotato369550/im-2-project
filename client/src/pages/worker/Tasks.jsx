@@ -13,70 +13,75 @@ const TasksPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const [output, setOutput] = useState([]);
+  const userData = JSON.parse(localStorage.getItem('user_data'));
+  const [workerTasks, setWorkerTask] = useState([]);
 
   //filter function
-   const [sortOption, setSortOption] = useState('default');
+  const [sortOption, setSortOption] = useState('default');
 
-  const workerTasks=[
-    {
-        TaskID: 1112,
-        Title: "AC Installation",
-        Description: "Install split-type air conditioning unit in master bedroom",
-        Location: "Talisay, Cebu",
-        StartDate: "8/13/2025",               
-        Notes: "Customer prefers installation in the afternoon. Parking available in basement.",
-        Price: "Php 5,000.00",
-        is_removed: 0,
+  // use
+  
 
-    },
+//   const workerTasks=[
+//     {
+//         TaskID: 1112,
+//         Title: "AC Installation",
+//         Description: "Install split-type air conditioning unit in master bedroom",
+//         Location: "Talisay, Cebu",
+//         StartDate: "8/13/2025",               
+//         Notes: "Customer prefers installation in the afternoon. Parking available in basement.",
+//         Price: "Php 5,000.00",
+//         is_removed: 0,
 
-    {
-        TaskID: 1311,
-        Title: "AC Installation",
-        Description: "Install split-type air conditioning unit in master bedroom",
-        Location: "Talisay, Cebu",
-        StartDate: "8/13/2025",               
-        Notes: "Customer prefers installation in the afternoon. Parking available in basement.",
-        Price: "Php 5,000.00",
-        is_removed: 1,  
+//     },
 
-    },
+//     {
+//         TaskID: 1311,
+//         Title: "AC Installation",
+//         Description: "Install split-type air conditioning unit in master bedroom",
+//         Location: "Talisay, Cebu",
+//         StartDate: "8/13/2025",               
+//         Notes: "Customer prefers installation in the afternoon. Parking available in basement.",
+//         Price: "Php 5,000.00",
+//         is_removed: 1,  
 
-    {
-        TaskID: 1113,
-        Title: "AC Installation",
-        Description: "Install split-type air conditioning unit in master bedroom",
-        Location: "Talisay, Cebu",
-        StartDate: "8/13/2025",               
-        Notes: "Customer prefers installation in the afternoon. Parking available in basement.",
-        Price: "Php 5,000.00",
-        is_removed: 0,  
+//     },
 
-    },
+//     {
+//         TaskID: 1113,
+//         Title: "AC Installation",
+//         Description: "Install split-type air conditioning unit in master bedroom",
+//         Location: "Talisay, Cebu",
+//         StartDate: "8/13/2025",               
+//         Notes: "Customer prefers installation in the afternoon. Parking available in basement.",
+//         Price: "Php 5,000.00",
+//         is_removed: 0,  
+
+//     },
     
     
-];
+// ];
 
 
 // Filter out soft-deleted customers
   const activeAssignments = workerTasks.filter(data => data.is_removed === 0);
 
-useEffect(() => {
-  setOutput(activeAssignments);
-}, [activeAssignments]); // Changed from workerTasks
+// useEffect(() => {
+//   setOutput(activeAssignments);
+// }, [activeAssignments]); // Changed from workerTasks
 
 // 3. Fix the filter/sort effect:
-useEffect(() => {
-  let results = activeAssignments.filter(task =>
-    task.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    task.Location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    task.Description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+// useEffect(() => {
+//   let results = activeAssignments.filter(task =>
+//     task.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+//     task.Location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+//     task.Description.toLowerCase().includes(searchQuery.toLowerCase())
+//   );
   
-  results = sortData(results, sortOption);
-  setOutput(results);
-}, [searchQuery, sortOption, activeAssignments]);
- 
+//   results = sortData(results, sortOption);
+//   setOutput(results);
+// }, [searchQuery, sortOption, activeAssignments]);
+  
  // Sorting function
    const sortData = (data, option) => {
      const sorted = [...data];

@@ -7,20 +7,6 @@ export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
 
-    //doesnt render soft deleted items
-    if(is_removed === 1){
-        return null;
-    }
-
-    return(
-        //title
-        <div className="border border-gray-200 shadow shadow-lg bg-white p-6 rounded-xl flex flex-col">
-            <div className="flex justify-between items-center flex-row"> 
-                <p className="font-alegreya-sans-sc text-cbvt-navy font-semibold text-2xl pb-4 ">{Title}</p>
-                <p className="font-alegreya-sans-sc text-cbvt-navy font-semibold text-lg">{Price}</p>
-            </div>
-            
-
     const handleStatusUpdate = async (updateMessage) => {
         setIsSubmitting(true);
         setSubmitSuccess(false);
@@ -57,7 +43,8 @@ export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location
         if (statusUpdate.trim()) {
             handleStatusUpdate(statusUpdate.trim());
         }
-    };
+    };            
+   
 
     return(
         <div className="border border-gray-200 shadow-lg bg-white p-6 rounded-xl flex flex-col">

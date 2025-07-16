@@ -47,14 +47,10 @@ const App = () => (
         <Route path="/manager/orders" element={<Orders />} />
       </Route>
       {/* Worker Routes */}
-
-        
       <Route element={<PrivateRoute allowedRoles={['worker']} />}>
         <Route path="/worker/dashboard" element={<WorkerDashboard />} />
         <Route path="/worker/assignments" element={<WorkerAssignments />} />
         <Route path="/worker/tasks" element={<Tasks />} />
-      {/* Worker Routes */}
-      <Route element={<PrivateRoute allowedRoles={['worker']} />}>
       </Route>
 
       {/* Fallback */}

@@ -123,19 +123,21 @@ const AssignmentPage = () => {
                 />
               </div>
             </div>
-            <div className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
+            <SortingDropdown 
+            onSortChange={(sortValue) => setSortOption(sortValue)}
+            />
+            {/* <div className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
               <Filter className='h-3 w-3 ml-3 text-gray-500'/>
               <p className='text-gray-500 ml-2'>Filter</p>
-            </div>
+            </div> */}
           </div>
           
-          <SortingDropdown 
-            onSortChange={(sortValue) => setSortOption(sortValue)}
-          />
+          
         </div>
         
         {/* Assignments Grid */}
-        <div className='flex-1 overflow-y-auto'>
+        <div className='flex-1 overfl
+        ow-y-auto'>
           <div className='grid grid-cols-2 gap-5 p-8 pb-16'>
             {output.map((assignment) => (
               <AvailableAssignments
