@@ -121,29 +121,7 @@ export default function Login() {
             </div>
 
             {/* Remember Me and Forgot Password */}
-            <div className="flex items-center justify-between">
-              <label htmlFor="rememberMe" className="flex items-center cursor-pointer space-x-3 px-4">
-                <div
-                  className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                    formData.rememberMe ? "bg-cbvt-blue border-cbvt-blue" : "border-gray-400"
-                  }`}
-                >
-                  {formData.rememberMe && (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
-                      <path d="M10 16.4L6 12.4L7.4 11L10 13.6L16.6 7L18 8.4L10 16.4Z" fill="white" />
-                    </svg>
-                  )}
-                </div>
-                <input
-                  type="checkbox"
-                  name="rememberMe"
-                  id="rememberMe"
-                  checked={formData.rememberMe}
-                  onChange={handleInputChange}
-                  className="sr-only"
-                />
-                <span className="text-[14px] font-ibm-plex-sans text-cbvt-gray opacity-70">Remember me</span>
-              </label>
+            <div className="flex items-end justify-end">
               <a
                 href="#"
                 className="text-[14px] font-ibm-plex-sans text-cbvt-light-blue opacity-70 hover:underline transition-opacity"
