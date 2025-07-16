@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter } from "lucide-react";
 import { CustomerCard } from "../../components/CustomerCard";
@@ -9,7 +9,7 @@ const UsersPage = () => {
   const [activeItem, setActiveItem] = useState("Users");
   const [searchQuery, setSearchQuery] = useState("");
   const [customerData, setCustomerData] = useState([]);
-
+  const navigate = useNavigate();
   /*
   const customerData = [
     {
@@ -127,9 +127,10 @@ const UsersPage = () => {
       customer.Email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleLogout = () => {
-    console.log("Logging out...");
-  };
+  const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">

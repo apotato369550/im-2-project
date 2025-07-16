@@ -16,7 +16,7 @@ import Tasks from "./pages/worker/Tasks.jsx";
 import Contact from "./pages/Contact.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import OrderForm from "./pages/OrderForm.jsx";
-// import { ForgetPasswordTestingSpace, ChangePasswordTestingSpace } from './testing/AssignmentCreationTestingSpace.jsx'
+import { ForgetPasswordTestingSpace, ChangePasswordTestingSpace } from './testing/AssignmentCreationTestingSpace.jsx'
 import ClientDashboard from "./pages/ClientDashboard.jsx";
 
 import PrivateRoute from "./security/PrivateRoute";
@@ -33,19 +33,23 @@ const App = () => (
       <Route path="/clientdashboard" element={<ClientDashboard/>} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/order-form" element={<OrderForm />} />
-      {/* <Route path="/forget-password" element={<ForgetPasswordTestingSpace />} />
-      <Route path="/reset-password" element={<ChangePasswordTestingSpace />} /> */}
+      <Route path="/forget-password" element={<ForgetPasswordTestingSpace />} />
+      <Route path="/reset-password" element={<ChangePasswordTestingSpace />} /> */
 
+        
+      {/* Manager Routes */}
+      <Route element={<PrivateRoute allowedRoles={['manager']} />}>
         <Route path="/manager/dashboard" element={<Dashboard />} />
         <Route path="/manager/workers" element={<Workers />} />
-         <Route path="/manager/inventory" element={<Inventory />} />
+        <Route path="/manager/inventory" element={<Inventory />} />
         <Route path="/manager/users" element={<Users />} />
         <Route path="/manager/assignment" element={<Assignment />} />
         <Route path="/manager/orders" element={<Orders />} />
-      {/* Manager Routes */}
-      <Route element={<PrivateRoute allowedRoles={['manager']} />}>
       </Route>
+      {/* Worker Routes */}
 
+        
+      <Route element={<PrivateRoute allowedRoles={['worker']} />}>
         <Route path="/worker/dashboard" element={<WorkerDashboard />} />
         <Route path="/worker/assignments" element={<WorkerAssignments />} />
         <Route path="/worker/tasks" element={<Tasks />} />

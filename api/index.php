@@ -50,9 +50,11 @@ $router->post('/im-2-project/api/users/update-profile', 'UserController@updatePr
 /**********************************
  *          GET ENDPOINTS
  *********************************/
+$router->get('/im-2-project/api/assignments/available', 'AssignmentController@availableAssignments');
+$router->get('/im-2-project/api/assignments/recent', 'AssignmentController@getRecentAssignments');
 $router->get('/im-2-project/api/assignments', 'AssignmentController@viewAssignments');
-$router->get('/im-2-project/api/assignments/{id}', 'AssignmentController@viewAssignment');
 $router->get('/im-2-project/api/assignments/fetch-list', 'AssignmentController@fetchList');
+$router->get('/im-2-project/api/assignments/{id}', 'AssignmentController@viewAssignment');
 
 
 /**********************************
@@ -141,11 +143,14 @@ $router->get('/im-2-project/api/items/{itemId}', 'ItemController@getItem');
  *********************************/
 $router->post('/im-2-project/api/items/create', 'ItemController@createItem');
 $router->post('/im-2-project/api/items/upload-image', 'ItemController@uploadImage');
+$router->post('/im-2-project/api/items/edit-item/{id}', 'ItemController@updateItemDetails');
 
 /**********************************
  *          DELETE ENDPOINTS
  *********************************/
 $router->delete('/im-2-project/api/items/delete/{itemId}', 'ItemController@deleteItem');
+
+
 
 
 /**************************************************************************
@@ -168,7 +173,7 @@ $router->delete('/im-2-project/api/items/delete/{itemId}', 'ItemController@delet
  /**********************************
  *          GET ENDPOINTS
  *********************************/
- $router->post('/im-2-project/api/suppliers/fetch-list', 'SupplierController@getAllSupplier');
+ $router->get('/im-2-project/api/suppliers/fetch', 'SupplierController@getAllSupplier');
 
 
 

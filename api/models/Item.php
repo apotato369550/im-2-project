@@ -38,10 +38,8 @@ Class Item{
 
     public function getAllItems() {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("SELECT * FROM items WHERE is_removed = :removed");
-        $stmt->execute([
-            "removed" => 0
-        ]);
+        $stmt = $db->prepare("SELECT * FROM items");
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
@@ -58,32 +56,29 @@ Class Item{
             }
         }
 
-        $stmt = $db->prepare("UPDATE items SET is_remove = 1 WHERE item_id = :item_id");
+        $stmt = $db->prepare("UPDATE items SET is_removed = 1 WHERE item_id = :item_id");
         return $stmt->execute(['item_id' => $itemId]);
     }
 
-    public function editItemDetails($itemId, $type, $inverter, $horsepower, $brand, $supplierId, $model, $price, $imagePath){
+    public function editItemDetails($itemId, $type, $inverter, $horsepower, $brand, $supplierId, $model){
         $db = DBHelper::getConnection();
         $stmt = $db->prepare(
         'UPDATE items 
         SET  supplier_id = :supplierId,
-             model = :model,
-             price = :price,
-             type = :type,
-             inverter = :inverter,
-             horsepower = :horsepower,
-             brand =  :brand,
-             image_path  = :imagePath
+            model = :model,
+            type = :type,
+            inverter = :inverter,
+            horsepower = :horsepower,
+            brand = :brand
         WHERE item_id = :itemId');
         $stmt->execute([
-            'supplier_id' => $supplierId,
+            'supplierId' => $supplierId,  
             'model' => $model,
-            'price' => $price,
             'type' => $type,
             'inverter' => $inverter,
             'horsepower' => $horsepower,
             'brand' => $brand,
-            'image_path' => $imagePath
+            'itemId' => $itemId
         ]);
         return $db->lastInsertId();
     }

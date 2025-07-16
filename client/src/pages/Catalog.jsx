@@ -62,10 +62,12 @@ const Catalog = () => {
   useEffect(()=>{
     axios.get("http://localhost/im-2-project/api/items")
     .then((response)=>{
-      const updatedProducts = response.data.map((product) => ({
+      const updatedProducts = response.data
+      .map((product) => ({
         ...product,
         image_path: `http://localhost/im-2-project/${product.image_path.replace(/^(\.\.\/)+/, '')}`
-      }));
+      }))
+      .filter(product => product.is_removed !== 1);
       setItemList(updatedProducts);
     })
     .catch((e)=>{
@@ -368,21 +370,21 @@ const Catalog = () => {
                     </div>
 
                     <div className="p-4">
-                      <h3 className="text-[14px] font-alegreya-sans-sc font-bold text-cbvt-navy capitalize mb-2">
+                      <h3 className="text-[20px] font-alegreya-sans-sc font-bold text-cbvt-navy capitalize mb-2">
                         {prod.brand} {prod.model}
                       </h3>
 
-                      <p className="text-[10px] font-carme text-cbvt-light-blue capitalize mb-3">
+                      <p className="text-[14px] font-carme text-cbvt-light-blue capitalize mb-3">
                         {prod.hp} {prod.type} Air Conditioner
                       </p>
 
-                      <div className="flex items-center justify-between">
-                        <p className="text-[18px] font-alegreya-sans-sc font-bold text-cbvt-blue capitalize">
+                      <div className="flex items-center justify-end">
+                        {/* <p className="text-[18px] font-alegreya-sans-sc font-bold text-cbvt-blue capitalize">
                           Php {prod.price.toLocaleString()}
-                        </p>
+                        </p> */}
 
                         <button
-                          className="bg-cbvt-navy text-white px-4 py-1 rounded-full text-[10px] font-carme hover:bg-opacity-90 transition-all capitalize"
+                          className="bg-cbvt-navy text-white px-4 py-1 h-[30px] w-[100px] rounded-full text-[10px] font-carme hover:bg-opacity-90 transition-all capitalize"
                           onClick={(e)=>{handleRequestClick(prod, e)}}
                         >
                           request

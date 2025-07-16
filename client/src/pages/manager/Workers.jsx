@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter } from "lucide-react";
 import { CardHolderMd } from "../../components/CardHolderMd";
@@ -9,13 +9,12 @@ const WorkersPage = () => {
   const [activeItem, setActiveItem] = useState('Workers');
   const [searchQuery, setSearchQuery] = useState('');
   const [workerData, setWorkerData] = useState([]);
-
+  const navigate = useNavigate();
   //
   /*
   const workerData = [
     {
       Name: "John Doe",
-      Position: "Senior Technician",
       PhoneNumber: "+63 912 345 6789",
       Email: "john.doe@gmail.com",
       ActiveTasks: 5,
@@ -23,7 +22,6 @@ const WorkersPage = () => {
     },
     {
       Name: "John Dab",
-      Position: "Senior Technician",
       PhoneNumber: "+63 912 345 6789",
       Email: "john.doe@gmail.com",
       ActiveTasks: 5,
@@ -31,7 +29,6 @@ const WorkersPage = () => {
     },
     {
       Name: "Jane Doe",
-      Position: "Senior Technician",
       PhoneNumber: "+63 912 345 6789",
       Email: "john.doe@gmail.com",
       ActiveTasks: 5,
@@ -39,7 +36,6 @@ const WorkersPage = () => {
     },
     {
       Name: "Jane Dab",
-      Position: "Senior Technician",
       PhoneNumber: "+63 912 345 6789",
       Email: "jane.dab@gmail.com",
       ActiveTasks: 5,
@@ -47,7 +43,6 @@ const WorkersPage = () => {
     },
     {
       Name: "Jhen Doe",
-      Position: "Senior Technician",
       PhoneNumber: "+63 912 345 6789",
       Email: "john.doe@gmail.com",
       ActiveTasks: 5,
@@ -128,9 +123,10 @@ const WorkersPage = () => {
     worker.Position.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleLogout = () => {
-    console.log('Logging out...');
-  };
+  const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">

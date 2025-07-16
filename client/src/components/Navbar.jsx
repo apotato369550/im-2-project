@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FaUserCircle } from 'react-icons/fa';
 import { LogOut } from 'lucide-react';
 import { jwtDecode } from 'jwt-decode'  
 
 const Navbar = () => {
 const [user, setUser] = useState(null)
-
+const navigate = useNavigate();
   useEffect(()=>{
     const userData = localStorage.getItem('user_data');
     if(userData){
@@ -34,6 +34,7 @@ const [user, setUser] = useState(null)
   const handleLogout = (e)=>{
     localStorage.removeItem("user_data");
     setUser(null);
+    navigate("/");
   }
   return (
     <>
