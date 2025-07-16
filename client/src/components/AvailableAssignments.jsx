@@ -62,7 +62,7 @@ export const AvailableAssignments = ({AssignmentID, Title, Description, Assigned
             <div className="flex flex-row justify-center space-x-4 mt-[-5px]">
 
                 <div className=" w-[230px] h-[38px] rounded-3xl p-1 flex justify-center transition-all">
-                    <p className="text-cbvt-navy font-alegreya-sans font-semibold">{Price}</p>
+                    <p className="text-cbvt-navy font-alegreya-sans font-semibold">Php {Price}</p>
                 </div>
 
 

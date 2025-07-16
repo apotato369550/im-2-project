@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter } from "lucide-react";
 import { AssignmentCard } from "../../components/AssignmentCard";
@@ -9,6 +9,7 @@ const AssignmentPage = () => {
   const [activeItem, setActiveItem] = useState('Assignment');
   const [searchQuery, setSearchQuery] = useState('');
   const [assignmentData, setAssignmentData] = useState([]);
+  const navigate = useNavigate();
 
     useEffect(() => {
       console.log("Works");
@@ -56,9 +57,10 @@ const AssignmentPage = () => {
     assignment.Description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleLogout = () => {
-    console.log('Logging out...');
-  };
+  const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">

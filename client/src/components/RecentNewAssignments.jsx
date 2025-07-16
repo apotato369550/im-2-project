@@ -2,7 +2,7 @@ import { Briefcase } from 'lucide-react';
 import ApplyModal from './ApplyModal';
 
 
-export const RecentNewAssignments = ({ assignmentID, title, location, timeAgo }) => {
+export const RecentNewAssignments = ({ assignmentID, title, details, location, timeAgo }) => {
   return (
     <div className="flex items-start p-4 hover:bg-gray-50 rounded-lg transition-colors">
       {/* for the icon */}
@@ -14,10 +14,10 @@ export const RecentNewAssignments = ({ assignmentID, title, location, timeAgo })
       <div className="flex-1 min-w-0"> 
         <div className="flex justify-between items-baseline gap-2">
           <p className="font-medium truncate">{title}</p>
-        
           <ApplyModal />
 
         </div>
+          <p className="font-[10px] truncate">{details}</p>
         
         <div className="mt-1">
           <p className="text-gray-600 text-sm truncate">

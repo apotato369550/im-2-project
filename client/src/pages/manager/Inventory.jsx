@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Outlet, useFetcher } from 'react-router-dom';
+import { Outlet, useFetcher, useNavigate } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter} from "lucide-react";
 import { ItemCard } from '../../components/ItemCard';
@@ -28,6 +28,7 @@ const InventoryPage = () => {
   const [itemData, setItemData] = useState([]);
   const [editItem, setEditItem] = useState(null);
   const userData = JSON.parse(localStorage.getItem("user_data"));
+  const navigate = useNavigate();
   
   useEffect(() => {
 
@@ -114,9 +115,10 @@ const InventoryPage = () => {
     setUploadedFiles((files) => files.filter((f) => f !== file));
   }
 
-  const handleLogout = () => {
-    console.log("Logging out...");
-  };
+ const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   // Handle edit from ItemCard component
   const handleEditFromCard = (updatedItemData) => {

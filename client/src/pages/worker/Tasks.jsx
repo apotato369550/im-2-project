@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import WorkerSidebar from "../../components/WorkerSidebar";
 import { Plus, Search, Filter} from "lucide-react";
 import { TaskCard } from '../../components/TasksCard';
@@ -7,6 +7,7 @@ import { TaskCard } from '../../components/TasksCard';
 const AssignmentPage = () => {
   const [activeItem, setActiveItem] = useState('My Tasks');
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   const workerTasks=[
     {
@@ -52,9 +53,10 @@ const AssignmentPage = () => {
     assignment.Description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleLogout = () => {
-    console.log('Logging out...');
-  };
+  const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">

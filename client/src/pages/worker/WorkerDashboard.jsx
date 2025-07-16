@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import WorkerSidebar from "../../components/WorkerSidebar";
 import {RecentNewAssignments} from "../../components/RecentNewAssignments";
 import { CardHolderSm } from "../../components/CardHolderSm";
@@ -10,46 +10,65 @@ import {
   Clock,
   Circle,
   Square,
+  FileDiff,
 } from "lucide-react";
+import axios from 'axios';
 
 
 
 const WorkerDashboard = () => {
   const [activeItem, setActiveItem] = useState('Dashboard');
+  const navigate = useNavigate();
+  const userData = JSON.parse(localStorage.getItem('user_data'));
+  const [availableAssignment, setAvailableAssignments] = useState();
+  const [recentAssignments, setRecentAssignments] = useState([]);
+  const [availableAssignmentCount, setAvailableAssignmentsCount] = useState(0);
+
+  useEffect(()=>{
+    const fetchAssignment = async ()=>{
+      axios.get("http://localhost/im-2-project/api/assignments/fetch-list", {
+        headers: {
+          Authorization: "Bearer " + userData.token
+        }
+      })
+      .then((res)=>{
+        const filteredData = res.data.filter(assignment => assignment.assignedWorkerId != null)
+        setAvailableAssignments(filteredData);
+        console.log(filteredData);
+        setAvailableAssignmentsCount(filteredData.length)
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+    }
+
+    const fetchRecent = ()=>{
+      axios.get("http://localhost/im-2-project/api/assignments/recent", {
+        headers: {
+          Authorization: "Bearer " + userData.token
+        }
+      })
+      .then((res)=>{
+        console.log(res.data);
+        setRecentAssignments(res.data);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+    }
+
+    fetchAssignment();
+    fetchRecent();
+
+  }, [])
 
   const cardData = [
-{
-    title: "Active Tasks",
-    amount: 24,
-    icon: Briefcase,
-},
-{
-  title: "Available Assignments",
-  amount: 56,
-  icon: Calendar,
-}
-];
-
-const recentNewAssignments = [
-  {
-    assignmentID: 111,
-    title:"AC Installation",
-    location:"Cebu City",
-    timeAgo:"2 hours ago",
-  },
-  {
-    assignmentID: 112,
-    title:"AC Maintenance",
-    location:"Mandaue",
-    timeAgo:"4 hours ago",
-  },
-  {
-    assignmentID: 113,
-    title:"AC Check-Up",
-    location:"Banilad",
-    timeAgo:"7 hours ago",
-  }
-];
+    {
+      title: "Available Assignments",
+      amount: availableAssignmentCount,
+      icon: Calendar,
+    }
+  ];
 
 const toDO = [
   {
@@ -72,10 +91,10 @@ const toDO = [
 
 
   
-  const handleLogout = () => {
-    console.log('Logging out...');
-   
-  };
+  const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -126,12 +145,13 @@ const toDO = [
 
                 <div className='flex flex-col ml-2 space-y-8'>
 
-                    {recentNewAssignments.map((update) => (
+                    {recentAssignments.map((update) => (
                       <RecentNewAssignments  
-                        key={update.assignmentID}
-                        title={update.title}
-                        location={update.location}
-                        timeAgo={update.timeAgo}
+                        key={update.assignment_id}
+                        details={update.assignment_details}
+                        title={update.service_name}
+                        location={update.Location}
+                        timeAgo={update.assignment_date_created}
                       />
 
                     ))}
