@@ -14,8 +14,6 @@ export const ItemCard = ({
   onEdit,
   onDelete
 }) => {
-  if (is_removed) return null;
-
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,6 +25,9 @@ export const ItemCard = ({
     supplier_id
   });
 
+  // Check if item is removed/disabled
+  const isDisabled = is_removed === 1 || is_removed === true;
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -37,12 +38,14 @@ export const ItemCard = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isDisabled) return; // Prevent submission if disabled
     // Include item_id in the data passed to onEdit
     onEdit({ ...formData, item_id });
     setIsOpen(false);
   };
 
   const handleDeleteConfirm = () => {
+    if (isDisabled) return; // Prevent deletion if disabled
     // Pass item_id to onDelete so parent knows which item to delete
     onDelete(item_id);
     setIsDeleteOpen(false);
@@ -50,6 +53,7 @@ export const ItemCard = ({
 
   // Reset form data when modal opens
   const handleEditOpen = () => {
+    if (isDisabled) return; // Prevent edit if disabled
     setFormData({
       brand,
       type,
@@ -69,52 +73,81 @@ export const ItemCard = ({
 
   return (
     <>
-      <div className="grid grid-cols-13 gap-2 p-3 border-b border-gray-200 hover:bg-gray-50 text-sm justify-center">
+      <div className={`grid grid-cols-13 gap-2 p-3 border-b border-gray-200 text-sm justify-center ${
+        isDisabled 
+          ? 'bg-gray-100 opacity-60 cursor-not-allowed' 
+          : 'hover:bg-gray-50'
+      }`}>
         {/* Item ID */}
         <div className="col-span-2 flex items-center justify-center text-center">
-          <p className="text-cbvt-blue text-lg font-alegreya-sans-sc">AC-{item_id}</p>
+          <p className={`text-lg font-alegreya-sans-sc ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-blue'
+          }`}>
+            AC-{item_id}
+            {isDisabled && <span className="text-xs text-red-500 ml-2">(REMOVED)</span>}
+          </p>
         </div>
         {/* Brand */}
         <div className="col-span-3 flex items-center justify-center text-center">
-          <p className="text-cbvt-dark-gray font-carme">{brand}</p>
+          <p className={`font-carme ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-dark-gray'
+          }`}>{brand}</p>
         </div>
         {/* Type */}
         <div className="col-span-2 flex items-center justify-center text-center">
-          <p className="text-cbvt-dark-gray font-carme">{type}</p>
+          <p className={`font-carme ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-dark-gray'
+          }`}>{type}</p>
         </div>
         {/* Model */}
         <div className="col-span-2 flex items-center justify-center text-center">
-          <p className="text-cbvt-dark-gray truncate font-carme">{model}</p>
+          <p className={`truncate font-carme ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-dark-gray'
+          }`}>{model}</p>
         </div>
         {/* Horsepower */}
         <div className="col-span-1 flex items-center justify-center text-center">
-          <span className="text-cbvt-dark-gray font-carme">{horsepower}</span>
+          <span className={`font-carme ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-dark-gray'
+          }`}>{horsepower}</span>
         </div>
         {/* Inverter */}
         <div className="col-span-1 flex items-center justify-center text-center">
-          <span className="text-cbvt-hover-blue font-carme">{inverter ? 'Yes' : 'No'}</span>
+          <span className={`font-carme ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-hover-blue'
+          }`}>{inverter ? 'Yes' : 'No'}</span>
         </div>
         {/* Actions */}
         <div className="col-span-2 flex items-center justify-center space-x-1 text-center">
           <button 
-            className="p-1 rounded-full hover:bg-gray-200 text-cbvt-dark-gray"
-            title="Edit"
+            className={`p-1 rounded-full ${
+              isDisabled 
+                ? 'text-gray-300 cursor-not-allowed' 
+                : 'hover:bg-gray-200 text-cbvt-dark-gray'
+            }`}
+            title={isDisabled ? "Cannot edit removed item" : "Edit"}
             onClick={handleEditOpen}
+            disabled={isDisabled}
           >
             <Edit size={18} />
           </button>
           <button 
-            className="p-1 rounded-full hover:bg-gray-200 text-cbvt-dark-gray"
-            title="Delete"
-            onClick={() => setIsDeleteOpen(true)}
+            className={`p-1 rounded-full ${
+              isDisabled 
+                ? 'text-gray-300 cursor-not-allowed' 
+                : 'hover:bg-gray-200 text-cbvt-dark-gray'
+            }`}
+            title={isDisabled ? "Cannot delete removed item" : "Delete"}
+            onClick={() => !isDisabled && setIsDeleteOpen(true)}
+            disabled={isDisabled}
           >
             <Trash2 size={18} />
           </button>
         </div>
       </div>
 
-      {/* Edit Modal */}
-      {isOpen && (
+      {/* Edit Modal - Only show if not disabled */}
+      {isOpen && !isDisabled && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="overlay bg-black bg-opacity-30 absolute inset-0" onClick={() => setIsOpen(false)}></div>
           <div className="relative bg-white rounded-[24px] shadow-lg w-full max-w-4xl p-10 flex flex-col items-center gap-8">
@@ -231,8 +264,8 @@ export const ItemCard = ({
         </div>
       )}
 
-      {/* Delete Modal */}
-      {isDeleteOpen && (
+      {/* Delete Modal - Only show if not disabled */}
+      {isDeleteOpen && !isDisabled && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="overlay bg-black bg-opacity-30 absolute inset-0" onClick={() => setIsDeleteOpen(false)}></div>
           <div className="relative bg-white rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">

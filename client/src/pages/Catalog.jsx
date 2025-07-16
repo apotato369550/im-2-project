@@ -62,10 +62,12 @@ const Catalog = () => {
   useEffect(()=>{
     axios.get("http://localhost/im-2-project/api/items")
     .then((response)=>{
-      const updatedProducts = response.data.map((product) => ({
+      const updatedProducts = response.data
+      .map((product) => ({
         ...product,
         image_path: `http://localhost/im-2-project/${product.image_path.replace(/^(\.\.\/)+/, '')}`
-      }));
+      }))
+      .filter(product => product.is_removed !== 1);
       setItemList(updatedProducts);
     })
     .catch((e)=>{
