@@ -96,67 +96,54 @@ const toDO = [
             Welcome back, Worker
           </p>
 
-              <p className="text-cbvt-dark-gray mb-10">
-                Here's your work overview for today.
-              </p>
+          <p className="text-cbvt-dark-gray mb-10">
+            Here's your work overview for today.
+          </p>
         </div>
 
         {/* this is for the cards */}
-         <div>
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {cardData.map((card) => (
-              <CardHolderSm 
-              key={card.index} 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10 max-w-7xl mx-auto">
+          {cardData.map((card, idx) => (
+            <CardHolderSm 
+              key={idx} 
               title={card.title} 
               amount={card.amount}
               icon={card.icon}
-              />
-            ))}
+            />
+          ))}
+        </div>
+
+        {/* container for next content (recent updates and quick actions) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {/* container for recent updates */}
+          <div className="bg-white shadow-lg rounded-xl border border-gray-200 p-8 col-span-2 flex flex-col">
+            <p className="text-cbvt-navy font-alegreya-sans-sc font-semibold tracking-wide text-xl mb-8">Recent New Assignments</p>
+            <div className="flex flex-col space-y-6 flex-1">
+              {recentNewAssignments.map((update) => (
+                <RecentNewAssignments  
+                  key={update.assignmentID}
+                  title={update.title}
+                  location={update.location}
+                  timeAgo={update.timeAgo}
+                />
+              ))}
+            </div>
           </div>
 
-        </div>
-
-
-         {/* container for next content (recent updates and quick actions) */}
-        <div className='flex flex-row space-x-7'>
-
-             {/* container for recent updates */}
-            <div className='bg-white w-[783px] shadow-lg rounded-xl border border-gray-200 p-8'>
-                <p className='text-cbvt-navy font-alegreya-sans-sc font-semibold tracking-wide text-xl mb-10'>Recent New Assignments</p>
-
-                <div className='flex flex-col ml-2 space-y-8'>
-
-                    {recentNewAssignments.map((update) => (
-                      <RecentNewAssignments  
-                        key={update.assignmentID}
-                        title={update.title}
-                        location={update.location}
-                        timeAgo={update.timeAgo}
-                      />
-
-                    ))}
-
-                </div>
-
+          {/* container for To do list*/}
+          <div className="bg-white shadow-lg rounded-xl border border-gray-200 p-8 flex flex-col">
+            <p className="text-cbvt-navy font-alegreya-sans-sc font-semibold tracking-wide text-xl mb-5">To Do List:</p>
+            <div className="flex flex-col space-y-3">
+              {toDO.map((task)=> (
+                <ToDo 
+                  key={task.assignmentID}
+                  title={task.title}
+                />
+              ))}
             </div>
-
-
-
-             {/* container for To do list*/}
-                    <div className='bg-white h-[245px] w-[376px] shadow-lg rounded-xl border border-gray-200 p-8'>
-                        <p className='text-cbvt-navy font-alegreya-sans-sc font-semibold tracking-wide  text-xl mb-5'>To Do List:</p>
-                    {toDO.map((task)=> (
-                       <ToDo 
-                       key={task.assignmentID}
-                       title={task.title}
-                       />
-                    ))}
-                   
-                        
-
-                    </div>
-                </div>
+          </div>
         </div>
+      </div>
            
           
        </div>

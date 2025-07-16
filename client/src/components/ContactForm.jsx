@@ -11,7 +11,7 @@ import axios from 'axios';
 const ContactForm = ({ 
   topMargin = "mt-76", 
   topPadding = "pt-28",
-  backgroundImage = contactBg,
+  backgroundImage,
   backgroundSize = "contain",
   height = "min-h-[1360px]"
 }) => {
@@ -77,8 +77,11 @@ const ContactForm = ({
   return (
     <>
       <section
-        className={`bg-cover bg-center bg-no-repeat w-full overflow-hidden min-h-[700px] my-12 md:my-20`}
-        style={{ backgroundImage: `url(${contactUsBg})`, backgroundSize: backgroundSize }}
+        className={`bg-cover bg-center bg-no-repeat w-full overflow-hidden ${height}`}
+        style={{ 
+          backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
+          backgroundSize: backgroundSize
+        }}
       >
         <div className={`relative mx-auto max-w-6xl w-full px-4 md:px-8 z-10`}>
           <div className="grid gap-6 md:gap-12 grid-cols-1 md:grid-cols-2 items-start">

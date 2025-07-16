@@ -6,6 +6,7 @@ import Brands from "../components/Brands";
 import ContactForm from "../components/ContactForm";
 import Footer from "../components/Footer";
 import React from "react"; 
+import contactBg from "../assets/images/contactBg.png"
 
 const Home = () => {
   return (
@@ -21,6 +22,7 @@ const Home = () => {
           topMargin="mt-20" 
           topPadding="pt-8"
           backgroundSize="cover"
+          backgroundImage={contactBg}
         />
       </div>
       <Footer/>
