@@ -29,20 +29,6 @@ export const CardHolderMd = ({Name, Position, PhoneNumber, Email, ActiveTasks, C
             <div className="border-t border-gray-300 my-4"></div>
 
 
-            <div className="flex flex-row justify-center mt-[-5px] space-x-20">
-                <div className="flex flex-col justify-center items-center">
-                    <p className="text-cbvt-navy font-alegreya-sans-sc font-semibold text-2xl">{ActiveTasks}</p>
-                    <p className="font-carme text-cbvt-dark-gray text-xs mt-[-4px]">Active Tasks</p>
-                </div>
-
-
-                <div className="flex flex-col justify-center items-center mt-[-1px]">
-                    <p className="text-cbvt-navy font-alegreya-sans-sc font-semibold text-2xl">{CompletedTasks}</p>
-                    <p className="font-carme text-cbvt-dark-gray text-xs mt-[-4px]">Completed Tasks</p>
-                </div>
-            </div>
-
-
         </div>
 
 

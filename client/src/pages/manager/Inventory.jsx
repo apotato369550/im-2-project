@@ -124,7 +124,7 @@ const InventoryPage = () => {
   }
 
   const handleLogout = () => {
-    console.log('Logging out...');
+    console.log("Logging out...");
   };
 
   // Handle edit from ItemCard component
@@ -226,14 +226,14 @@ const InventoryPage = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <Sidebar 
+      <Sidebar
         activeItem={activeItem}
         onItemChange={setActiveItem}
         onLogout={handleLogout}
       />
 
       {/* Main Content */}
-      
+
       <div className="flex-1 flex flex-col pb-8">
         {/* Header Section */}
         <div className="p-8 pb-0">
@@ -243,8 +243,8 @@ const InventoryPage = () => {
                 {activeItem}
               </h1>
               <p className="text-cbvt-dark-gray mb-6">
-                Manage product inventory.   
-              </p> 
+                Manage product inventory.
+              </p>
             </div>
             <button className='flex items-center bg-cbvt-navy h-[40px] px-4 rounded-2xl text-white mr-10 '>
               <Plus className='h-3 w-3 mr-2' />

@@ -29,8 +29,11 @@ Class UpdateController{
 
     public function recentUpdates(){
         $decoded = AuthMiddleware::verifyToken();
+        
         $update = new Update();
         $recentUpdates = $update->getRecentUpdates();
+        error_log("Recent updates result: " . print_r($recentUpdates, true));
+        
         echo json_encode($recentUpdates ?: []);
     }
 
