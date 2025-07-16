@@ -1,8 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import{MapPin, Calendar, Ellipsis, Circle} from 'lucide-react';
 
-export const CustomerCard = ({Name, Address, DateJoined, Email, Orders, TotalSpent}) => {
+export const CustomerCard = ({Name, Address, DateJoined, Email, Orders, TotalSpent, is_removed}) => {
 
+//doesnt render soft deleted items
+    if (is_removed === 1){
+    return null;
+}
     return(
         <div className="bg-white w-[349px] h-[264px] rounded-xl border border-gray-200 shadow-lg p-8">
             <div className="flex flex-wrap flex-row"> 
