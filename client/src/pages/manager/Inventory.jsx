@@ -1,10 +1,11 @@
-import { useCallback, useRef, useState } from 'react';
-import { Outlet, useFetcher } from 'react-router-dom';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Outlet, useFetcher, useNavigate } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter} from "lucide-react";
 import { ItemCard } from '../../components/ItemCard';
 import Modal from "react-modal";
 import { useDropzone } from "react-dropzone"
+import axios from 'axios';
 
 const InventoryPage = () => {
   const [activeItem, setActiveItem] = useState('Inventory');
@@ -14,57 +15,48 @@ const InventoryPage = () => {
   const fileInputRef = useRef(null);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [form, setForm] = useState({
-    supplier: '',
+    supplier_id: '',
     model: '',
+    price: '0',
     type: '',
     inverter: '',
     horsepower: '',
     brand: '',
   });
-  const [suppliers, setsuppliers] = useState([
-    { id: '42', name: 'General Royal Global Industries' },
-    { id: '17', name: 'Cebu Appliance Center' },
-    { id: '89', name: 'X‑Tria Air Conditioning Solutions' },
-  ])
-  const [itemData, setItemData] = useState([
-  {
-    "item_id": 1001,
-    "supplier_id": 42,
-    "manager_id": 1,
-    "model": "ArcticCool Pro X",
-    "image_path": "/inventory/arcticcool_prox.jpg",
-    "type": "Split AC",
-    "inverter": true,
-    "horsepower": 1.5,
-    "brand": "ArcticCool",
-    "is_removed": false
-  },
-  {
-    "item_id": 1002,
-    "supplier_id": 17,
-    "manager_id": 1,
-    "model": "FrostMaster Window",
-    "image_path": "/inventory/frostmaster_window.jpg",
-    "type": "Window AC",
-    "inverter": false,
-    "horsepower": 2.0,
-    "brand": "Glacial",
-    "is_removed": false
-  },
-  {
-    "item_id": 1003,
-    "supplier_id": 89,
-    "manager_id": 1,
-    "model": "EcoSilent Inverter",
-    "image_path": "/inventory/ecosilent_inverter.jpg",
-    "type": "Cassette",
-    "inverter": true,
-    "horsepower": 2.5,
-    "brand": "BreezeTech",
-    "is_removed": true
-  }
-]);
+
+  const [suppliers, setSuppliers] = useState([])
+  const [itemData, setItemData] = useState([]);
   const [editItem, setEditItem] = useState(null);
+  const userData = JSON.parse(localStorage.getItem("user_data"));
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+
+  const fetchItems = async () => {
+    try {
+      const res = await axios.get("http://localhost/im-2-project/api/items");
+      setItemData(res.data);
+      console.log("Items:", res.data);
+    } catch (err) {
+      console.error("Item fetch error:", err);
+    }
+  };
+
+  const fetchSuppliers = async () => {
+    try {
+      const res = await axios.get("http://localhost/im-2-project/api/suppliers/fetch", {
+        headers: { Authorization: "Bearer " + userData.token }
+      });
+      setSuppliers(res.data);
+      console.log(res.data);
+    } catch (err) {
+      console.error("Supplier fetch error:", err);
+    }
+  };
+
+    fetchItems();
+    fetchSuppliers();
+  }, []);
 
   const typeOptions = [
     { value: '', label: 'Select Type' },
@@ -123,14 +115,16 @@ const InventoryPage = () => {
     setUploadedFiles((files) => files.filter((f) => f !== file));
   }
 
-  const handleLogout = () => {
-    console.log("Logging out...");
-  };
+ const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   // Handle edit from ItemCard component
   const handleEditFromCard = (updatedItemData) => {
     console.log('Edit called with:', updatedItemData);
     
+    // Update the item in the local state first
     setItemData(prev =>
       prev.map(item =>
         item.item_id === updatedItemData.item_id 
@@ -146,45 +140,105 @@ const InventoryPage = () => {
           : item
       )
     );
+
+    // Send update request to backend
+    axios.post(`http://localhost/im-2-project/api/items/edit-item/${updatedItemData.item_id}`, {
+      brand: updatedItemData.brand,
+      type: updatedItemData.type,
+      model: updatedItemData.model,
+      horsepower: parseFloat(updatedItemData.horsepower),
+      inverter: updatedItemData.inverter,
+      supplier_id: parseInt(updatedItemData.supplier_id)
+    }, {
+      headers: {
+        Authorization: "Bearer " + userData.token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((response) => {
+      console.log('Item updated successfully:', response.data);
+    })
+    .catch((err) => {
+      console.error('Error updating item:', err);
+      // Optionally revert the optimistic update if the API call fails
+    });
   };
 
   // Handle delete from ItemCard component
   const handleDeleteFromCard = (itemId) => {
     console.log('Delete called for item:', itemId);
-    
-    setItemData(prev =>
-      prev.map(item =>
+
+    axios.delete(`http://localhost/im-2-project/api/items/delete/${itemId}`, {
+      headers:{
+        Authorization: "Bearer " + userData.token
+      }
+    })
+    .then(()=>{
+      setItemData(prev =>
+        prev.map(item =>
         item.item_id === itemId 
           ? { ...item, is_removed: true }
           : item
-      )
-    );
+        )
+      );
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
   };
 
   const handleCreateItem = (e) => {
     e.preventDefault(); 
   
-    const newItem = {
-      ...form,
-      item_id: Date.now(),
-      supplier_id: parseInt(form.supplier),
-      inverter: form.inverter === 'true',
-      horsepower: parseFloat(form.horsepower),
-      manager_id: 1,
-      is_removed: false,
-      image_path: uploadedFiles[0]?.preview || "", 
-    };
-  
-    setItemData(prev => [...prev, newItem]);
-    setmodalIsOpen(false);
-    setForm({ supplier: '', model: '', type: '', inverter: '', horsepower: '', brand: '' });
-    setUploadedFiles([]);
+    const formData = new FormData();
+    
+    // Add form fields
+    formData.append('supplier_id', form.supplier_id);
+    formData.append('model', form.model);
+    formData.append('price', form.price);
+    formData.append('type', form.type);
+    formData.append('inverter', form.inverter === 'true');
+    formData.append('horsepower', parseFloat(form.horsepower));
+    formData.append('brand', form.brand);
+    formData.append('manager_id', 1);
+    formData.append('is_removed', false);
+    
+    // Add image file
+    if (uploadedFiles.length > 0) {
+      formData.append('image', uploadedFiles[0]);
+    }
+
+    axios
+      .post("http://localhost/im-2-project/api/items/create", formData, {
+        headers:{
+          Authorization: "Bearer " + userData.token,
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then((response)=>{
+        const newItem = {
+          ...form,
+          ...response.data,
+          inverter: form.inverter === 'true',
+          horsepower: parseFloat(form.horsepower),
+          manager_id: 1,
+          is_removed: false,
+        };
+        // Add the response data to itemData instead of newItem
+        setItemData(prev => [...prev, newItem ]);
+        setmodalIsOpen(false);
+        setForm({ supplier_id: '', model: '', price: '0', type: '', inverter: '', horsepower: '', brand: '' });
+        setUploadedFiles([]);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
   };
 
   const openEditModal = (item) => {
     setEditItem(item);
     setForm({
-      supplier: item.supplier_id.toString(),
+      supplier_id: item.supplier_id,
       model: item.model,
       type: item.type,
       inverter: item.inverter ? 'true' : 'false',
@@ -199,7 +253,7 @@ const InventoryPage = () => {
     const updatedItem = {
       ...editItem,
       ...form,
-      supplier_id: parseInt(form.supplier),
+      supplier_id: parseInt(form.supplier_id),
       inverter: form.inverter === 'true',
       horsepower: parseFloat(form.horsepower),
       brand: form.brand,
@@ -213,13 +267,13 @@ const InventoryPage = () => {
     );
     setmodalIsOpen(false);
     setEditItem(null);
-    setForm({ supplier: '', model: '', type: '', inverter: '', horsepower: '', brand: '' });
+    setForm({ supplier_id: '', model: '', type: '', inverter: '', horsepower: '', brand: '' });
   };
 
   const closeModal = () => {
     setmodalIsOpen(false);
     setEditItem(null);
-    setForm({ supplier: '', model: '', type: '', inverter: '', horsepower: '', brand: '' });
+    setForm({ supplier_id: '', model: '', type: '', inverter: '', horsepower: '', brand: '' });
     setUploadedFiles([]);
   };
 
@@ -304,6 +358,7 @@ const InventoryPage = () => {
                 horsepower={item.horsepower}
                 brand={item.brand}
                 is_removed={item.is_removed}
+                suppliers={suppliers}
                 onEdit={handleEditFromCard}
                 onDelete={handleDeleteFromCard}
               />
@@ -351,16 +406,16 @@ const InventoryPage = () => {
                   <div className='flex flex-col gap-4'>
                     <label className='font-carme text-cbvt-navy'>Supplier</label>
                     <select
-                      name='supplier'
-                      value={form.supplier}
+                      name='supplier_id'
+                      value={form.supplier_id}
                       onChange={handleFormChange}
-                      className={`border rounded-lg p-2 ${form.supplier ? 'text-cbvt-navy' : 'text-gray-400'}`}
+                      className={`border rounded-lg p-2 ${form.supplier_id ? 'text-cbvt-navy' : 'text-gray-400'}`}
                       required
                     >
                       <option value="" className='text-gray-400'>Select Supplier</option>
                       {suppliers.map(supplier => (
-                        <option key={supplier.id} value={supplier.id} className='text-cbvt-navy'>
-                          {supplier.name}
+                        <option key={supplier.supplier_id} value={supplier.supplier_id} className='text-cbvt-navy'>
+                          {supplier.company_name}
                         </option>
                       ))}
                     </select>

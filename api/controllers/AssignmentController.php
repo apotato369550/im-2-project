@@ -33,6 +33,17 @@ class AssignmentController{
         }
     }
 
+    public function availableAssignments(){
+        $decoded = AuthMiddleware::verifyToken();
+        $assignment = new Assignment();
+        $assignmentList = $assignment->getAvailableAssignments();
+        if($assignmentList){
+            echo json_encode($assignmentList ?: []);
+        }else{
+            ErrorHelper::sendError(408, "Error fetching assignments or might have no data");
+        }
+    }
+
     //missing validation checkers
 
     public function createAssignment(){
@@ -136,6 +147,18 @@ class AssignmentController{
             }
         }
     }
+
+    public function getRecentAssignments(){
+        $decoded = AuthMiddleware::verifyToken();
+        $assignment = new Assignment();
+        $recentAssignments = $assignment->recentAssignments();
+        if(!empty($recentAssignments)){
+            echo json_encode($recentAssignments);
+        }else{
+            ErrorHelper::sendError(401, "Something went wrong");
+        }
+    }
+
     public function findAssignmentByOrderId($orderId){
         $assignment = new Assignment();
         $exists = $assignment->orderExist($orderId);
