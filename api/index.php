@@ -105,9 +105,9 @@ $router->delete('/im-2-project/api/orders/delete/{id}', 'OrderController@deleteO
 /**********************************
  *          GET ENDPOINTS
  *********************************/
-$router->get('/im-2-project/api/quotations/order/{orderId}', 'QuotationController@viewQuotationsByOrder');
 $router->get('/im-2-project/api/quotations/user', 'QuotationController@viewUserQuotations');
 $router->get('/im-2-project/api/quotations/fetch-list', 'QuotationController@fetchList');
+$router->get('/im-2-project/api/quotations/order/{orderId}', 'QuotationController@viewQuotationsByOrder');
 
 
 /**********************************
@@ -118,12 +118,12 @@ $router->post('/im-2-project/api/quotations/create', 'QuotationController@create
 /**********************************
  *          PUT ENDPOINTS
  *********************************/
-$router->put('/im-2-project/api/quotations/update/{id}', 'QuotationController@updateQuotationStatus');
+// $router->put('/im-2-project/api/quotations/update/{id}', 'QuotationController@updateQuotationStatus');
 
 /**********************************
  *          DELETE ENDPOINTS
  *********************************/
-$router->delete('/im-2-project/api/quotations/delete/{quotationId}', 'QuotationController@deleteQuotation');
+// $router->delete('/im-2-project/api/quotations/delete/{quotationId}', 'QuotationController@deleteQuotation');
 
 
 

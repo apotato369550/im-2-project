@@ -73,7 +73,7 @@ Class User {
                     COUNT(o.order_id) as order_count
             FROM users u
             LEFT JOIN orders o ON u.user_id = o.client_id
-            LEFT JOIN quotation q ON q.order_id = o.order_id AND q.quotation_status = "Approved"
+            LEFT JOIN quotation q ON q.order_id = o.order_id
             WHERE u.user_id <> 1
             GROUP BY u.user_id
             ORDER BY total_spent;

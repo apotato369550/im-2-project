@@ -38,7 +38,7 @@ Class Item{
 
     public function getAllItems() {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("SELECT * FROM items");
+        $stmt = $db->prepare("SELECT i.*, s.company_name as companyName FROM items i JOIN supplier s ON s.supplier_id = i.supplier_id");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
