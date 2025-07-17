@@ -19,8 +19,6 @@ const TasksPage = () => {
 
   //filter function
   const [sortOption, setSortOption] = useState('default');
-
-  useEffect(()=>{
     axios
     .get("http://localhost/im-2-project/api/assignments", {
       headers: {
@@ -50,6 +48,7 @@ const TasksPage = () => {
 
   const activeAssignments = workerTasks;
 
+>>>>>>> main
   // Sorting function
   const sortData = (data, option) => {
     const sorted = [...data];
@@ -63,6 +62,15 @@ const TasksPage = () => {
     }
   };
 
+  const handleStatusUpdate = (taskId, newStatus) => {
+    setWorkerTasks(prevTasks => 
+      prevTasks.map(task => 
+        task.TaskID === taskId 
+          ? { ...task, status: newStatus }
+          : task
+      )
+    );
+  
   // Combined filter and sort effect
   useEffect(() => {
     let results = activeAssignments.filter(task =>
@@ -79,6 +87,7 @@ const TasksPage = () => {
     localStorage.removeItem("user_data");
     navigate("/");
   }
+>>>>>>> main
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -91,7 +100,6 @@ const TasksPage = () => {
       />  
 
       {/* Main Content */}
-      
       <div className="flex-1 flex flex-col pb-8">
         {/* Header Section */}
         <div className="p-8 pb-0 relative z-10">
@@ -107,6 +115,7 @@ const TasksPage = () => {
           </div>
 
           <div className='flex flex-row gap-4 relative z-20' > 
+
             {/* Search Bar */}
             <div className="mb-8">
               <div className='relative bg-white border border-gray-200 rounded-3xl h-[38px] w-full max-w-[382px]'>
@@ -150,6 +159,9 @@ const TasksPage = () => {
                 Notes={assignment.notes}
                 OrderId={assignment.order_id}
                 onTaskUpdate={handleTaskUpdate}
+                is_removed={assignment.is_removed}
+                status={assignment.status}
+                onStatusUpdate={handleStatusUpdate}
               />
             ))}
           </div>

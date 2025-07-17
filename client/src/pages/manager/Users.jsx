@@ -3,67 +3,20 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter } from "lucide-react";
 import { CustomerCard } from "../../components/CustomerCard";
+import SortingDropdown from '../../components/SortingDropdown';
 import axios from "axios";
 
 const UsersPage = () => {
   const [activeItem, setActiveItem] = useState("Users");
-  const [searchQuery, setSearchQuery] = useState("");
+  
+  // Search and filter states (following TasksPage pattern)
   const [customerData, setCustomerData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [output, setOutput] = useState([]);
+  const [sortOption, setSortOption] = useState('default');
   const navigate = useNavigate();
-  /*
-  const customerData = [
-    {
-      Name: "Jhen Aloyon",
-      DateJoined: "2/14/2023",
-      Address: "Cebu City",
-      Email: "jhen.aloyon@gmail.com",
-      Orders: 2,
-      TotalSpent: "₱27,000",
-    },
-    {
-      Name: "Jen Aloyon",
-      DateJoined: "2/14/2023",
-      Address: "Cebu City",
-      Email: "jhen.aloyon@gmail.com",
-      Orders: 5,
-      TotalSpent: "₱25,000",
-    },
-    {
-      Name: "Jin Aloyon",
-      DateJoined: "2/14/2023",
-      Address: "Cebu City",
-      Email: "jhen.aloyon@gmail.com",
-      Orders: 2,
-      TotalSpent: "₱27",
-    },
-    {
-      Name: "Jon Aloyon",
-      DateJoined: "2/14/2023",
-      Address: "Cebu City",
-      Email: "jhen.aloyon@gmail.com",
-      Orders: 5,
-      TotalSpent: "₱2",
-    },
-    {
-      Name: "Jun Aloyon",
-      DateJoined: "2/14/2023",
-      Address: "Cebu City",
-      Email: "jhen.aloyon@gmail.com",
-      Orders: 5,
-      TotalSpent: "₱27",
-    },
-    {
-      Name: "Jan Aloyon",
-      DateJoined: "2/14/2023",
-      Address: "Cebu City",
-      Email: "jhen.aloyon@gmail.com",
-      Orders: 5,
-      TotalSpent: "₱27",
-    },
-  ];
-  */
 
-  useEffect(() => {
+   useEffect(() => {
     console.log("Works");
     const userData = JSON.parse(localStorage.getItem("user_data"));
     console.log(userData);
@@ -86,6 +39,7 @@ const UsersPage = () => {
               "user_full_name": "Jose Carumba"
               "user_id": 12
               "user_type": "worker"
+              "is_removed": 0
           }
         ]
 
@@ -98,6 +52,7 @@ const UsersPage = () => {
             Email: "jhen.aloyon@gmail.com",
             Orders: 5,
             TotalSpent: "₱27",
+            is_removed: 0,
           },
       ]
         */
@@ -105,12 +60,14 @@ const UsersPage = () => {
 
         // Convert API response to your desired format
         const formattedData = response.data.map((user) => ({
+          WorkerID: user.user_id,
           Name: user.user_full_name,
           DateJoined: "2/14/2023", // <-- placeholder or use real value if available
           Address: "Cebu City", // <-- placeholder or add this to your backend
           Email: user.user_email,
           Orders: user.order_count,
           TotalSpent: `₱${parseFloat(user.total_spent).toFixed(2)}`,
+          is_removed: user.is_removed || 0, // Add is_removed field
         }));
 
         console.log("Formatted data:", formattedData);
@@ -120,12 +77,42 @@ const UsersPage = () => {
         console.log(error.response.data);
       });
   }, []);
+ 
 
-  const filteredCustomers = customerData.filter(
-    (customer) =>
+  // Filter out soft-deleted customers (following TasksPage pattern)kd
+  const activeCustomers = customerData.filter(customer => customer.is_removed === 0);
+
+  // Initialize output with active customers
+  useEffect(() => {
+    setOutput(activeCustomers);
+  }, [activeCustomers]);
+
+  // Combined search and sort functionality (following TasksPage pattern)
+  useEffect(() => {
+    let results = activeCustomers.filter(customer =>
       customer.Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      customer.Email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      customer.Email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      customer.Address.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    
+    results = sortData(results, sortOption);
+    setOutput(results);
+  }, [searchQuery, sortOption, activeCustomers]);
+
+  // Sorting function (following TasksPage pattern)
+  const sortData = (data, option) => {
+    const sorted = [...data];
+    switch(option) {
+      case 'name-asc':
+        return sorted.sort((a, b) => a.Name.localeCompare(b.Name));
+      case 'name-desc':
+        return sorted.sort((a, b) => b.Name.localeCompare(a.Name));
+      default:
+        return data;
+    }
+  };
+
+ 
 
   const handleLogout = (e)=>{
     localStorage.removeItem("user_data");
@@ -174,25 +161,27 @@ const UsersPage = () => {
                 />
               </div>
             </div>
-            <div className="h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center">
-              <Filter className="h-3 w-3 ml-3 text-gray-500" />
-              <p className="text-gray-500 ml-2">Filter</p>
-            </div>
+            
+            {/* Sort Dropdown (replacing the simple Filter button) */}
+            <SortingDropdown 
+              onSortChange={(sortValue) => setSortOption(sortValue)}
+            />
           </div>
         </div>
 
-        {/* Cumstomers Grid */}
+        {/* Customers Grid */}
         <div className="flex-1 overflow-y-auto px-8 pb-8">
           <div className="grid grid-cols-3 gap-5 mt-5">
-            {customerData.map((customer) => (
+            {output.map((customer) => (
               <CustomerCard
-                key={customer.Name} //Name, Address, DateJoined, Email, Orders, TotalSpent
+                key={customer.WorkerID} //Name, Address, DateJoined, Email, Orders, TotalSpent
                 Name={customer.Name}
                 Address={customer.Address}
                 DateJoined={customer.DateJoined}
                 Email={customer.Email}
                 Orders={customer.Orders}
                 TotalSpent={customer.TotalSpent}
+                is_removed={customer.is_removed}
               />
             ))}
           </div>

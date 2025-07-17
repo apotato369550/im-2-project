@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import{User, MapPin, Calendar, Clock} from 'lucide-react';
-import ApplyModal from "./ApplyModal";
+import AcceptModal from "./AcceptModal";
 
 export const AvailableAssignments = ({is_removed, AssignmentID, Title, Description, AssignedPerson, CustomerName, Location, DueDate, EstimatedTime, Price}) => {
 
@@ -65,7 +65,7 @@ if(is_removed === 1){
                 </div>
 
 
-                    <ApplyModal />
+                    <AcceptModal />
 
             </div>
 

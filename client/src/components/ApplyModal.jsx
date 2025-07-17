@@ -47,7 +47,7 @@ const ApplyModal = () => {
               </div>
             </div>
 
-             <div className="bg-gray-50 px-4 py-3 flex justify-end gap-3">
+             <div className=" px-4 py-3 flex justify-end gap-3">
             <button
               onClick={() => setIsOpen(false)}
               className="px-4 py-2 border border-gray-300 rounded-3xl shadow-md text-gray-700 hover:bg-gray-200 hover:cursor-pointer transition-colors"

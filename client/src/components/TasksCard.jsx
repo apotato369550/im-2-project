@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { User, Calendar, MapPin, Send } from 'lucide-react';
 import { useState } from 'react';
@@ -119,6 +120,7 @@ export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location
                         <span className="pl-2 text-cbvt-dark-gray">{Notes}</span>
                     </p>
                 </div>
+
 
                 {/* Status update here */}
                 <form onSubmit={handleSubmitUpdate} className="mb-4">
