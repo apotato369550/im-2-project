@@ -9,7 +9,7 @@ const ApplyModal = () => {
       <button 
         onClick={() => setIsOpen(true)}
         className="border-[0.5px] border-[rgb(15_40_81)] bg-cbvt-navy text-white w-[100px] h-[30px] px-3 rounded-3xl text-sm flex-shrink-0 hover:bg-cbvt-hover-blue transition-colors
-                              hover:!bg-white hover:!text-[rgb(15_40_81)] transition-colors  hover:cursor-pointer"
+                              hover:!bg-white hover:!text-[rgb(15_40_81)] hover:cursor-pointer"
       >
         Apply
       </button>

@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import axios from 'axios';
+import { X, CheckCircle, Phone, Monitor } from 'lucide-react';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import BreadCrumbs from "../components/BreadCrumbs";
 
 export default function OrderForm() {
   const [userAcc, setUserAcc] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -32,7 +34,6 @@ export default function OrderForm() {
   const isUnitRequest = !!requestedUnit || !!selectedProduct;
   const currUser = JSON.parse(localStorage.getItem('user_data'));
   console.log(currUser);
-
 
   useEffect(() => {
     // Get user data from localStorage
@@ -100,13 +101,22 @@ export default function OrderForm() {
         },
       })
       .then(() => {
-        alert("Form submitted successfully! We will contact you soon.");
-        navigate("/"); 
+        setShowModal(true);
       })
       .catch((error) => {
         console.error("Submission error:", error);
         alert("Something went wrong. Please try again.");
       });
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    navigate("/"); 
+  };
+
+  const handleViewDashboard = () => {
+    setShowModal(false);
+    navigate("/dashboard"); // Adjust path to your dashboard route
   };
 
   // Generate unit name for display
@@ -277,6 +287,76 @@ export default function OrderForm() {
           </div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full mx-4 transform transition-all">
+          
+            <div className="relative bg-[#f6f8fa] rounded-t-3xl p-6 border-b border-gray-200">
+              <button
+                onClick={handleCloseModal}
+                className="absolute top-4 right-4 text-cbvt-navy hover:text-cbvt-blue transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+              
+              <div className="flex items-center justify-center mb-4">
+                <div className="bg-green-100 rounded-full p-3">
+                  <CheckCircle className="h-8 w-8 text-green-600" />
+                </div>
+              </div>
+              
+              <h2 className="text-2xl font-bold text-cbvt-navy text-center uppercase tracking-wide">
+                Order Submitted Successfully!
+              </h2>
+            </div>
+
+      
+            <div className="p-8">
+              <div className="text-center mb-8">
+                <p className="text-cbvt-navy text-lg mb-4 font-carme">
+                  Thank you for your order! We have received your request and will process it shortly.
+                </p>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center justify-center space-x-3 bg-[#f6f8fa] rounded-2xl p-4">
+                    <Phone className="h-5 w-5 text-cbvt-blue" />
+                    <p className="text-cbvt-navy font-medium">
+                      Our manager will call you for quotation negotiation
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center justify-center space-x-3 bg-[#f6f8fa] rounded-2xl p-4">
+                    <Monitor className="h-5 w-5 text-cbvt-blue" />
+                    <p className="text-cbvt-navy font-medium">
+                      Check your dashboard for order updates
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={handleViewDashboard}
+                  className="flex-1 bg-cbvt-navy hover:bg-cbvt-navy text-white px-6 py-3 rounded-full font-bold uppercase tracking-wide transition-all shadow-md hover:scale-105"
+                >
+                  View Dashboard
+                </button>
+                
+                <button
+                  onClick={handleCloseModal}
+                  className="flex-1 bg-white hover:bg-gray-50 text-cbvt-navy border-2 border-cbvt-navy px-6 py-3 rounded-full font-bold uppercase tracking-wide transition-all shadow-md hover:scale-105"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
