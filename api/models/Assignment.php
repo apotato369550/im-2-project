@@ -39,16 +39,29 @@ class Assignment{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function viewAssignments(string $userId) : ?array
+    public function viewAssignments($userId) : ?array
     {
         $db = DBHelper::getConnection();
-        $stmt = $db->prepare("
-            SELECT a.*
+        $stmt = $db->prepare(
+            "SELECT a.assignment_id,
+                    a.assignment_details as notes,
+                    a.assignment_status,
+                    a.assignment_due,
+                    a.order_id,
+                    o.address AS location,
+                    o.phone_number AS clientNumber,
+                    u.user_full_name AS clientName,
+                    s.service_type AS serviceName,
+                    COALESCE(q.total_payment, 0) as price
             FROM assignments a
-            INNER JOIN orders o ON a.order_id = o.order_id
-            WHERE o.client_id = :client_id AND o.order_id IS NOT NULL
+            LEFT JOIN orders o ON a.order_id = o.order_id
+            LEFT JOIN users u ON o.client_id = u.user_id
+            LEFT JOIN service s ON o.service_id = s.service_id
+            LEFT JOIN quotation q ON q.order_id = o.order_id
+            WHERE a.worker_id = :workerId
+            
         ");
-        $stmt->execute(['client_id' => $userId]);
+        $stmt->execute(['workerId' => $userId]);
         $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $assignments ?: [];
     }

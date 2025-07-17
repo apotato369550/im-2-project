@@ -126,7 +126,7 @@ class AssignmentController{
             $updateData = [
                 'worker_id' => $decoded->user_id,
                 'assignment_id' => $id,
-                'message' => 'The status for assignment no ' . $id . ' has been changed to ' . $data['assignment_status']
+                'message' => 'Status Update for Order# ' . $data['order_id'] . ':' . $data['assignment_status']
             ];
             $newUpdate  = $update->saveUpdate($updateData);
             echo json_encode([
@@ -145,6 +145,17 @@ class AssignmentController{
                 "message" => "Order status updated successfully"
                 ]);
             }
+
+            $update = new UpdateController();
+            $updateData = [
+                'worker_id' => $decoded->user_id,
+                'assignment_id' => $id,
+                'message' => 'Status Update for Order# ' . $data['order_id'] . ':' . $data['assignment_status']
+            ];
+            $newUpdate  = $update->saveUpdate($updateData);
+            echo json_encode([
+                "message" => "Assignment status updated successfully"
+            ]);
         }
     }
 
@@ -152,11 +163,7 @@ class AssignmentController{
         $decoded = AuthMiddleware::verifyToken();
         $assignment = new Assignment();
         $recentAssignments = $assignment->recentAssignments();
-        if(!empty($recentAssignments)){
-            echo json_encode($recentAssignments);
-        }else{
-            ErrorHelper::sendError(401, "Something went wrong");
-        }
+        echo json_encode($recentAssignments);
     }
 
     public function findAssignmentByOrderId($orderId){

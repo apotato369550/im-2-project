@@ -5,10 +5,26 @@ import Services from "../components/Services";
 import Brands from "../components/Brands";
 import ContactForm from "../components/ContactForm";
 import Footer from "../components/Footer";
-import React from "react"; 
+import React, { useEffect } from "react"; 
 import contactBg from "../assets/images/contactBg.png"
+import { useNavigate } from "react-router-dom";
+
 
 const Home = () => {
+  const userData = JSON.parse(localStorage.getItem('user_data'));
+  const navigate = useNavigate();
+  useEffect(() => {
+    if(userData){
+      if(userData.user_type === "worker"){
+        navigate("/worker/dashboard");
+      }else if(userData.user_type === "manager"){
+        navigate("/manager/dashboard");
+      }
+    }
+  }, [])
+  
+
+
   return (
     <>
     <div className="overflow-hidden">

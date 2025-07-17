@@ -3,15 +3,15 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import WorkerSidebar from "../../components/WorkerSidebar";
 import { Plus, Search, Filter} from "lucide-react";
 import { AvailableAssignments } from "../../components/AvailableAssignments";
-import SortingDropdown from "../../components/SortingDropdown"; // Added missing import
+import SortingDropdown from "../../components/SortingDropdown"; 
 import axios from 'axios'
 
 const AssignmentPage = () => {
   const [activeItem, setActiveItem] = useState('Available Assignments');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortOption, setSortOption] = useState(''); // Added missing state
-  const [output, setOutput] = useState([]); // Added missing state
-  const [availableAssignmentsCount, setAvailableAssignmentsCount] = useState(0); // Added missing state
+  const [sortOption, setSortOption] = useState(''); 
+  const [output, setOutput] = useState([]); 
+  const [availableAssignmentsCount, setAvailableAssignmentsCount] = useState(0); 
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem('user_data'));
   const [availableAssignments, setAvailableAssignments] = useState([]);
@@ -26,7 +26,7 @@ const AssignmentPage = () => {
         });
         
         const filteredData = res.data
-          .filter(assignment => assignment.assignedWorkerId != null)
+          .filter(assignment => assignment.assignedWorkerId === null)
           .map(assignment => ({
             ...assignment,
             total_payment: assignment.total_payment === null ? 0 : assignment.total_payment
@@ -41,9 +41,9 @@ const AssignmentPage = () => {
     };
 
     fetchAssignment();
-  }, []); // Fixed dependency array - removed availableAssignments to prevent infinite loop
+  }, []); 
 
-  // Initialize output with availableAssignments when it changes
+  
   useEffect(() => {
     setOutput(availableAssignments);
   }, [availableAssignments]);
@@ -92,6 +92,7 @@ const AssignmentPage = () => {
         activeItem={activeItem}
         onItemChange={setActiveItem}
         onLogout={handleLogout}
+        userData={userData}
       />
 
       {/* Main Content */}
@@ -109,7 +110,7 @@ const AssignmentPage = () => {
             </div>
           </div>
 
-          <div className='flex flex-row'> 
+          <div className='flex flex-row gap-5'> 
             {/* Search Bar */}
             <div className="mb-8">
               <div className='relative bg-white border border-gray-200 rounded-3xl h-[38px] w-full max-w-[382px]'>
@@ -123,19 +124,26 @@ const AssignmentPage = () => {
                 />
               </div>
             </div>
-            <div className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
+            <SortingDropdown 
+            onSortChange={(sortValue) => setSortOption(sortValue)}
+            sortingOptions={[
+                { value: 'default', label: 'Default Sorting' },
+                { value: 'name-asc', label: 'A-Z' },
+                { value: 'name-desc', label: 'Z-A' }
+              ]}
+            />
+            {/* <div className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
               <Filter className='h-3 w-3 ml-3 text-gray-500'/>
               <p className='text-gray-500 ml-2'>Filter</p>
-            </div>
+            </div> */}
           </div>
           
-          <SortingDropdown 
-            onSortChange={(sortValue) => setSortOption(sortValue)}
-          />
+          
         </div>
         
         {/* Assignments Grid */}
-        <div className='flex-1 overflow-y-auto'>
+        <div className='flex-1 overfl
+        ow-y-auto'>
           <div className='grid grid-cols-2 gap-5 p-8 pb-16'>
             {output.map((assignment) => (
               <AvailableAssignments

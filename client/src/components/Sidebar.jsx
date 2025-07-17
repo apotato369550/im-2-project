@@ -42,6 +42,8 @@ const sidebarItems = [
   }
 ];
 
+const userData = JSON.parse(localStorage.getItem('user_data'));
+
 const handleLogout = (e)=>{
     localStorage.removeItem("user_data");
     setUser(null);
