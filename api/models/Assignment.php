@@ -47,14 +47,17 @@ class Assignment{
                     a.assignment_details as notes,
                     a.assignment_status,
                     a.assignment_due,
+                    a.order_id,
                     o.address AS location,
                     o.phone_number AS clientNumber,
                     u.user_full_name AS clientName,
-                    s.service_type AS serviceName
+                    s.service_type AS serviceName,
+                    COALESCE(q.total_payment, 0) as price
             FROM assignments a
             LEFT JOIN orders o ON a.order_id = o.order_id
             LEFT JOIN users u ON o.client_id = u.user_id
             LEFT JOIN service s ON o.service_id = s.service_id
+            LEFT JOIN quotation q ON q.order_id = o.order_id
             WHERE a.worker_id = :workerId
             
         ");

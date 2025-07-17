@@ -30,9 +30,8 @@ const WorkerDashboard = () => {
         }
       })
       .then((res)=>{
-        const filteredData = res.data.filter(assignment => assignment.assignedWorkerId != null)
+        const filteredData = res.data.filter(assignment => assignment.assignedWorkerId == null)
         setAvailableAssignments(filteredData);
-        console.log(filteredData);
         setAvailableAssignmentsCount(filteredData.length)
       })
       .catch((err)=>{
@@ -47,7 +46,6 @@ const WorkerDashboard = () => {
         }
       })
       .then((res)=>{
-        console.log(res.data);
         setRecentAssignments(res.data);
       })
       .catch((err)=>{
@@ -96,6 +94,8 @@ const WorkerDashboard = () => {
         activeItem={activeItem}
         onItemChange={setActiveItem}
         onLogout={handleLogout}
+        userData={userData}
+
       />
 
       {/* put main stuff here */}
