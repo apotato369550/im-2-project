@@ -189,8 +189,8 @@ $router->delete('/im-2-project/api/items/delete/{itemId}', 'ItemController@delet
 /**********************************
  *          GET ENDPOINTS
  *********************************/
-$router->get('/im-2-project/api/updates/recent', 'UpdateController@recentUpdates');
 $router->get('/im-2-project/api/updates/{client_id}', 'UpdateController@getClientUpdates');
+$router->get('/im-2-project/api/updates/recent', 'UpdateController@recentUpdates');
 $router->get('/im-2-project/api/updates', 'UpdateController@fetchUpdates');
 
 

@@ -19,22 +19,24 @@ const TasksPage = () => {
 
   //filter function
   const [sortOption, setSortOption] = useState('default');
-    axios
-    .get("http://localhost/im-2-project/api/assignments", {
-      headers: {
-        Authorization: "Bearer " + userData.token
-      }
-    })
-    .then((response)=>{
-      setWorkerTask(response.data);
-      console.log(response.data);
-    })
-    .catch((Err)=>{
-      console.log(Err);
-    })
 
-  }, []);
-  
+  // Move API call to useEffect
+  useEffect(() => {
+    axios
+      .get("http://localhost/im-2-project/api/assignments", {
+        headers: {
+          Authorization: "Bearer " + userData.token
+        }
+      })
+      .then((response) => {
+        setWorkerTask(response.data);
+        console.log(response.data);
+      })
+      .catch((Err) => {
+        console.log(Err);
+      });
+  }, []); // Empty dependency array to run once on mount
+
   // Function to handle task updates from child components
   const handleTaskUpdate = (taskId, newStatus) => {
     setWorkerTask(prevTasks => 
@@ -48,7 +50,6 @@ const TasksPage = () => {
 
   const activeAssignments = workerTasks;
 
->>>>>>> main
   // Sorting function
   const sortData = (data, option) => {
     const sorted = [...data];
@@ -63,14 +64,15 @@ const TasksPage = () => {
   };
 
   const handleStatusUpdate = (taskId, newStatus) => {
-    setWorkerTasks(prevTasks => 
+    setWorkerTask(prevTasks => 
       prevTasks.map(task => 
-        task.TaskID === taskId 
-          ? { ...task, status: newStatus }
+        task.assignment_id === taskId 
+          ? { ...task, assignment_status: newStatus }
           : task
       )
     );
-  
+  };
+
   // Combined filter and sort effect
   useEffect(() => {
     let results = activeAssignments.filter(task =>
@@ -83,11 +85,10 @@ const TasksPage = () => {
     setOutput(results);
   }, [searchQuery, sortOption, workerTasks]); 
   
-  const handleLogout = (e)=>{
+  const handleLogout = (e) => {
     localStorage.removeItem("user_data");
     navigate("/");
   }
->>>>>>> main
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -114,8 +115,7 @@ const TasksPage = () => {
             </div>
           </div>
 
-          <div className='flex flex-row gap-4 relative z-20' > 
-
+          <div className='flex flex-row gap-4 relative z-20'> 
             {/* Search Bar */}
             <div className="mb-8">
               <div className='relative bg-white border border-gray-200 rounded-3xl h-[38px] w-full max-w-[382px]'>
