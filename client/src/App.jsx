@@ -59,6 +59,8 @@ const App = () => (
 
       {/* Fallback */}
       <Route path="*" element={<NotFound />} />
+      </Routes>
+
     </Routes>
   </BrowserRouter>
 );
