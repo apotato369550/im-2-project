@@ -31,8 +31,23 @@ class Assignment{
     public function getAvailableAssignments(){
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("
-            SELECT  *
-            FROM assignments
+            SELECT a.assignment_id,
+                    a.assignment_details,
+                    a.assignment_status,
+                    a.assignment_due,
+                    a.assignment_date_created,
+                    u.user_id as clientId,
+                    u.user_full_name as clientName,
+                    w.user_id as assignedWorkerId,
+                    w.user_full_name as assignedWorker,
+                    s.service_type as service_name,
+                    o.address as Location,
+                    q.total_payment
+             FROM assignments a
+             JOIN orders o ON o.order_id = a.order_id
+             JOIN service s ON o.service_id = s.service_id
+             LEFT JOIN quotation q ON o.order_id = q.order_id
+             LEFT JOIN users u ON u.user_id = o.client_id
             WHERE worker_id IS NULL
         ");
         $stmt->execute();
