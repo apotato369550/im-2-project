@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { User, Calendar, MapPin, Send } from 'lucide-react';
-import { useState } from 'react';
 import axios from 'axios';
 
 export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location, Notes, OrderId, onTaskUpdate}) => {
@@ -23,27 +22,28 @@ export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location
         };
         console.log(payload.order_id);
 
-        axios.put(`http://localhost/im-2-project/api/assignments/edit/${TaskID}`, payload, {
-            headers:{
-                Authorization: "Bearer " + userData.token
-            }
-        })
-        .then((res)=>{
+        try {
+            const response = await axios.put(`http://localhost/im-2-project/api/assignments/edit/${TaskID}`, payload, {
+                headers:{
+                    Authorization: "Bearer " + userData.token
+                }
+            });
+            
             setStatusUpdate('');
             setSubmitSuccess(true);
-            setIsSubmitting(false);
             
             // Call the callback to update parent component
             if (onTaskUpdate) {
                 onTaskUpdate(TaskID, updateMessage);
             }
-        })
-        .catch((err)=>{
+            
+            setTimeout(() => setSubmitSuccess(false), 3000);
+        } catch (err) {
             console.log(err);
-            setSubmitSuccess(false)
-        })
-        
-        setTimeout(() => setSubmitSuccess(false), 3000);
+            setSubmitSuccess(false);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleCompleteTask = async () => {
@@ -81,21 +81,10 @@ export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location
         }
     };            
    
-
     return(
         <div className="relative border border-gray-200 shadow-lg bg-white p-6 rounded-xl flex flex-col">
-            {/* Completed Overlay */}
-            {isCompleted && (
-                <div className="absolute inset-0 bg-white bg-opacity-90 rounded-xl flex items-center justify-center z-10">
-                    <div className="text-center">
-                        <div className="text-4xl font-bold text-green-600 mb-2">✓</div>
-                        <div className="text-2xl font-semibold text-green-600">COMPLETED</div>
-                    </div>
-                </div>
-            )}
-
-            {/* Main card content - disabled when completed */}
-            <div className={isCompleted ? 'opacity-50 pointer-events-none' : ''}>
+            {/* Main card content */}
+            <div>
                 {/* Title */}
                 <div className="flex justify-between items-center flex-row"> 
                     <p className="font-alegreya-sans-sc text-cbvt-navy font-semibold text-2xl pb-4">{Title}</p>
@@ -120,7 +109,6 @@ export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location
                         <span className="pl-2 text-cbvt-dark-gray">{Notes}</span>
                     </p>
                 </div>
-
 
                 {/* Status update here */}
                 <form onSubmit={handleSubmitUpdate} className="mb-4">
@@ -159,6 +147,21 @@ export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location
                     </button>
                 </div>
             </div>
+
+            {/* Blurred Completed Overlay */}
+            {isCompleted && (
+                <div className="absolute inset-0 rounded-xl flex items-center justify-center z-10 pointer-events-none" 
+                     style={{
+                         background: 'rgba(255, 255, 255, 0.4)',
+                         backdropFilter: 'blur(2px)',
+                         WebkitBackdropFilter: 'blur(2px)'
+                     }}>
+                    <div className="text-center bg-white bg-opacity-80 px-6 py-4 rounded-lg shadow-lg">
+                        <div className="text-4xl font-bold text-green-600 mb-2">✓</div>
+                        <div className="text-2xl font-semibold text-green-600">COMPLETED</div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

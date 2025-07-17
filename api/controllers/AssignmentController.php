@@ -90,7 +90,7 @@ class AssignmentController{
             $updateData = [
                 'worker_id' => $decoded->user_id,
                 'assignment_id' => $id,
-                'message' => $decoded->user_name . " has accepted the assignment"
+                'message' => $decoded->user_full_name . " has accepted the assignment"
             ];
             $newUpdate  = $update->saveUpdate($updateData);
 
@@ -126,7 +126,7 @@ class AssignmentController{
             $updateData = [
                 'worker_id' => $decoded->user_id,
                 'assignment_id' => $id,
-                'message' => 'Status Update for Order# ' . $data['order_id'] . ':' . $data['assignment_status']
+                'message' => 'Status Update for Order# ' . $data['order_id'] . ': ' . $data['assignment_status']
             ];
             $newUpdate  = $update->saveUpdate($updateData);
             echo json_encode([

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import WorkerSidebar from "../../components/WorkerSidebar";
-import { Plus, Search, Filter} from "lucide-react";
+import { Plus, Search, Filter, FileX, RefreshCw } from "lucide-react";
 import { AvailableAssignments } from "../../components/AvailableAssignments";
 import SortingDropdown from "../../components/SortingDropdown"; 
 import axios from 'axios'
@@ -12,38 +12,41 @@ const AssignmentPage = () => {
   const [sortOption, setSortOption] = useState(''); 
   const [output, setOutput] = useState([]); 
   const [availableAssignmentsCount, setAvailableAssignmentsCount] = useState(0); 
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem('user_data'));
   const [availableAssignments, setAvailableAssignments] = useState([]);
 
   useEffect(() => {
-    const fetchAssignment = async () => {
-      try {
-        const res = await axios.get("http://localhost/im-2-project/api/assignments/fetch-list", {
-          headers: {
-            Authorization: "Bearer " + userData.token
-          }
-        });
-        
-        const filteredData = res.data
-          .filter(assignment => assignment.assignedWorkerId === null)
-          .map(assignment => ({
-            ...assignment,
-            total_payment: assignment.total_payment === null ? 0 : assignment.total_payment
-          }));
-        
-        setAvailableAssignments(filteredData);
-        console.log(filteredData);
-        setAvailableAssignmentsCount(filteredData.length);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchAssignment();
+    fetchAssignments();
   }, []); 
 
-  
+  const fetchAssignments = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axios.get("http://localhost/im-2-project/api/assignments/fetch-list", {
+        headers: {
+          Authorization: "Bearer " + userData.token
+        }
+      });
+      
+      const filteredData = res.data
+        .filter(assignment => assignment.assignedWorkerId === null)
+        .map(assignment => ({
+          ...assignment,
+          total_payment: assignment.total_payment === null ? 0 : assignment.total_payment
+        }));
+      
+      setAvailableAssignments(filteredData);
+      console.log(filteredData);
+      setAvailableAssignmentsCount(filteredData.length);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     setOutput(availableAssignments);
   }, [availableAssignments]);
@@ -76,14 +79,53 @@ const AssignmentPage = () => {
     }
   };
 
-  const acceptAssignment = () => {
-    // Implementation needed
+  // Handle successful assignment acceptance
+  const handleAcceptSuccess = (assignmentId) => {
+    // Remove the accepted assignment from the list
+    setAvailableAssignments(prev => 
+      prev.filter(assignment => assignment.assignment_id !== assignmentId)
+    );
+    
+    // Update the count
+    setAvailableAssignmentsCount(prev => prev - 1);
+    
+    // Optional: You might want to refetch assignments to get the latest data
+    // fetchAssignments();
   };
 
   const handleLogout = (e) => {
     localStorage.removeItem("user_data");
     navigate("/");
   };
+
+  const handleRefresh = () => {
+    fetchAssignments();
+  };
+
+  // Empty state component
+  const EmptyState = () => (
+    <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
+      <div className="bg-gray-100 rounded-full p-6 mb-4">
+        <FileX className="h-12 w-12 text-gray-400" />
+      </div>
+      <h3 className="text-xl font-semibold text-gray-700 mb-2">
+        No Available Assignments
+      </h3>
+      <p className="text-gray-500 mb-6 max-w-md">
+        {searchQuery 
+          ? `No assignments found matching "${searchQuery}". Try adjusting your search terms.`
+          : "There are currently no assignments available. Check back later for new opportunities."
+        }
+      </p>
+      <button
+        onClick={handleRefresh}
+        className="flex items-center gap-2 px-4 py-2 bg-cbvt-navy text-white rounded-lg hover:bg-cbvt-navy/90 transition-colors"
+      >
+        <RefreshCw className="h-4 w-4" />
+        Refresh
+      </button>
+    </div>
+  );
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -125,41 +167,47 @@ const AssignmentPage = () => {
               </div>
             </div>
             <SortingDropdown 
-            onSortChange={(sortValue) => setSortOption(sortValue)}
-            sortingOptions={[
+              onSortChange={(sortValue) => setSortOption(sortValue)}
+              sortingOptions={[
                 { value: 'default', label: 'Default Sorting' },
                 { value: 'name-asc', label: 'A-Z' },
                 { value: 'name-desc', label: 'Z-A' }
               ]}
             />
-            {/* <div className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
-              <Filter className='h-3 w-3 ml-3 text-gray-500'/>
-              <p className='text-gray-500 ml-2'>Filter</p>
-            </div> */}
           </div>
-          
-          
         </div>
         
-        {/* Assignments Grid */}
-        <div className='flex-1 overfl
-        ow-y-auto'>
-          <div className='grid grid-cols-2 gap-5 p-8 pb-16'>
-            {output.map((assignment) => (
-              <AvailableAssignments
-                key={assignment.assignment_id}
-                Title={assignment.service_name}
-                Description={assignment.service_details}
-                Price={parseFloat(assignment.total_payment || 0).toLocaleString('en-PH', {
-                  style: 'currency',
-                  currency: 'PHP'
-                })}
-                CustomerName={assignment.clientName}
-                Location={assignment.Location}
-                DueDate={assignment.assignment_due}
-              />
-            ))}
-          </div>
+        {/* Assignments Grid or Empty State */}
+        <div className='flex-1 overflow-y-auto'>
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <RefreshCw className="h-8 w-8 animate-spin text-cbvt-navy mx-auto mb-4" />
+                <p className="text-gray-500">Loading assignments...</p>
+              </div>
+            </div>
+          ) : output.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <div className='grid grid-cols-2 gap-5 p-8 pb-16'>
+              {output.map((assignment) => (
+                <AvailableAssignments
+                  key={assignment.assignment_id}
+                  AssignmentID={assignment.assignment_id}
+                  Title={assignment.service_name}
+                  Description={assignment.service_details}
+                  Price={parseFloat(assignment.total_payment || 0).toLocaleString('en-PH', {
+                    style: 'currency',
+                    currency: 'PHP'
+                  })}
+                  CustomerName={assignment.clientName}
+                  Location={assignment.Location}
+                  DueDate={assignment.assignment_due}
+                  onAcceptSuccess={handleAcceptSuccess}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
