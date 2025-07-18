@@ -20,6 +20,15 @@ Class User {
         return $user ?: null;
     }
 
+    public function findId($id)
+    {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("SELECT * FROM users WHERE user_id = :id");
+        $stmt->execute(['id' => $id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user ?: null;
+    }
+
     public function saveImagePath($userId, $imagePath) {
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("UPDATE users SET image_path = :image_path WHERE user_id = :user_id");
@@ -42,6 +51,22 @@ Class User {
         ]);
 
         return $success ?: null;
+    }
+
+    public function updateProfileDetails($data){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare('
+            UPDATE users
+            SET user_email = :userEmail, user_full_name = :userFullName
+            WHERE user_id = :userId
+        ');
+        $result = $stmt->execute([
+            "userEmail" => $data['user_email'],
+            "userFullName" => $data['user_full_name'],
+            "userId" => $data['user_id']
+        ]);
+
+        return $result;
     }
 
     

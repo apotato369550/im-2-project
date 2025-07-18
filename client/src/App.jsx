@@ -30,13 +30,17 @@ const App = () => (
       <Route path="/signup" element={<SignUp />} />
       <Route path="/about" element={<About />} />
       <Route path="/catalog" element={<Catalog />} />
-      <Route path="/clientdashboard" element={<ClientDashboard/>} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/order-form" element={<OrderForm />} />
       <Route path="/forget-password" element={<ForgetPasswordTestingSpace />} />
       <Route path="/reset-password" element={<ChangePasswordTestingSpace />} /> */
 
-        
+
+      {/*Client Routes*/} 
+      <Route element={<PrivateRoute allowedRoles={['client']} />}>
+        <Route path="/clientdashboard" element={<ClientDashboard/>} />
+      </Route>  
+
       {/* Manager Routes */}
       <Route element={<PrivateRoute allowedRoles={['manager']} />}>
         <Route path="/manager/dashboard" element={<Dashboard />} />

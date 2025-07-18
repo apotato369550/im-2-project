@@ -70,24 +70,45 @@ class UserController{
     headers for profile must include the authorization header with value Bearer <token> to access protected routes
     */
 
-    public function updateProfilePicture(){
-        $decoded = AuthMiddleware::verifyToken();
-        $email = $_POST['user_email'];
-        $userModel = new User();
-        $exist = $userModel->findEmail($email);
-        if (!$exist) {
-            ErrorHelper::sendError(404, 'Item not found');
-        }
 
+    //
+    public function updateProfile($id){
+    $decoded = AuthMiddleware::verifyToken();
+    $email = $_POST['user_email'];
+    $newName = $_POST['user_full_name'];
+    $userModel = new User();
+
+    $exist = $userModel->findEmail($email);
+    if ($exist && $exist['user_id'] != $id) {
+        ErrorHelper::sendError(409, 'Email already taken');
+    }
+
+    $currentUser = $userModel->findId($id);
+    if (!$currentUser) {
+        ErrorHelper::sendError(404, 'User not found');
+    }
+
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
         $image = new ImageController();
-        $filename = $image->saveImage($exist);
-
-
-        if (!$userModel->saveImagePath($exist['user_id'], 'uploads/' . $filename)) {
+        $filename = $image->saveImage($currentUser); // use currentUser, not exist
+        if (!$userModel->saveImagePath($currentUser['user_id'], 'uploads/' . $filename)) {
             ErrorHelper::sendError(500, 'Failed to update image path in database');
         }
+    }
 
-        echo json_encode(['message' => 'Image uploaded', 'image_path' => 'uploads/' . $filename]);
+    // Update if values changed
+    if ($currentUser['user_email'] !== $email || $currentUser['user_full_name'] !== $newName) {
+        $data = [
+            "user_full_name" => $newName,
+            "user_email" => $email,
+            "user_id" => $id // this was missing before
+        ];
+        if (!$userModel->updateProfileDetails($data)) {
+            ErrorHelper::sendError(500, 'Failed to update profile details in database');
+        }
+    }
+
+    echo json_encode(['message' => 'Profile Updated Sucessfully']);
     }
 
     public function profile() : void

@@ -39,7 +39,7 @@ $router->get('/im-2-project/api/users/fetch-list', 'UserController@fetchAllUsers
  *********************************/
 $router->post('/im-2-project/api/users/login', 'UserController@login');
 $router->post('/im-2-project/api/users/register', 'UserController@register');
-$router->post('/im-2-project/api/users/update-profile', 'UserController@updateProfilePicture');
+$router->post('/im-2-project/api/users/update-profile/{id}', 'UserController@updateProfile');
 
 
 /**************************************************************************
