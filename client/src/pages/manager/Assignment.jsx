@@ -3,12 +3,68 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter } from "lucide-react";
 import { AssignmentCard } from "../../components/AssignmentCard";
+import SortingDropdown from '../../components/SortingDropdown';
 import axios from 'axios';
 
 const AssignmentPage = () => {
   const [activeItem, setActiveItem] = useState('Assignment');
+  
+
+      //search function
+  const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [assignmentData, setAssignmentData] = useState([]);
+  const [output, setOutput] = useState([]);
+
+  //filter function
+   const [sortOption, setSortOption] = useState('default');
+
+  
+
+   // Initialize with all workers on first render
+   useEffect(() => {
+     setOutput(assignmentData);
+   }, []);
+
+
+   //delete and edit functions
+
+     // Handle order deletion
+  const handleDeleteAssignment = (assignmentId) => {
+    setAssignments(prev => 
+      prev.map(assignment => 
+        assignment.AssignmentID === assignmentId
+          ? { ...assignment, is_removed: 1 }
+          : assignment
+      )
+    );
+  };
+
+  // Handle order editing
+  const handleEditOrder = (orderId, updatedOrder) => {
+    console.log('Editing order:', orderId, 'with data:', updatedOrder);
+    setOrders(prevOrders => 
+      prevOrders.map(order => 
+        order.OrderID === orderId 
+          ? { ...order, ...updatedOrder } 
+          : order
+      )
+    );
+    // Also update the output to reflect changes immediately
+    setOutput(prevOutput => 
+      prevOutput.map(order => 
+        order.OrderID === orderId 
+          ? { ...order, ...updatedOrder } 
+          : order
+      )
+    );
+  };
+ 
+ 
+
+
+  
+  const [assignmentData, setAssignmentData] = useState([])
+
 
     useEffect(() => {
       console.log("Works");
@@ -55,6 +111,39 @@ const AssignmentPage = () => {
     assignment.CustomerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     assignment.Description.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+
+    // Combined filter and sort effect
+   useEffect(() => {
+     // Apply search filter
+     let results = assignmentData.filter(data =>
+       data.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    data.AssignedPerson.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    data.CustomerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    data.Description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    data.Location.toLowerCase().includes(searchQuery.toLowerCase())
+     );
+ 
+     // Apply sorting
+     results = sortData(results, sortOption);
+     
+     setOutput(results);
+   }, [searchQuery, sortOption]); // Add sortOption to dependencies
+ 
+ 
+ // Sorting function
+   const sortData = (data, option) => {
+     const sorted = [...data];
+     switch(option) {
+       case 'name-asc':
+         return sorted.sort((a, b) => a.Title.localeCompare(b.Title));
+       case 'name-desc':
+         return sorted.sort((a, b) => b.Title.localeCompare(a.Title));
+       default:
+         return data;
+     }
+   };
+
 
   const handleLogout = () => {
     console.log('Logging out...');
@@ -104,10 +193,9 @@ const AssignmentPage = () => {
                 />
               </div>
             </div>
-            <div className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
-              <Filter className='h-3 w-3 ml-3 text-gray-500' />
-              <p className='text-gray-500 ml-2'>Filter</p>
-            </div>
+            <SortingDropdown 
+            onSortChange={(sortValue) => setSortOption(sortValue)}
+          />
           </div>
 
 
@@ -117,20 +205,20 @@ const AssignmentPage = () => {
 
         <div className='flex-1 overflow-y-auto'>
           <div className='grid grid-cols-2 gap-5 p-8 pb-16'>
-            {assignmentData.map((assignment) => (
-              <AssignmentCard  // AssignmentID, Title, Description, AssignedPerson, CustomerName, Location, DueDate, EstimatedTime
-                key={assignment.AssignmentID}
-                Title={assignment.Title}
-                Description={assignment.Description}
-                AssignedPerson={assignment.AssignedPerson}
-                CustomerName={assignment.CustomerName}
-                Location={assignment.Location}
-                DueDate={assignment.DueDate}
-                EstimatedTime={assignment.EstimatedTime}
+            {output.map((assignment) => (
+                    <AssignmentCard  // AssignmentID, Title, Description, AssignedPerson, CustomerName, Location, DueDate, EstimatedTime
+                        key={assignment.AssignmentID}
+                        Title={assignment.Title}
+                        Description={assignment.Description}
+                        AssignedPerson={assignment.AssignedPerson}
+                        CustomerName={assignment.CustomerName}
+                        Location={assignment.Location}
+                        DueDate={assignment.DueDate}
+                        is_removed={assignment.is_removed}
+                        onDelete={handleDeleteAssignment}
+                    />
 
-              />
-
-            ))}
+                ))}
           </div>
 
         </div>

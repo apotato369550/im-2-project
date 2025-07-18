@@ -3,14 +3,23 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter} from "lucide-react";
 import { OrdersCard } from "../../components/OrdersCard";
+import SortingDropdown from '../../components/SortingDropdown';
 import axios from 'axios';
 
 const OrdersPage = () => {
-  const [activeItem, setActiveItem] = useState('Orders');
+   const [activeItem, setActiveItem] = useState('Orders');
+  
+
+        //search function
+  const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [output, setOutput] = useState([]);
 
-  const [orderData, setOrderData] = useState([]);
+  //filter function
+   const [sortOption, setSortOption] = useState('default');
 
+   const [orders, setOrders] = useState([]); // Add this state for managing orders
+ 
   useEffect(() => {
     console.log("Works");
     const userData = JSON.parse(localStorage.getItem("user_data"));
@@ -52,6 +61,102 @@ const OrdersPage = () => {
         console.log(error.response.data);
       });
   }, []);
+
+
+
+  
+  // Initialize with orderData
+  useEffect(() => {
+    setOrders(orderData);
+    setOutput(orderData); // Initialize output with the same data
+  }, []);
+
+  // Handle status updates
+  const handleStatusUpdate = (orderId, newStatus) => {
+    console.log('Updating status for order:', orderId, 'to:', newStatus);
+    setOrders(prevOrders => 
+      prevOrders.map(order => 
+        order.OrderID === orderId 
+          ? { ...order, order_status: newStatus } 
+          : order
+      )
+    );
+    // Also update the output to reflect changes immediately
+    setOutput(prevOutput => 
+      prevOutput.map(order => 
+        order.OrderID === orderId 
+          ? { ...order, order_status: newStatus } 
+          : order
+      )
+    );
+  };
+
+  // Handle order deletion
+  const handleDeleteOrder = (orderId) => {
+    console.log('Deleting order:', orderId);
+    const confirmDelete = window.confirm('Are you sure you want to delete this order? This action cannot be undone.');
+    
+    if (confirmDelete) {
+      setOrders(prevOrders => prevOrders.filter(order => order.OrderID !== orderId));
+      setOutput(prevOutput => prevOutput.filter(order => order.OrderID !== orderId));
+    }
+  };
+
+  // Handle order editing
+  const handleEditOrder = (orderId, updatedOrder) => {
+    console.log('Editing order:', orderId, 'with data:', updatedOrder);
+    setOrders(prevOrders => 
+      prevOrders.map(order => 
+        order.OrderID === orderId 
+          ? { ...order, ...updatedOrder } 
+          : order
+      )
+    );
+    // Also update the output to reflect changes immediately
+    setOutput(prevOutput => 
+      prevOutput.map(order => 
+        order.OrderID === orderId 
+          ? { ...order, ...updatedOrder } 
+          : order
+      )
+    );
+  };
+ 
+ 
+   // Combined filter and sort effect
+  useEffect(() => {
+    // Apply search filter to the main orders array
+    let results = orders.filter(order =>
+      order.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.Description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.Customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.order_status.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Apply sorting
+    results = sortData(results, sortOption);
+    
+    setOutput(results);
+  }, [searchQuery, sortOption, orders]); 
+
+
+ 
+ 
+ // Sorting function
+   const sortData = (data, option) => {
+     const sorted = [...data];
+     switch(option) {
+       case 'name-asc':
+         return sorted.sort((a, b) => a.Title.localeCompare(b.Title));
+       case 'name-desc':
+         return sorted.sort((a, b) => b.Title.localeCompare(a.Title));
+       default:
+         return data;
+     }
+   };
+
+
+
 
   const filteredOrders = orderData.filter(order =>
     order.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -107,10 +212,9 @@ const OrdersPage = () => {
               />
             </div>
           </div>
-          <div className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
-            <Filter className='h-3 w-3 ml-3 text-gray-500'/>
-            <p className='text-gray-500 ml-2'>Filter</p>
-        </div>
+          <SortingDropdown 
+            onSortChange={(sortValue) => setSortOption(sortValue)}
+          />
         </div>
 
 
@@ -120,17 +224,22 @@ const OrdersPage = () => {
         
         <div className='flex-1 overflow-y-auto'>
             <div className='grid grid-cols-2 gap-5 p-8 pb-16'>
-                {orderData.map((order) => (
-                    <OrdersCard  //OrderID, Title, Description, Customer, Amount, OrderDate, DeliveryDate
-                        key={order.OrderID}
-                        Title={order.Title}
-                        Description={order.Description}
-                        Customer={order.Customer}
-                        Quantity={order.Quantity}
-                        Amount={order.Amount}
-                        OrderDate={order.OrderDate}
-                        DeliveryDate={order.DeliveryDate}
-
+                {output.map((order) => (
+                <OrdersCard
+                      key={order.OrderID}
+                      OrderID={order.OrderID}
+                      Title={order.Title}
+                      Description={order.Description}
+                      Customer={order.Customer}
+                      Quantity={order.Quantity}
+                      Amount={order.Amount}
+                      OrderDate={order.OrderDate}
+                      DeliveryDate={order.DeliveryDate}
+                      order_status={order.order_status}
+                      onStatusUpdate={handleStatusUpdate}
+                      onDelete={handleDeleteOrder}
+                      onEdit={handleEditOrder}
+                      is_removed={order.is_removed}
                     />
 
                 ))}

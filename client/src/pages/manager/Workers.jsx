@@ -2,67 +2,21 @@ import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter } from "lucide-react";
+import SortingDropdown from '../../components/SortingDropdown';
 import { CardHolderMd } from "../../components/CardHolderMd";
 import axios from 'axios';
 
 const WorkersPage = () => {
   const [activeItem, setActiveItem] = useState('Workers');
+ 
+    //search function
   const [searchQuery, setSearchQuery] = useState('');
-  const [workerData, setWorkerData] = useState([]);
+  const [output, setOutput] = useState([]);
 
-  //
-  /*
-  const workerData = [
-    {
-      Name: "John Doe",
-      Position: "Senior Technician",
-      PhoneNumber: "+63 912 345 6789",
-      Email: "john.doe@gmail.com",
-      ActiveTasks: 5,
-      CompletedTasks: 27,
-    },
-    {
-      Name: "John Dab",
-      Position: "Senior Technician",
-      PhoneNumber: "+63 912 345 6789",
-      Email: "john.doe@gmail.com",
-      ActiveTasks: 5,
-      CompletedTasks: 27,
-    },
-    {
-      Name: "Jane Doe",
-      Position: "Senior Technician",
-      PhoneNumber: "+63 912 345 6789",
-      Email: "john.doe@gmail.com",
-      ActiveTasks: 5,
-      CompletedTasks: 27,
-    },
-    {
-      Name: "Jane Dab",
-      Position: "Senior Technician",
-      PhoneNumber: "+63 912 345 6789",
-      Email: "jane.dab@gmail.com",
-      ActiveTasks: 5,
-      CompletedTasks: 27,
-    },
-    {
-      Name: "Jhen Doe",
-      Position: "Senior Technician",
-      PhoneNumber: "+63 912 345 6789",
-      Email: "john.doe@gmail.com",
-      ActiveTasks: 5,
-      CompletedTasks: 27,
-    },
-    {
-      Name: "Jhen Dab",
-      Position: "Senior Technician",
-      PhoneNumber: "+63 912 345 6789",
-      Email: "john.doe@gmail.com",
-      ActiveTasks: 5,
-      CompletedTasks: 27,
-    }
-  ];
-  */
+  //filter function
+  const [sortOption, setSortOption] = useState('default');
+
+  const [workerData, setWorkerData] = useState([]);
 
   useEffect(() => {
     console.log("Works");
@@ -109,8 +63,9 @@ const WorkersPage = () => {
             .filter((user) => user.user_type === "worker")
             .map((user) => ({
               Name: user.user_full_name,
-              Position: "Senior Technician", // placeholder
-              PhoneNumber: "+63 912 345 6789", // placeholder
+              worker_id: user.user_id,
+              Position: user.user_type,
+              is_removed: user.is_removed,
               Email: user.user_email,
             }));
 
@@ -121,6 +76,40 @@ const WorkersPage = () => {
         console.log(error.response.data);
       });
   }, []);
+
+// search and filter function here
+
+  // Combined filter and sort effect
+  useEffect(() => {
+    // Filter out soft-deleted workers
+    const activeWorkers = workerData.filter(worker => worker.is_removed === 0);
+    
+    // Apply search filter
+    let results = activeWorkers.filter(worker =>
+      worker.Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      worker.Position.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Apply sorting
+    results = sortWorkers(results, sortOption);
+    
+    setOutput(results);
+  }, [searchQuery, sortOption, workerData]);
+
+
+    // Sorting function
+  const sortWorkers = (workers, option) => {
+    const sorted = [...workers];
+    switch(option) {
+      case 'name-asc':
+        return sorted.sort((a, b) => a.Name.localeCompare(b.Name));
+      case 'name-desc':
+        return sorted.sort((a, b) => b.Name.localeCompare(a.Name));
+      default:
+        return workers;
+    }
+  };
+
 
 
   const filteredWorkers = workerData.filter(worker =>
@@ -175,10 +164,9 @@ const WorkersPage = () => {
                 />
               </div>
             </div>
-            <div className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
-              <Filter className='h-3 w-3 ml-3 text-gray-500' />
-              <p className='text-gray-500 ml-2'>Filter</p>
-            </div>
+            <SortingDropdown 
+            onSortChange={(sortValue) => setSortOption(sortValue)}
+          />
           </div>
 
 
@@ -192,16 +180,14 @@ const WorkersPage = () => {
           <div className="grid grid-cols-3 gap-5 mt-5">
             {workerData.map((worker) => (
               <CardHolderMd
-                key={worker.Name}
+                key={worker.worker_id}
                 Name={worker.Name}
                 Position={worker.Position}
-                PhoneNumber={worker.PhoneNumber}
                 Email={worker.Email}
-                ActiveTasks={worker.ActiveTasks}
-                CompletedTasks={worker.CompletedTasks}
+                is_removed={worker.is_removed}
+                onDelete={handleWorkerDelete}
+                onEdit={handleWorkerEdit}
               />
-
-
             ))}
 
 

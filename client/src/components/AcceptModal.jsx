@@ -21,7 +21,7 @@ const AcceptModal = () => {
             <div className="overlay"></div>
             <div className="modal-content"> 
                 <h2 className='text-cbvt-navy font-alegreya-sans-sc text-lg font-semibold'>Are you sure you want to accept this assignment?</h2>
-             <div className=" px-4 py-3 flex justify-end gap-3">
+             <div className=" px-4 py-3 flex justify-center gap-3">
                 
                     <button
                         onClick={() => setIsOpen(false)}

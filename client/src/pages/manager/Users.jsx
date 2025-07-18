@@ -60,7 +60,7 @@ const UsersPage = () => {
 
         // Convert API response to your desired format
         const formattedData = response.data.map((user) => ({
-          WorkerID: user.user_id,
+          CustomerID: user.user_id,
           Name: user.user_full_name,
           DateJoined: "2/14/2023", // <-- placeholder or use real value if available
           Address: "Cebu City", // <-- placeholder or add this to your backend
@@ -173,7 +173,7 @@ const UsersPage = () => {
           <div className="grid grid-cols-3 gap-5 mt-5">
             {output.map((customer) => (
               <CustomerCard
-                key={customer.WorkerID} //Name, Address, DateJoined, Email, Orders, TotalSpent
+                key={customer.CustomerID} //Name, Address, DateJoined, Email, Orders, TotalSpent
                 Name={customer.Name}
                 Address={customer.Address}
                 DateJoined={customer.DateJoined}
@@ -181,6 +181,8 @@ const UsersPage = () => {
                 Orders={customer.Orders}
                 TotalSpent={customer.TotalSpent}
                 is_removed={customer.is_removed}
+                onDelete={handleCustomerDelete}
+                onEdit={handleCustomerEdit}
               />
             ))}
           </div>
