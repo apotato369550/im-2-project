@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import{MapPin, Calendar, Ellipsis, Circle} from 'lucide-react';
 import { useStat, useRef, useEffect } from "react";
+import { useState } from "react";
 
 
 export const CustomerCard = ({Name, Address, DateJoined, Email, Orders, TotalSpent, is_removed,onDelete, onEdit}) => {

@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import{Phone, Mail, Ellipsis, Circle} from 'lucide-react';
 import { useState, useEffect, useRef } from "react";
 
-export const CardHolderMd = ({worker_id, Name, Position, PhoneNumber, Email, onDelete, onEdit}) => {
+export const CardHolderMd = ({worker_id, Name, Position, PhoneNumber, Email, onDelete, onEdit, is_removed}) => {
 const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);

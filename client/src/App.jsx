@@ -57,7 +57,7 @@ const App = () => (
         
       <Route element={<PrivateRoute allowedRoles={['worker']} />}>
         
-      </Route>
+m       </Route>
 
       {/* Fallback */}
       <Route path="*" element={<NotFound />} />
