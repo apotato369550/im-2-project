@@ -1,6 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import{User, Calendar, DollarSign, Boxes} from 'lucide-react';
 import { EditStatusModal } from "./EditStatusModal";
+import { useState } from "react";
+import { Loader } from "lucide-react";
 
 export const OrdersCard = ({ 
   OrderID, 
