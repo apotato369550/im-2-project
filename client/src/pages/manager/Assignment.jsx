@@ -380,13 +380,6 @@ const AssignmentPage = () => {
                 Manage work assignments.
               </p>
             </div>
-            <button 
-              onClick={handleCreateAssignment}
-              className='flex items-center bg-cbvt-navy h-[40px] px-4 rounded-2xl text-white mr-10 hover:bg-opacity-90 transition-colors'
-            >
-              <Plus className='h-3 w-3 mr-2' />
-              <span className='text-xs'>Create Assignment</span>
-            </button>
           </div>
 
           <div className='flex flex-row gap-4'>

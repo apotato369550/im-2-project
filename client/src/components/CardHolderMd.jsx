@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import{Phone, Mail, Ellipsis, Circle} from 'lucide-react';
+import{Phone, Mail, Ellipsis, Circle, Edit, Trash2} from 'lucide-react';
 import { useState, useEffect, useRef } from "react";
 
 export const CardHolderMd = ({worker_id, Name, Position, PhoneNumber, Email, onDelete, onEdit, is_removed}) => {
