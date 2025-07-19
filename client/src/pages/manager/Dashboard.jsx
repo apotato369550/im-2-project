@@ -12,6 +12,7 @@ import {
   Plus,
 } from "lucide-react";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function getRelativeTime(dateString) {
   const now = new Date();
@@ -216,17 +217,18 @@ useEffect(() => {
 
                         <div className='flex items-center bg-white h-[38px] w-[310px] rounded-2xl border border-gray-200 mb-3'>
                             <Plus className='h-3 w-3 ml-3'/>
-                            <p className='ml-2'>Add New Worker</p>
+                            <p ></p>
+                            <Link className='ml-2' to="../manager/workers">Add New Worker</Link>
                         </div>
 
                         <div className='flex items-center bg-white h-[38px] w-[310px] rounded-2xl border border-gray-200 mb-3'>
                             <Plus className='h-3 w-3 ml-3'/>
-                            <p className='ml-2'>Create Assignment</p>
+                            <Link className='ml-2' to="../manager/assignments">Create Assignment</Link>
                         </div>  
 
                         <div className='flex items-center bg-white h-[38px] w-[310px] rounded-2xl border border-gray-200'>
                             <Plus className='h-3 w-3 ml-3'/>
-                            <p className='ml-2'>Process Order</p>
+                            <Link className='ml-2' to="../manager/orders">Process Order</Link>
                         </div>
 
                     </div>
