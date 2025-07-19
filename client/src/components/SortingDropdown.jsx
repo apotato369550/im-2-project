@@ -4,7 +4,9 @@ import { ChevronDown } from 'lucide-react';
 const SortingDropdown = ({ 
   onSortChange, 
   sortingOptions = [
-    { value: 'default', label: 'Default Sorting' }
+    { value: 'default', label: 'Default Sorting' },
+    { value: 'name-asc', label: 'Customer Name (A-Z)' },
+    { value: 'name-desc', label: 'Customer Name (Z-A)' }
   ],
   defaultValue = 'default'
 }) => {
