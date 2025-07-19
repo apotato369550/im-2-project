@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import{User, Calendar, DollarSign, Boxes} from 'lucide-react';
+import{User, Calendar, DollarSign, Boxes, UserCheck, Edit} from 'lucide-react';
 import { EditStatusModal } from "./EditStatusModal";
 import { useState } from "react";
 import { Loader } from "lucide-react";
@@ -17,6 +17,7 @@ export const OrdersCard = ({
   onStatusUpdate, // Add this prop to receive update function from parent
   onDelete, // Add this prop for delete functionality
   onCreateAssignment, // Add this prop for creating assignments
+  onUpdateQuotation, // Add this prop for updating quotations
   is_removed
 }) => {
 
@@ -27,6 +28,11 @@ if (is_removed === 1) {
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isAssignmentOpen, setIsAssignmentOpen] = useState(false);
+  const [isQuotationOpen, setIsQuotationOpen] = useState(false);
+  const [quotationForm, setQuotationForm] = useState({
+    totalPayment: Amount || '',
+    description: ''
+  });
 
   const handleDeleteConfirm = () => {
     onDelete(OrderID, { is_removed: 1 }); // Pass the OrderID and update object for soft delete
@@ -59,12 +65,41 @@ if (is_removed === 1) {
     setIsAssignmentOpen(false);
   };
 
+  // Handle quotation form changes
+  const handleQuotationFormChange = (e) => {
+    const { name, value } = e.target;
+    setQuotationForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Handle quotation update
+  const handleUpdateQuotation = (e) => {
+    e.preventDefault();
+    
+    if (onUpdateQuotation) {
+      onUpdateQuotation(OrderID, {
+        totalPayment: quotationForm.totalPayment,
+        description: quotationForm.description
+      });
+    }
+    
+    setIsQuotationOpen(false);
+    setQuotationForm({ totalPayment: Amount || '', description: '' });
+  };
+
+  const closeQuotationModal = () => {
+    setIsQuotationOpen(false);
+    setQuotationForm({ totalPayment: Amount || '', description: '' });
+  };
+
   // Check if order can be converted to assignment
-  const canCreateAssignment = order_status === "Quotation Confirmed";
+  const canCreateAssignment = order_status === "Quotation Confirmed" && Title !== "Retail";
+  
+  // Check if quotation can be edited
+  const canEditQuotation = ["Pending", "Quotation Pending", "Quotation Sent"].includes(order_status);
 
     return(
         //main card
-        <div className="bg-white h-[347px] w-[535px] border border-gray-200 rounded-xl shadow-lg p-8">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-8" style={{height: canCreateAssignment || canEditQuotation ? '420px' : '347px', width: '535px'}}>
             
             {/*container for title and description*/}
             <div className="flex flex-col">
@@ -117,15 +152,12 @@ if (is_removed === 1) {
     
                  </div>
 
-
-
-
-        <div className="flex flex-col space-y-3">
-        {/* Assignment Button - Only show when status is "Quotation Confirmed" */}
+        <div className="flex flex-col space-y-3 mt-6">
+        {/* Special Action Buttons - Only show one at a time */}
         {canCreateAssignment && (
-          <div className="flex justify-center">
+          <div className="flex justify-center mb-3">
             <button 
-              className="border w-[480px] h-[38px] rounded-3xl border-green-500 bg-green-500 text-white p-1 mb-[-12px] flex justify-center items-center transition-all hover:bg-green-600 cursor-pointer focus:outline-none"
+              className="border w-[470px] h-[38px] rounded-3xl border-green-500 bg-green-500 text-white p-1 flex justify-center items-center transition-all hover:bg-green-600 cursor-pointer focus:outline-none"
               onClick={() => setIsAssignmentOpen(true)}
             >
               <UserCheck className="h-4 w-4 mr-2"/>
@@ -134,10 +166,25 @@ if (is_removed === 1) {
           </div>
         )}
 
-        <div className="border-t border-gray-300 my-4"></div>
+        {canEditQuotation && (
+          <div className="flex justify-center mb-3">
+            <button 
+              className="border w-[470px] h-[38px] rounded-3xl border-blue-500 bg-blue-500 text-white p-1 flex justify-center items-center transition-all hover:bg-blue-600 cursor-pointer focus:outline-none"
+              onClick={() => setIsQuotationOpen(true)}
+            >
+              <Edit className="h-4 w-4 mr-2"/>
+              <span>Edit Quotation</span>
+            </button>
+          </div>
+        )}
+
+        {/* Divider - only show if there are special buttons */}
+        {(canCreateAssignment || canEditQuotation) && (
+          <div className="border-t border-gray-300 my-4"></div>
+        )}
 
         {/* Regular buttons */}
-        <div className="flex flex-row justify-center space-x-4 mt-[-5px]">
+        <div className="flex flex-row justify-center space-x-4">
           <EditStatusModal 
             order_status={order_status}
             onStatusUpdate={handleStatusUpdate}
@@ -155,10 +202,10 @@ if (is_removed === 1) {
 
       {/* Assignment Confirmation Modal */}
       {isAssignmentOpen && (
-        <div className="modal"> 
-            <div className="overlay"></div>
-            <div className="modal-content">
-          <div className="bg-white p-6 rounded-lg max-w-md">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="fixed inset-0 bg-black bg-opacity-50"></div>
+            <div className="relative bg-white rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
             <h3 className="text-lg font-semibold mb-4">Create Assignment</h3>
             <p className="mb-4">
               This will convert Order #{OrderID} into an assignment and change the status to "Assigned".
@@ -171,7 +218,7 @@ if (is_removed === 1) {
             <div className="flex justify-end space-x-3">
               <button 
                 onClick={() => setIsAssignmentOpen(false)}
-                className="px-4 py-2 border border-gray-300 rounded-3xl"
+                className="px-4 py-2 border border-gray-300 rounded-3xl hover:bg-gray-100"
               >
                 Cancel
               </button>
@@ -187,10 +234,81 @@ if (is_removed === 1) {
         </div>
       )}
 
+      {/* Edit Quotation Modal */}
+      {isQuotationOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-50"></div>
+          <div className="relative w-full max-w-2xl mx-auto bg-white rounded-[24px] p-8 shadow-2xl">
+            <button 
+              onClick={closeQuotationModal} 
+              className="absolute top-4 right-4 text-gray-400 hover:text-cbvt-navy text-2xl font-bold focus:outline-none" 
+              aria-label="Close"
+            >
+              ×
+            </button>
+            
+            <h2 className="font-alegreya-sans-sc text-cbvt-navy text-2xl font-semibold mb-6">
+              Edit Quotation - Order #{OrderID}
+            </h2>
+            
+            <form onSubmit={handleUpdateQuotation} className="space-y-6">
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <label className="block font-carme text-cbvt-navy mb-2">
+                    Total Payment
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    name="totalPayment"
+                    value={quotationForm.totalPayment}
+                    onChange={handleQuotationFormChange}
+                    className="w-full border rounded-lg p-3 text-cbvt-navy focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
+                    placeholder="Enter total payment amount"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block font-carme text-cbvt-navy mb-2">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    value={quotationForm.description}
+                    onChange={handleQuotationFormChange}
+                    rows={4}
+                    className="w-full border rounded-lg p-3 text-cbvt-navy focus:outline-none focus:ring-2 focus:ring-cbvt-blue resize-vertical"
+                    placeholder="Detail the changes/charges of the order..."
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="flex justify-center space-x-4 pt-4">
+                <button
+                  type="button"
+                  onClick={closeQuotationModal}
+                  className="px-6 py-2 border border-gray-300 rounded-2xl text-gray-700 hover:bg-gray-100 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-cbvt-navy text-white rounded-2xl hover:bg-cbvt-blue transition font-semibold"
+                >
+                  Update Quotation
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
        {/* Delete Modal */}
       {isDeleteOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="overlay"></div>
+          <div className="fixed inset-0 bg-black bg-opacity-50"></div>
           <div className="relative bg-white rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="p-8">
               <h2 className="text-2xl font-bold text-cbvt-navy mb-6 text-center font-alegreya-sans-sc">
@@ -217,5 +335,3 @@ if (is_removed === 1) {
     </div>
     );
 };
-
-
