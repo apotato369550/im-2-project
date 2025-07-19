@@ -70,7 +70,7 @@ const AssignmentPage = () => {
           DueDate: formatDate(assignment.assignment_due),
           Status: assignment.status || "Pending",
           is_removed: assignment.is_removed || 0,
-          EstimatedTime: assignment.estimated_time || "Not specified",
+          OrderId: assignment.orderId
         }));
 
         console.log("Formatted Assignments:", formattedAssignments);
@@ -106,10 +106,20 @@ const AssignmentPage = () => {
   useEffect(() => {
     console.log("Assignment data in filter effect:", assignmentData);
     
-    // Filter out soft-deleted assignments
+    // Filter out soft-deleted assignments - handle both string and number types
     const activeAssignments = assignmentData.filter(assignment => {
-      console.log(`Assignment ${assignment.Title}: is_removed = ${assignment.is_removed} (type: ${typeof assignment.is_removed})`);
-      return assignment.is_removed === 0 || assignment.is_removed === "0" || assignment.is_removed === false || assignment.is_removed === null || assignment.is_removed === undefined;
+      const isRemoved = assignment.is_removed;
+      console.log(`Assignment ${assignment.Title}: is_removed = ${isRemoved} (type: ${typeof isRemoved})`);
+      
+      // Handle different data types that might come from the API
+      if (typeof isRemoved === 'string') {
+        return isRemoved !== '1' && isRemoved !== 'true' && isRemoved !== 'True';
+      }
+      if (typeof isRemoved === 'boolean') {
+        return !isRemoved;
+      }
+      // For numbers (including 0, 1)
+      return isRemoved == 0 || isRemoved === false || isRemoved === null || isRemoved === undefined;
     });
     
     console.log("Active assignments after filtering:", activeAssignments);
@@ -241,7 +251,7 @@ const AssignmentPage = () => {
       //   headers: { Authorization: "Bearer " + userData.token }
       // });
       
-      // For now, update local state
+      // For now, update local state - ensure is_removed is set as number 1
       setAssignmentData(prev => 
         prev.map(assignment => 
           assignment.AssignmentID === assignmentId
@@ -259,6 +269,7 @@ const AssignmentPage = () => {
   const handleEditAssignment = (assignmentId, updatedData) => {
     console.log('Editing assignment:', assignmentId, updatedData);
     
+    // axios.put(`http:://localhost/im-2-project/api/assignments/edit/${assignmentId}`, )
     // Update the assignment in the local state
     setAssignmentData(prev => 
       prev.map(assignment => 
@@ -432,6 +443,7 @@ const AssignmentPage = () => {
                   is_removed={assignment.is_removed}
                   onDelete={handleDeleteAssignment}
                   onEdit={handleEditAssignment}
+                  OrderId={assignment.OrderId}
                 />
               ))}
             </div>

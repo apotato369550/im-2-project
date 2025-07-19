@@ -14,7 +14,7 @@ class Update{
             'updateMessage' => $data['message'],
         ]);
 
-        return $result ?: null;
+        return $result;
     }
 
         public function renderUpdates(){

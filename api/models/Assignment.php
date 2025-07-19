@@ -10,12 +10,14 @@ class Assignment{
                     a.assignment_status,
                     a.assignment_due,
                     a.assignment_date_created,
+                    a.is_removed,
                     u.user_id as clientId,
                     u.user_full_name as clientName,
                     w.user_id as assignedWorkerId,
                     w.user_full_name as assignedWorker,
                     s.service_type as service_name,
                     o.address as Location,
+                    o.order_id as orderId,
                     q.total_payment
              FROM assignments a
              JOIN orders o ON o.order_id = a.order_id
@@ -127,16 +129,18 @@ class Assignment{
         return $success ?: null;
     }
     
-    public function editAssignmentStatus($data){
+    public function editAssignment($data){
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("
             UPDATE assignments
-            SET assignment_status = :assignment_status
+            SET assignment_status = :assignment_status, assignment_details = :assignmentDetails, assignment_due = :assignmentDue
             WHERE assignment_id = :assignment_id
         ");
         $success = $stmt->execute([
             'assignment_status' => $data['assignment_status'],
-            'assignment_id' => $data['assignment_id']
+            'assignment_id' => $data['assignment_id'],
+            'assignmentDue'=> $data['assignment_due'],
+            'assignmentDetails' => $data['assignment_details']
         ]);
         return $success ?: null;
     }
@@ -144,7 +148,7 @@ class Assignment{
     public function orderExist($orderId){
         $db = DBHelper::getConnection();
         $stmt = $db->prepare('
-            SELECT *
+            SELECT assignment_id, order_id, assignment_status
             FROM assignments
             WHERE order_id = :orderId
         ');
@@ -152,7 +156,8 @@ class Assignment{
             "orderId" => $orderId
         ]);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result === false ? null : $result; 
     }
 
     public function recentAssignments(){
