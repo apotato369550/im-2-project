@@ -238,10 +238,6 @@ const OrdersPage = () => {
                 Track and manage customer orders.
               </p> 
             </div>
-            <button className='flex items-center bg-cbvt-navy h-[40px] px-4 rounded-2xl text-white mr-10 '>
-              <Plus className='h-3 w-3 mr-2' />
-              <span className='text-xs'>Create Order</span>
-            </button>
           </div>
 
           <div className='flex flex-row gap-4'> 
