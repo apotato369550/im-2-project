@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { User, MapPin, Calendar, Clock, Circle, Ellipsis, Edit, Trash2 } from 'lucide-react';
+import axios from 'axios';
 
 export const AssignmentCard = ({
   AssignmentID, 
@@ -10,8 +11,8 @@ export const AssignmentCard = ({
   Location, 
   DueDate, 
   Status,
-  EstimatedTime,
   is_removed,
+  OrderId,
   onDelete, 
   onEdit
 }) => {
@@ -29,17 +30,11 @@ export const AssignmentCard = ({
   const [currentLocation, setCurrentLocation] = useState(Location);
   const [currentDueDate, setCurrentDueDate] = useState(DueDate);
   const [currentStatus, setCurrentStatus] = useState(Status);
-  const [currentEstimatedTime, setCurrentEstimatedTime] = useState(EstimatedTime);
 
-  // Edit form state
-  const [editTitle, setEditTitle] = useState(Title);
+  // Edit form state - only for editable fields
   const [editDescription, setEditDescription] = useState(Description);
-  const [editAssignedPerson, setEditAssignedPerson] = useState(AssignedPerson);
-  const [editCustomerName, setEditCustomerName] = useState(CustomerName);
-  const [editLocation, setEditLocation] = useState(Location);
   const [editDueDate, setEditDueDate] = useState(DueDate);
   const [editStatus, setEditStatus] = useState(Status);
-  const [editEstimatedTime, setEditEstimatedTime] = useState(EstimatedTime);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -57,34 +52,60 @@ export const AssignmentCard = ({
 
   // Handle soft delete
   const handleDeleteConfirm = () => {
-    onDelete(AssignmentID);
-    setIsDeleteOpen(false);
-    setIsMenuOpen(false);
+    console.log(AssignmentID)
+    const userData = JSON.parse(localStorage.getItem('user_data'));    
+    axios.delete(`http://localhost/im-2-project/api/assignments/delete/${AssignmentID}`, {
+      data: { order_id: OrderId },
+      headers: {
+        Authorization: "Bearer " + userData.token
+      }
+    })
+    .then((response)=>{
+      console.log(response);
+      onDelete(AssignmentID);
+      setIsDeleteOpen(false);
+      setIsMenuOpen(false);
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
   };
 
   // Handle edit
   const handleEditConfirm = () => {
-    // Update local state
-    setCurrentTitle(editTitle);
-    setCurrentDescription(editDescription);
-    setCurrentAssignedPerson(editAssignedPerson);
-    setCurrentCustomerName(editCustomerName);
-    setCurrentLocation(editLocation);
-    setCurrentDueDate(editDueDate);
-    setCurrentStatus(editStatus);
-    setCurrentEstimatedTime(editEstimatedTime);
+    const userData = JSON.parse(localStorage.getItem('user_data'));
+    axios.put(`http://localhost/im-2-project/api/assignments/edit/${AssignmentID}`, {
+      assignment_details: editDescription,
+      assignment_due: editDueDate,
+      assignment_status: editStatus,
+      order_id: OrderId,
+    }, {
+      headers: {
+        Authorization: "Bearer " + userData.token
+      }
+    })
+    .then((response)=>{
+      console.log(response);
+      setCurrentDescription(editDescription);
+      setCurrentDueDate(editDueDate);
+      setCurrentStatus(editStatus);
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+    // Update local state - only editable fields
+    
 
     // Call parent update function
     if (onEdit) {
       onEdit(AssignmentID, {
-        Title: editTitle,
+        Title: currentTitle, // Keep original value
         Description: editDescription,
-        AssignedPerson: editAssignedPerson,
-        CustomerName: editCustomerName,
-        Location: editLocation,
+        AssignedPerson: currentAssignedPerson, // Keep original value
+        CustomerName: currentCustomerName, // Keep original value
+        Location: currentLocation, // Keep original value
         DueDate: editDueDate,
         Status: editStatus,
-        EstimatedTime: editEstimatedTime
       });
     }
 
@@ -93,15 +114,11 @@ export const AssignmentCard = ({
   };
 
   const handleEditCancel = () => {
-    // Reset edit form to current values
-    setEditTitle(currentTitle);
+    // Reset edit form to current values - only editable fields
     setEditDescription(currentDescription);
-    setEditAssignedPerson(currentAssignedPerson);
-    setEditCustomerName(currentCustomerName);
-    setEditLocation(currentLocation);
     setEditDueDate(currentDueDate);
     setEditStatus(currentStatus);
-    setEditEstimatedTime(currentEstimatedTime);
+
     setIsEditOpen(false);
     setIsMenuOpen(false);
   };
@@ -209,16 +226,6 @@ export const AssignmentCard = ({
             </span>
           </div>
         </div>
-
-        <div className="flex items-center">
-          <Clock className="h-4 w-4 text-cbvt-gray mr-3 flex-shrink-0"/>
-          <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-xs text-cbvt-dark-gray">Estimated Time</span>
-            <span className="text-sm text-cbvt-navy">
-              {currentEstimatedTime}
-            </span>
-          </div>
-        </div>
       </div>
 
       {/* Status Badge */}
@@ -239,18 +246,20 @@ export const AssignmentCard = ({
               </h2>
               
               <div className="space-y-4">
+                {/* Title - Disabled */}
                 <div>
-                  <label className="block text-sm font-medium text-cbvt-dark-gray mb-2">
-                    Title
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Title (Read Only)
                   </label>
                   <input
                     type="text"
-                    value={editTitle}
-                    onChange={(e) => setEditTitle(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cbvt-navy"
+                    value={currentTitle}
+                    disabled
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
                   />
                 </div>
 
+                {/* Description - Editable */}
                 <div>
                   <label className="block text-sm font-medium text-cbvt-dark-gray mb-2">
                     Description
@@ -263,42 +272,46 @@ export const AssignmentCard = ({
                   />
                 </div>
 
+                {/* Assigned Person - Disabled */}
                 <div>
-                  <label className="block text-sm font-medium text-cbvt-dark-gray mb-2">
-                    Assigned Person
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Assigned Person (Read Only)
                   </label>
                   <input
                     type="text"
-                    value={editAssignedPerson}
-                    onChange={(e) => setEditAssignedPerson(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cbvt-navy"
+                    value={currentAssignedPerson}
+                    disabled
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
                   />
                 </div>
 
+                {/* Customer Name - Disabled */}
                 <div>
-                  <label className="block text-sm font-medium text-cbvt-dark-gray mb-2">
-                    Customer Name
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Customer Name (Read Only)
                   </label>
                   <input
                     type="text"
-                    value={editCustomerName}
-                    onChange={(e) => setEditCustomerName(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cbvt-navy"
+                    value={currentCustomerName}
+                    disabled
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
                   />
                 </div>
 
+                {/* Location - Disabled */}
                 <div>
-                  <label className="block text-sm font-medium text-cbvt-dark-gray mb-2">
-                    Location
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Location (Read Only)
                   </label>
                   <input
                     type="text"
-                    value={editLocation}
-                    onChange={(e) => setEditLocation(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cbvt-navy"
+                    value={currentLocation}
+                    disabled
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
                   />
                 </div>
 
+                {/* Due Date - Editable */}
                 <div>
                   <label className="block text-sm font-medium text-cbvt-dark-gray mb-2">
                     Due Date
@@ -311,6 +324,7 @@ export const AssignmentCard = ({
                   />
                 </div>
 
+                {/* Status - Editable */}
                 <div>
                   <label className="block text-sm font-medium text-cbvt-dark-gray mb-2">
                     Status
@@ -325,18 +339,6 @@ export const AssignmentCard = ({
                     <option value="Completed">Completed</option>
                     <option value="Overdue">Overdue</option>
                   </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-cbvt-dark-gray mb-2">
-                    Estimated Time
-                  </label>
-                  <input
-                    type="text"
-                    value={editEstimatedTime}
-                    onChange={(e) => setEditEstimatedTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cbvt-navy"
-                  />
                 </div>
               </div>
 

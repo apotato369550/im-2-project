@@ -39,35 +39,39 @@ $router->get('/im-2-project/api/users/fetch-list', 'UserController@fetchAllUsers
  *********************************/
 $router->post('/im-2-project/api/users/login', 'UserController@login');
 $router->post('/im-2-project/api/users/register', 'UserController@register');
-$router->post('/im-2-project/api/users/update-profile', 'UserController@updateProfilePicture');
+$router->post('/im-2-project/api/users/update-profile/{id}', 'UserController@updateProfile');
 
 
 /**************************************************************************
- *                          ASSIGNMENTs    ROUTES
+ *                          ASSIGNMENTS    ROUTES
  *************************************************************************/
 
 
 /**********************************
  *          GET ENDPOINTS
- *********************************/
+*********************************/
+$router->get('/im-2-project/api/assignments', 'AssignmentController@viewAssignments');
 $router->get('/im-2-project/api/assignments/recent', 'AssignmentController@getRecentAssignments');
 $router->get('/im-2-project/api/assignments/available', 'AssignmentController@availableAssignments');
-$router->get('/im-2-project/api/assignments', 'AssignmentController@viewAssignments');
 $router->get('/im-2-project/api/assignments/fetch-list', 'AssignmentController@fetchList');
-$router->get('/im-2-project/api/assignments/{id}', 'AssignmentController@viewAssignment');
 
 
 /**********************************
  *          POST ENDPOINTS
- *********************************/
+*********************************/
 $router->post('/im-2-project/api/assignments/create', 'AssignmentController@createAssignment');
 
 
 /**********************************
  *          PUT ENDPOINTS
- *********************************/
+*********************************/
 $router->put('/im-2-project/api/assignments/accept/{id}', 'AssignmentController@acceptAssignment');
-$router->put('/im-2-project/api/assignments/edit/{id}', 'AssignmentController@editAssignmentStatus');
+$router->put('/im-2-project/api/assignments/edit/{id}', 'AssignmentController@editAssignment');
+/**********************************
+ *          DELETE ENDPOINTS
+*********************************/
+$router->delete('/im-2-project/api/assignments/delete/{id}', 'AssignmentController@deleteAssignment');
+
 
 
 /**************************************************************************
@@ -79,7 +83,7 @@ $router->put('/im-2-project/api/assignments/edit/{id}', 'AssignmentController@ed
  *          GET ENDPOINTS
  *********************************/
 $router->get('/im-2-project/api/orders', 'OrderController@viewOrders');
-$router->get('/im-2-project/api/orders/{id}', 'OrderController@findOrder');
+// $router->get('/im-2-project/api/orders/{id}', 'OrderController@findOrder');
 $router->get('/im-2-project/api/orders/fetch-list', 'OrderController@fetchList');
 
 /**********************************

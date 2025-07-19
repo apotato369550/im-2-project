@@ -60,7 +60,10 @@ const navigate = useNavigate();
                   <FaUserCircle className="text-3xl" />
                 </Link>
                 <span className="flex gap-5 text-xl font-alegreya-sans-sc capitalize cursor-pointer">
-                  {user}
+                  <Link to="/clientdashboard">
+                    {user}
+                  </Link>
+                  
                     <LogOut className='cursor-pointer' onClick={handleLogout}/>
                 </span>
               </div>

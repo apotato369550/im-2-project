@@ -21,7 +21,8 @@ class Order{
                 i.type,
                 i.inverter,
                 i.brand, 
-                q.total_payment
+                q.total_payment,
+                o.is_removed
             FROM orders o 
             JOIN users u ON o.client_id = u.user_id
             JOIN service s ON o.service_id = s.service_id
@@ -98,4 +99,5 @@ class Order{
 
         return $result;
     }
+
 }

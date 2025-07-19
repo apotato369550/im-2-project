@@ -98,27 +98,33 @@ class OrderController{
 
     public function deleteOrder($orderId){
         $decoded = AuthMiddleware::verifyToken();
+        
         if(!$orderId){
             ErrorHelper::sendError(400, "Missing Order Id");
+            return; // Add return to stop execution
         }
 
         $assignment = new AssignmentController();
         $orderHasAssignment = $assignment->findAssignmentByOrderId($orderId);
 
-        if($orderHasAssignment){
-            $order = new Order();
-            $removeOrder = $order->deleteOrder($orderId);
-
-            if($removeOrder){
-                echo json_encode([
-                "message" => "Successfully Deleted Order No." . $orderId
-                ]);
-            }else{
-                ErrorHelper::sendError(401, "Something went wrong");
+        // Check if assignment exists
+        if($orderHasAssignment !== null){
+            // If assignment exists and is NOT completed, don't allow deletion
+            if($orderHasAssignment['assignment_status'] !== 'Completed'){
+                ErrorHelper::sendError(400, "Assignment Still Ongoing Unable to Delete");
+                return;
             }
-        }else{
-            ErrorHelper::sendError(400, "Assignment Still On Going Unable to Delete");
         }
         
+        $order = new Order();
+        $removeOrder = $order->deleteOrder($orderId);
+
+        if($removeOrder){
+            echo json_encode([
+                "message" => "Successfully Deleted Order No." . $orderId
+            ]);
+        } else {
+            ErrorHelper::sendError(500, "Failed to delete order"); 
+        }
     }
 }

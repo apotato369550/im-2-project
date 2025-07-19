@@ -102,7 +102,7 @@ class AssignmentController{
         }
     }
 
-    public function editAssignmentStatus($id){
+    public function editAssignment($id){
         $decoded = AuthMiddleware::verifyToken();
 
         $data = json_decode(file_get_contents('php://input'), true);
@@ -111,7 +111,7 @@ class AssignmentController{
         }
 
         $missingFields = MissingRequiredFields::checkMissingFields($data, [
-            'assignment_status', 'order_id'
+            'assignment_status', 'order_id', 'assignment_details', 'assignment_due'
         ]);
 
         if(!empty($missingFields)){
@@ -120,7 +120,7 @@ class AssignmentController{
 
         $data['assignment_id'] = $id;
         $assignment = new Assignment();
-        $updated = $assignment->editAssignmentStatus($data);
+        $updated = $assignment->editAssignment($data);
         if($updated){
             $update = new UpdateController();
             $updateData = [
@@ -169,15 +169,22 @@ class AssignmentController{
     public function findAssignmentByOrderId($orderId){
         $assignment = new Assignment();
         $exists = $assignment->orderExist($orderId);
-        $canDelete = empty($exists);
 
-        return $canDelete; 
+        return $exists; 
     }
 
     public function deleteAssignment($assignmentId){
         $decoded = AuthMiddleware::verifyToken();
         if(!$assignmentId){
             ErrorHelper::sendError(401, "Please pass the assignmentID");
+        }
+        $data = json_decode(file_get_contents('php://input'), true);
+        $missingFields = MissingRequiredFields::checkMissingFields($data, [
+            'order_id'
+        ]);
+
+        if(!empty($missingFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingFields));
         }
 
         $assignment = new Assignment();
@@ -186,9 +193,13 @@ class AssignmentController{
             $update = new UpdateController();
             $updateData = [
                 'worker_id' => $decoded->user_id,
-                'message' => 'Assignment no. ' . $assignmentId . ' has been deleted successfully'
+                'message' => 'Assignment for order no# ' . $data['order_id'] . ' has been deleted',
+                'assignment_id' => $assignmentId
             ];
-            $newUpdate  = $update->saveUpdate($updateData);
+            $newUpdate = $update->saveUpdate($updateData);
+            // if(!$newUpdate) {
+            //     ErrorHelper::sendError(500, "Assignment deleted but failed to save update log");
+            // }
             echo json_encode([
                 "message" => "Assignment status updated successfully"
             ]);

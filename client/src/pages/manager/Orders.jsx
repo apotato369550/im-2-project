@@ -16,11 +16,12 @@ const OrdersPage = () => {
    const [sortOption, setSortOption] = useState('default');
    const [isLoading, setIsLoading] = useState(true);
    const navigate = useNavigate();
+   const userData = JSON.parse(localStorage.getItem("user_data"));
+
 
    // Fetch orders from API
    useEffect(() => {
-    console.log("Fetching orders...");
-    const userData = JSON.parse(localStorage.getItem("user_data"));
+     console.log("Fetching orders...");
     
     if (!userData?.token) {
       console.error("No user token found");
@@ -79,14 +80,28 @@ const OrdersPage = () => {
   // Handle status updates
   const handleStatusUpdate = (orderId, newStatus) => {
     console.log('Updating status for order:', orderId, 'to:', newStatus);
+    axios.put(`http://localhost/im-2-project/api/orders/edit/${orderId}`, {
+      order_status: newStatus
+    }, {
+      headers: {
+        Authorization: "Bearer " + userData.token
+      }
+    })
+    .then((response)=>{
+      console.log(response);
+      setOrderData(prevOrders => 
+        prevOrders.map(order => 
+          order.OrderID === orderId 
+            ? { ...order, order_status: newStatus } 
+            : order
+        )
+      );
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
     
-    setOrderData(prevOrders => 
-      prevOrders.map(order => 
-        order.OrderID === orderId 
-          ? { ...order, order_status: newStatus } 
-          : order
-      )
-    );
+    
   };
 
   // Handle order deletion
@@ -95,7 +110,19 @@ const OrdersPage = () => {
     const confirmDelete = window.confirm('Are you sure you want to delete this order? This action cannot be undone.');
     
     if (confirmDelete) {
-      setOrderData(prevOrders => prevOrders.filter(order => order.OrderID !== orderId));
+      axios.delete(`http://localhost/im-2-project/api/orders/delete/${orderId}`, {
+        headers:{
+          Authorization: "Bearer " + userData.token
+        } 
+      })
+      .then((response)=>{
+        console.log(response);
+        setOrderData(prevOrders => prevOrders.filter(order => order.OrderID !== orderId));
+      })
+      .catch((err)=>{
+        console.log(err);
+        alert(err.response.data.error)
+      })
     }
   };
 
