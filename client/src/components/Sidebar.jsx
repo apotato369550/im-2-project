@@ -42,8 +42,18 @@ const sidebarItems = [
   }
 ];
 
+const userData = JSON.parse(localStorage.getItem('user_data'));
+
+const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    setUser(null);
+    navigate("/");
+}
+
 const Sidebar = ({ onLogout }) => {
   const location = useLocation();
+  
+  
   
   // Automatically determine active item based on current URL
   const activeItem = sidebarItems.find(item => 

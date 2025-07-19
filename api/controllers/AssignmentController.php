@@ -33,6 +33,17 @@ class AssignmentController{
         }
     }
 
+    public function availableAssignments(){
+        $decoded = AuthMiddleware::verifyToken();
+        $assignment = new Assignment();
+        $assignmentList = $assignment->getAvailableAssignments();
+        if($assignmentList){
+            echo json_encode($assignmentList ?: []);
+        }else{
+            ErrorHelper::sendError(408, "Error fetching assignments or might have no data");
+        }
+    }
+
     //missing validation checkers
 
     public function createAssignment(){
@@ -79,7 +90,7 @@ class AssignmentController{
             $updateData = [
                 'worker_id' => $decoded->user_id,
                 'assignment_id' => $id,
-                'message' => $decoded->user_name . " has accepted the assignment"
+                'message' => $decoded->user_full_name . " has accepted the assignment"
             ];
             $newUpdate  = $update->saveUpdate($updateData);
 
@@ -115,7 +126,7 @@ class AssignmentController{
             $updateData = [
                 'worker_id' => $decoded->user_id,
                 'assignment_id' => $id,
-                'message' => 'The status for assignment no ' . $id . ' has been changed to ' . $data['assignment_status']
+                'message' => 'Status Update for Order# ' . $data['order_id'] . ': ' . $data['assignment_status']
             ];
             $newUpdate  = $update->saveUpdate($updateData);
             echo json_encode([
@@ -134,8 +145,27 @@ class AssignmentController{
                 "message" => "Order status updated successfully"
                 ]);
             }
+
+            $update = new UpdateController();
+            $updateData = [
+                'worker_id' => $decoded->user_id,
+                'assignment_id' => $id,
+                'message' => 'Status Update for Order# ' . $data['order_id'] . ':' . $data['assignment_status']
+            ];
+            $newUpdate  = $update->saveUpdate($updateData);
+            echo json_encode([
+                "message" => "Assignment status updated successfully"
+            ]);
         }
     }
+
+    public function getRecentAssignments(){
+        $decoded = AuthMiddleware::verifyToken();
+        $assignment = new Assignment();
+        $recentAssignments = $assignment->recentAssignments();
+        echo json_encode($recentAssignments);
+    }
+
     public function findAssignmentByOrderId($orderId){
         $assignment = new Assignment();
         $exists = $assignment->orderExist($orderId);

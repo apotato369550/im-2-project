@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter } from "lucide-react";
 import SortingDropdown from '../../components/SortingDropdown';
@@ -24,6 +24,7 @@ const WorkersPage = () => {
   // Loading state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // Fetch workers data
   useEffect(() => {
@@ -138,10 +139,10 @@ const WorkersPage = () => {
     // You can add navigation to add worker page or open modal here
   };
 
-  const handleLogout = () => {
-    console.log('Logging out...');
-    // TODO: Implement logout functionality
-  };
+  const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   if (loading) {
     return (

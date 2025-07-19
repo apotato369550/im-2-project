@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import {RecentUpdates} from "../../components/RecentUpdates";
 import { CardHolderSm } from "../../components/CardHolderSm";
@@ -33,7 +33,7 @@ const DashboardPage = () => {
   const [activeItem, setActiveItem] = useState('Dashboard');
   const [cardData, setCardData] = useState([]);
   const [recentUpdates, setRecentUpdates] = useState([]);
-
+  const navigate = useNavigate();
   /*
 const recentUpdates = [
   {
@@ -67,9 +67,9 @@ useEffect(() => {
     const fetchAll = async () => {
       try {
         const [usersRes, assignmentsRes, ordersRes] = await Promise.all([
-          axios.get("http://localhost/im-2-project/api/users/fetch-list", { headers }),
-          axios.get("http://localhost/im-2-project/api/assignments/fetch-list", { headers }),
-          axios.get("http://localhost/im-2-project/api/orders/fetch-list", { headers }),
+          axios.get("http://localhost/im-2-project/api/users/fetch-list", { headers: headers }),
+          axios.get("http://localhost/im-2-project/api/assignments/fetch-list", { headers: headers }),
+          axios.get("http://localhost/im-2-project/api/orders/fetch-list", { headers: headers }),
         ]);
 
         const totalUsers = usersRes.data.length;
@@ -142,10 +142,10 @@ useEffect(() => {
 
 
   
-  const handleLogout = () => {
-    console.log('Logging out...');
-   
-  };
+  const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -160,8 +160,8 @@ useEffect(() => {
       
 
       {/* put main stuff here */}
-      <div className="flex-1 overflow-y-auto p-8 ">
-        <div className="max-w-7xl mx-auto">
+      <div className="flex-1 justify-items-start overflow-y-auto p-8 ">
+        <div className="flex-col  max-w-7xl">
           <p className="text-3xl font-bold font-alegreya-sans-sc text-cbvt-navy mt-2">
             Welcome back, Manager
           </p>
@@ -190,7 +190,7 @@ useEffect(() => {
         <div className='flex flex-row space-x-7'>
 
              {/* container for recent updates */}
-            <div className='bg-white w-[783px] shadow-lg rounded-xl border border-gray-200 p-8'>
+            <div className='bg-white w-[783px] h-[600px] shadow-lg rounded-xl border border-gray-200 p-8 overflow-scroll scroll-smooth '>
                 <p className='text-cbvt-navy font-alegreya-sans-sc font-semibold tracking-wide text-xl mb-10'>Recent Updates</p>
 
                 <div className='flex flex-col ml-2 space-y-8'>
@@ -208,8 +208,6 @@ useEffect(() => {
                 </div>
 
             </div>
-
-
 
              {/* container for quick actions */}
                 <div>

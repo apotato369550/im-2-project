@@ -10,11 +10,10 @@ export const ItemCard = ({
   inverter,
   supplier_id,
   is_removed,
+  suppliers, // This is the suppliers array passed from parent
   onEdit,
   onDelete
 }) => {
-  if (is_removed) return null;
-
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -26,6 +25,9 @@ export const ItemCard = ({
     supplier_id
   });
 
+  // Check if item is removed/disabled
+  const isDisabled = is_removed === 1 || is_removed === true;
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -36,12 +38,14 @@ export const ItemCard = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isDisabled) return; // Prevent submission if disabled
     // Include item_id in the data passed to onEdit
     onEdit({ ...formData, item_id });
     setIsOpen(false);
   };
 
   const handleDeleteConfirm = () => {
+    if (isDisabled) return; // Prevent deletion if disabled
     // Pass item_id to onDelete so parent knows which item to delete
     onDelete(item_id);
     setIsDeleteOpen(false);
@@ -49,6 +53,7 @@ export const ItemCard = ({
 
   // Reset form data when modal opens
   const handleEditOpen = () => {
+    if (isDisabled) return; // Prevent edit if disabled
     setFormData({
       brand,
       type,
@@ -60,54 +65,89 @@ export const ItemCard = ({
     setIsOpen(true);
   };
 
+  // Find supplier name by supplier_id
+  const getSupplierName = (supplierId) => {
+    const supplier = suppliers?.find(s => s.supplier_id === supplierId);
+    return supplier ? supplier.company_name : 'Unknown Supplier';
+  };
+
   return (
     <>
-      <div className="grid grid-cols-13 gap-2 p-3 border-b border-gray-200 hover:bg-gray-50 text-sm justify-center">
+      <div className={`grid grid-cols-13 gap-2 p-3 border-b border-gray-200 text-sm justify-center ${
+        isDisabled 
+          ? 'bg-gray-100 opacity-60 cursor-not-allowed' 
+          : 'hover:bg-gray-50'
+      }`}>
         {/* Item ID */}
         <div className="col-span-2 flex items-center justify-center text-center">
-          <p className="text-cbvt-blue text-lg font-alegreya-sans-sc">AC-{item_id}</p>
+          <p className={`text-lg font-alegreya-sans-sc ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-blue'
+          }`}>
+            AC-{item_id}
+            {isDisabled && <span className="text-xs text-red-500 ml-2">(REMOVED)</span>}
+          </p>
         </div>
         {/* Brand */}
         <div className="col-span-3 flex items-center justify-center text-center">
-          <p className="text-cbvt-dark-gray font-carme">{brand}</p>
+          <p className={`font-carme ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-dark-gray'
+          }`}>{brand}</p>
         </div>
         {/* Type */}
         <div className="col-span-2 flex items-center justify-center text-center">
-          <p className="text-cbvt-dark-gray font-carme">{type}</p>
+          <p className={`font-carme ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-dark-gray'
+          }`}>{type}</p>
         </div>
         {/* Model */}
         <div className="col-span-2 flex items-center justify-center text-center">
-          <p className="text-cbvt-dark-gray truncate font-carme">{model}</p>
+          <p className={`truncate font-carme ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-dark-gray'
+          }`}>{model}</p>
         </div>
         {/* Horsepower */}
         <div className="col-span-1 flex items-center justify-center text-center">
-          <span className="text-cbvt-dark-gray font-carme">{horsepower}</span>
+          <span className={`font-carme ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-dark-gray'
+          }`}>{horsepower}</span>
         </div>
         {/* Inverter */}
         <div className="col-span-1 flex items-center justify-center text-center">
-          <span className="text-cbvt-hover-blue font-carme">{inverter ? 'Yes' : 'No'}</span>
+          <span className={`font-carme ${
+            isDisabled ? 'text-gray-400' : 'text-cbvt-hover-blue'
+          }`}>{inverter ? 'Yes' : 'No'}</span>
         </div>
         {/* Actions */}
         <div className="col-span-2 flex items-center justify-center space-x-1 text-center">
           <button 
-            className="p-1 rounded-full hover:bg-gray-200 text-cbvt-dark-gray"
-            title="Edit"
+            className={`p-1 rounded-full ${
+              isDisabled 
+                ? 'text-gray-300 cursor-not-allowed' 
+                : 'hover:bg-gray-200 text-cbvt-dark-gray'
+            }`}
+            title={isDisabled ? "Cannot edit removed item" : "Edit"}
             onClick={handleEditOpen}
+            disabled={isDisabled}
           >
             <Edit size={18} />
           </button>
           <button 
-            className="p-1 rounded-full hover:bg-gray-200 text-cbvt-dark-gray"
-            title="Delete"
-            onClick={() => setIsDeleteOpen(true)}
+            className={`p-1 rounded-full ${
+              isDisabled 
+                ? 'text-gray-300 cursor-not-allowed' 
+                : 'hover:bg-gray-200 text-cbvt-dark-gray'
+            }`}
+            title={isDisabled ? "Cannot delete removed item" : "Delete"}
+            onClick={() => !isDisabled && setIsDeleteOpen(true)}
+            disabled={isDisabled}
           >
             <Trash2 size={18} />
           </button>
         </div>
       </div>
 
-      {/* Edit Modal */}
-      {isOpen && (
+      {/* Edit Modal - Only show if not disabled */}
+      {isOpen && !isDisabled && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="overlay bg-black bg-opacity-30 absolute inset-0" onClick={() => setIsOpen(false)}></div>
           <div className="relative bg-white rounded-[24px] shadow-lg w-full max-w-4xl p-10 flex flex-col items-center gap-8">
@@ -138,21 +178,32 @@ export const ItemCard = ({
                   className="border rounded-lg p-2"
                   required
                 >
+                  <option value="">Select Type</option>
                   <option value="Split AC">Split AC</option>
                   <option value="Window AC">Window AC</option>
                   <option value="Cassette">Cassette</option>
                   <option value="Portable">Portable</option>
                 </select>
                 <label className='font-carme text-cbvt-navy'>Horsepower</label>
-                <input
-                  type="number"
-                  step="0.5"
+                <select
                   name="horsepower"
                   value={formData.horsepower}
                   onChange={handleInputChange}
                   className="border rounded-lg p-2"
                   required
-                />
+                >
+                  <option value="">Select HP</option>
+                  <option value="0.5">0.5 HP</option>
+                  <option value="0.75">0.75 HP</option>
+                  <option value="1.0">1.0 HP</option>
+                  <option value="1.5">1.5 HP</option>
+                  <option value="2.0">2.0 HP</option>
+                  <option value="2.5">2.5 HP</option>
+                  <option value="3.0">3.0 HP</option>
+                  <option value="3.5">3.5 HP</option>
+                  <option value="4.0">4.0 HP</option>
+                  <option value="5.0">5.0 HP</option>
+                </select>
               </div>
               <div className="w-1/2 flex flex-col gap-4">
                 <label className='font-carme text-cbvt-navy'>Model</label>
@@ -172,18 +223,25 @@ export const ItemCard = ({
                   className="border rounded-lg p-2"
                   required
                 >
+                  <option value="">Inverter?</option>
                   <option value="true">Yes</option>
                   <option value="false">No</option>
                 </select>
-                <label className='font-carme text-cbvt-navy'>Supplier ID</label>
-                <input
-                  type="text"
+                <label className='font-carme text-cbvt-navy'>Supplier</label>
+                <select
                   name="supplier_id"
                   value={formData.supplier_id}
                   onChange={handleInputChange}
                   className="border rounded-lg p-2"
                   required
-                />
+                >
+                  <option value="">Select Supplier</option>
+                  {suppliers?.map(supplier => (
+                    <option key={supplier.supplier_id} value={supplier.supplier_id}>
+                      {supplier.company_name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </form>
             <div className="bg-gray-50 px-4 py-3 flex justify-end gap-3 w-full">
@@ -206,8 +264,8 @@ export const ItemCard = ({
         </div>
       )}
 
-      {/* Delete Modal */}
-      {isDeleteOpen && (
+      {/* Delete Modal - Only show if not disabled */}
+      {isDeleteOpen && !isDisabled && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="overlay bg-black bg-opacity-30 absolute inset-0" onClick={() => setIsDeleteOpen(false)}></div>
           <div className="relative bg-white rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
@@ -225,6 +283,7 @@ export const ItemCard = ({
               <div className="text-center mb-6">
                 <p className="text-cbvt-dark-gray">Item: <span className="font-semibold">AC-{item_id}</span></p>
                 <p className="text-cbvt-dark-gray">{brand} {model}</p>
+                <p className="text-cbvt-dark-gray">Supplier: <span className="font-semibold">{getSupplierName(supplier_id)}</span></p>
               </div>
               <div className="bg-gray-50 px-4 py-3 flex justify-end gap-3">
                 <button

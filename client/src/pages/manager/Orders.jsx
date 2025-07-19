@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter} from "lucide-react";
 import { OrdersCard } from "../../components/OrdersCard";
@@ -15,6 +15,7 @@ const OrdersPage = () => {
    const [output, setOutput] = useState([]);
    const [sortOption, setSortOption] = useState('default');
    const [isLoading, setIsLoading] = useState(true);
+   const navigate = useNavigate();
 
    // Fetch orders from API
    useEffect(() => {
@@ -183,9 +184,10 @@ const OrdersPage = () => {
     }
   };
 
-  const handleLogout = () => {
-    console.log('Logging out...');
-  };
+  const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">

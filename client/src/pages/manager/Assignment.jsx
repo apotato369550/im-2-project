@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter, ChevronDown } from "lucide-react";
 import { AssignmentCard } from "../../components/AssignmentCard";
@@ -18,6 +18,7 @@ const AssignmentPage = () => {
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // Sort options
   const sortOptions = [
@@ -284,10 +285,10 @@ const AssignmentPage = () => {
     // Example: navigate('/assignments/create');
   };
 
-  const handleLogout = () => {
-    console.log('Logging out...');
-    // TODO: Implement logout functionality
-  };
+  const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   // Close dropdown when clicking outside
   useEffect(() => {

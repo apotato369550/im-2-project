@@ -69,46 +69,39 @@ Class ItemController{
 
     public function updateItemDetails($itemId) {
         $decoded = AuthMiddleware::verifyToken(); // Require authentication
-        $data = $_POST;
-        if (
-            !isset($data['supplier_id']) ||
-            !isset($data['model']) ||
-            !isset($data['price']) ||
-            !isset($data['type']) ||
-            !isset($data['inverter']) ||
-            !isset($data['horsepower']) ||
-            !isset($data['brand']) ||
-            !isset($_FILES['image'])
-        ) {
-            echo json_encode(['error' => 'Missing required fields']);
-            return;
-        }
-        $uploadDir = __DIR__ . '/../../uploads/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
+        
+        $data = json_decode(file_get_contents("php://input"), true);
+        $missingRequiredFields = MissingRequiredFields::checkMissingFields($data,[
+            "type",
+            "inverter",
+            "horsepower",
+            "brand",
+            "supplier_id",
+            "model",
+        ]);
+
+        if(!empty($missingRequiredFields)){
+            ErrorHelper::sendError(400, 'Missing required fields: ' . implode(', ', $missingRequiredFields));
         }
 
-        $filename = uniqid() . '_' . basename($_FILES['image']['name']);
-        $targetFile = $uploadDir . $filename;
+        $itemModel = new Item();
+        $newItem = $itemModel->editItemDetails(
+            $itemId,
+            $data['type'],
+            $data['inverter'],
+            $data['horsepower'],
+            $data['brand'],
+            $data['supplier_id'],
+            $data['model'],
+        );
 
-
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-            $itemModel = new Item();
-            $itemId = $itemModel->editItemDetails(
-                $itemId,
-                $data['type'],
-                $data['inverter'],
-                $data['horsepower'],
-                $data['brand'],
-                $data['supplier_id'],
-                $data['model'],
-                $data['price'],
-                'uploads/' . $filename
-            );
-            echo json_encode(['message' => 'Item created', 'item_id' => $itemId, 'image_path' => 'uploads/' . $filename]);
-        } else {
-            echo json_encode(['error' => 'Failed to upload image']);
+        if($newItem != null){
+            echo json_encode([
+            'message' => 'Successfully update item no. ' . $itemId
+            ]);
         }
+
+        
     }  
 
     public function getAllItems() {

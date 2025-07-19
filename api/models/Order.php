@@ -26,9 +26,9 @@ class Order{
             JOIN users u ON o.client_id = u.user_id
             JOIN service s ON o.service_id = s.service_id
             LEFT JOIN items i ON i.item_id = o.item_id
-            LEFT JOIN quotation q ON q.order_id = o.order_id AND q.quotation_status = :status 
+            LEFT JOIN quotation q ON q.order_id = o.order_id
         ");
-        $stmt->execute(["status"=> "Approved"]);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 

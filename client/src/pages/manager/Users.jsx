@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import { Plus, Search, Filter } from "lucide-react";
 import { CustomerCard } from "../../components/CustomerCard";
@@ -18,6 +18,7 @@ const UsersPage = () => {
   const [sortOption, setSortOption] = useState('default');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // Fetch customer data
   useEffect(() => {
@@ -173,10 +174,10 @@ const UsersPage = () => {
     // Example: navigate('/customers/add');
   };
 
-  const handleLogout = () => {
-    console.log("Logging out...");
-    // TODO: Implement logout functionality
-  };
+  const handleLogout = (e)=>{
+    localStorage.removeItem("user_data");
+    navigate("/");
+  }
 
   // Loading state
   if (loading) {

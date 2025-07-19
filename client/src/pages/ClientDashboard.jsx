@@ -1,10 +1,44 @@
 import React, { useState } from 'react';
-import { Calendar, MapPin } from 'lucide-react';
+import { Calendar, MapPin, Pencil } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useDropzone } from 'react-dropzone';
 
 const ClientDashboard = () => {
     const [activeTab, setActiveTab] = useState('order-status');
+    const [user, setUser] = useState({
+      name: "User Full Name",
+      email: "User Email",
+      profilePic: null,
+    });
+    const [editProfile, setEditProfile] = useState(false);
+    const [profileForm, setProfileForm] = useState({
+      name: user.name,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+    const [isDraggingProfile, setIsDraggingProfile] = useState(false);
+
+    const onDropProfile = (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
+        const reader = new FileReader();
+        reader.onload = ev => setProfileForm(f => ({ ...f, profilePic: ev.target.result }));
+        reader.readAsDataURL(file);
+      }
+      setIsDraggingProfile(false);
+    };
+    const {
+      getRootProps: getProfileRootProps,
+      getInputProps: getProfileInputProps,
+      isDragActive: isProfileDragActive,
+    } = useDropzone({
+      accept: { 'image/*': [] },
+      multiple: false,
+      onDrop: onDropProfile,
+      onDragEnter: () => setIsDraggingProfile(true),
+      onDragLeave: () => setIsDraggingProfile(false),
+    });
 
      const workerTasks=[
     {
@@ -17,20 +51,17 @@ const ClientDashboard = () => {
             {
                 status: "Order Confirmed",
                 message: "Your order has been confirmed and assigned to a technician",
-                timestamp: "2025-01-15 10:30 AM",
-                progress: 25
+                timestamp: "2025-01-15"
             },
             {
                 status: "Technician En Route",
                 message: "Technician is on the way to your location",
-                timestamp: "2025-01-15 02:15 PM",
-                progress: 50
+                timestamp: "2025-01-15"
             },
             {
                 status: "Installation In Progress",
                 message: "Technician is currently installing the AC unit",
-                timestamp: "2025-01-15 03:45 PM",
-                progress: 75
+                timestamp: "2025-01-15"
             }
         ],
         Price: "Php 5,000.00"  
@@ -56,35 +87,6 @@ const ClientDashboard = () => {
         }
     ];
 
-    const quotations = [
-        {
-            id: 1,
-            service: "AC Installation",
-            description: "Split-type air conditioning unit installation for master bedroom",
-            amount: "Php 5,000.00",
-            status: "Pending Review",
-            date: "2025-01-14",
-            validUntil: "2025-01-21" //+7 days from og date maybe?
-        },
-        {
-            id: 2,
-            service: "AC Maintenance",
-            description: "Annual maintenance service for 2 units",
-            amount: "Php 2,500.00", 
-            status: "Pending Review",
-            date: "2025-01-12",
-            validUntil: "2025-01-19"
-        },
-        {
-            id: 3,
-            service: "AC Repair",
-            description: "Repair and cleaning of split-type AC unit",
-            amount: "Php 3,200.00",
-            status: "Pending Review", 
-            date: "2025-01-15",
-            validUntil: "2025-01-22"
-        }
-    ];
 
   return (
     <div className="h-screen bg-white flex flex-col">
@@ -93,12 +95,28 @@ const ClientDashboard = () => {
 
             {/*Left div*/}
             <div className='col-span-2 py-8 px-12'>
-                <div className='flex flex-row justify-start items-center gap-8 mb-8'>
-                    <img src={null} alt="User Profile" className='h-36 w-36 rounded-full bg-gray-300 left-0'/>
-                    <div className='flex flex-col'>
-                        <h5 className='font-carme text-cbvt-blue text-2xl font-bold'>User Full Name</h5>
-                        <p className='font-carme text-cbvt-navy text-lg'>User Email</p>
+                <div className='flex flex-row justify-between items-center gap-8 mb-8'>
+                    <div className='flex flex-row items-center gap-8'>
+                        <img
+                            src={user.profilePic || "https://ui-avatars.com/api/?name=" + encodeURIComponent(user.name)}
+                            alt="User Profile"
+                            className='h-36 w-36 rounded-full bg-gray-300 left-0 object-cover'
+                        />
+                        <div className='flex flex-col'>
+                            <h5 className='font-carme text-cbvt-blue text-2xl font-bold'>{user.name}</h5>
+                            <p className='font-carme text-cbvt-navy text-lg'>{user.email}</p>
+                        </div>
                     </div>
+                    <button
+                        className="p-2 rounded-full hover:bg-gray-200 text-cbvt-navy"
+                        onClick={() => {
+                            setProfileForm({ name: user.name, email: user.email, profilePic: user.profilePic });
+                            setEditProfile(true);
+                        }}
+                        aria-label="Edit Profile"
+                    >
+                        <Pencil size={28} />
+                    </button>
                 </div>
                 
                 {/* Navigation Links */}
@@ -125,16 +143,6 @@ const ClientDashboard = () => {
                         <span className='font-carme font-semibold'>Transaction History</span>
                     </button>
                     
-                    <button 
-                        onClick={() => setActiveTab('quotation-review')}
-                        className={`w-full text-left py-3 px-6 rounded-2xl transition-colors ${
-                            activeTab === 'quotation-review' 
-                                ? 'bg-blue-200 text-cbvt-navy'
-                                : 'text-cbvt-navy hover:bg-gray-100'
-                        }`}
-                    >
-                        <span className='font-carme font-semibold'>Quotation Review</span>
-                    </button>
                 </div>
             </div>
 
@@ -220,40 +228,57 @@ const ClientDashboard = () => {
                     </>
                 )}
 
-                {activeTab === 'quotation-review' && (
-                    <>
-                        <h1 className='text-cbvt-navy font-alegreya-sans-sc text-3xl'>Quotation Review</h1>
-                        <p className='font-carme text-gray-400 text-md'>Review and accept your service quotations.</p>
-                        <hr className='border-gray-500 mt-2 mb-4'/>
-                        <div className='flex-1 overflow-y-auto pr-2'>
-                            {quotations.map((quotation) => (
-                                <div key={quotation.id} className="border border-gray-200 shadow bg-white p-4 rounded-lg flex flex-col mb-3">
-                                    <div className="flex justify-between items-center flex-row mb-2">
-                                        <p className="font-alegreya-sans-sc text-cbvt-navy font-semibold text-lg">{quotation.service}</p>
-                                        <p className="font-alegreya-sans-sc text-cbvt-navy font-semibold text-md">{quotation.amount}</p>
-                                    </div>
-                                    <p className="text-cbvt-dark-gray text-sm mb-3">{quotation.description}</p>
-                                    <div className="flex justify-between items-center mb-3">
-                                        <div>
-                                            <p className="text-cbvt-dark-gray text-sm">Quoted on: {quotation.date}</p>
-                                            <p className="text-cbvt-dark-gray text-sm">Valid until: {quotation.validUntil}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <button className="flex-1 bg-cbvt-blue text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
-                                            Approve
-                                        </button>
-                                        <button className="flex-1 bg-red-100 text-red-700 py-2 px-4 rounded-lg text-sm font-semibold hover:bg-red-200 transition-colors">
-                                            Decline
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </>
-                )}
             </div>
         </div>
+        {editProfile && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+                <div className="bg-white rounded-xl p-8 shadow-lg w-full max-w-md relative">
+                    <button
+                        className="absolute top-2 right-2 text-gray-400 hover:text-cbvt-navy text-2xl font-bold"
+                        onClick={() => setEditProfile(false)}
+                    >×</button>
+                    <h2 className="text-xl font-bold mb-4 text-cbvt-navy">Edit Profile</h2>
+                    <form
+                        onSubmit={e => {
+                            e.preventDefault();
+                            setUser(profileForm);
+                            setEditProfile(false);
+                        }}
+                        className="flex flex-col gap-4"
+                    >
+                        <div {...getProfileRootProps()} className={`h-32 w-32 mx-auto border-2 border-dashed border-blue-300 rounded-full flex flex-col items-center justify-center cursor-pointer mb-2 transition ${isProfileDragActive || isDraggingProfile ? 'bg-blue-50 border-blue-400' : ''}`}>
+                            <input {...getProfileInputProps()} />
+                            {profileForm.profilePic ? (
+                                <img src={profileForm.profilePic} alt="Profile Preview" className="h-28 w-28 object-cover rounded-full" />
+                            ) : (
+                                <span className="text-gray-400 text-center">Drag & drop or click to upload<br/>profile image</span>
+                            )}
+                        </div>
+                        <p className='text-xs text-gray-500 text-center'>Only one image can be uploaded. Uploading another will replace the current image.</p>
+                        <input
+                            type="text"
+                            value={profileForm.name}
+                            onChange={e => setProfileForm(f => ({ ...f, name: e.target.value }))}
+                            className="border rounded-lg p-2"
+                            placeholder="Full Name"
+                        />
+                        <input
+                            type="email"
+                            value={profileForm.email}
+                            onChange={e => setProfileForm(f => ({ ...f, email: e.target.value }))}
+                            className="border rounded-lg p-2"
+                            placeholder="Email"
+                        />
+                        <button
+                            type="submit"
+                            className="bg-cbvt-navy text-white px-4 py-2 rounded-lg font-semibold"
+                        >
+                            Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+        )}
     </div>
   )
 }
