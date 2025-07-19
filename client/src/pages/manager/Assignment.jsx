@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
-import { Plus, Search, Filter } from "lucide-react";
+import { Plus, Search, Filter, ChevronDown } from "lucide-react";
 import { AssignmentCard } from "../../components/AssignmentCard";
-import SortingDropdown from '../../components/SortingDropdown';
 import axios from 'axios';
 
 const AssignmentPage = () => {
@@ -16,8 +15,24 @@ const AssignmentPage = () => {
   // UI states
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('default');
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Sort options
+  const sortOptions = [
+    { value: 'default', label: 'Default' },
+    { value: 'name-asc', label: 'Assignment Name (A-Z)' },
+    { value: 'name-desc', label: 'Assignment Name (Z-A)' },
+    { value: 'customer-asc', label: 'Customer Name (A-Z)' },
+    { value: 'customer-desc', label: 'Customer Name (Z-A)' },
+    { value: 'assigned-asc', label: 'Assigned Person (A-Z)' },
+    { value: 'assigned-desc', label: 'Assigned Person (Z-A)' },
+    { value: 'due-asc', label: 'Due Date (Earliest)' },
+    { value: 'due-desc', label: 'Due Date (Latest)' },
+    { value: 'status-asc', label: 'Status (A-Z)' },
+    { value: 'status-desc', label: 'Status (Z-A)' }
+  ];
 
   // Fetch assignments data
   useEffect(() => {
@@ -120,6 +135,9 @@ const AssignmentPage = () => {
   // Sorting function
   const sortAssignments = (assignments, option) => {
     const sorted = [...assignments];
+    
+    console.log(`Sorting ${assignments.length} assignments by ${option}`);
+    
     switch(option) {
       case 'name-asc':
         return sorted.sort((a, b) => a.Title.localeCompare(b.Title));
@@ -133,13 +151,81 @@ const AssignmentPage = () => {
         return sorted.sort((a, b) => a.AssignedPerson.localeCompare(b.AssignedPerson));
       case 'assigned-desc':
         return sorted.sort((a, b) => b.AssignedPerson.localeCompare(a.AssignedPerson));
+      case 'status-asc':
+        return sorted.sort((a, b) => a.Status.localeCompare(b.Status));
+      case 'status-desc':
+        return sorted.sort((a, b) => b.Status.localeCompare(a.Status));
       case 'due-asc':
-        return sorted.sort((a, b) => new Date(a.DueDate) - new Date(b.DueDate));
+        return sorted.sort((a, b) => {
+          const dateA = new Date(a.DueDate);
+          const dateB = new Date(b.DueDate);
+          // Handle invalid dates by putting them at the end
+          if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
+          if (isNaN(dateA.getTime())) return 1;
+          if (isNaN(dateB.getTime())) return -1;
+          return dateA - dateB;
+        });
       case 'due-desc':
-        return sorted.sort((a, b) => new Date(b.DueDate) - new Date(a.DueDate));
+        return sorted.sort((a, b) => {
+          const dateA = new Date(a.DueDate);
+          const dateB = new Date(b.DueDate);
+          // Handle invalid dates by putting them at the end
+          if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
+          if (isNaN(dateA.getTime())) return 1;
+          if (isNaN(dateB.getTime())) return -1;
+          return dateB - dateA;
+        });
       default:
         return assignments;
     }
+  };
+
+  // Custom sorting dropdown component
+  const SortingDropdown = () => {
+    const selectedOption = sortOptions.find(option => option.value === sortOption);
+
+    return (
+      <div className="relative">
+        <button
+          onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
+          className="flex items-center bg-white border border-gray-200 rounded-3xl h-[38px] px-4 hover:bg-gray-50 transition-colors min-w-[200px] justify-between"
+        >
+          <div className="flex items-center">
+            <Filter className="h-4 w-4 text-gray-500 mr-2" />
+            <span className="text-sm text-cbvt-dark-gray">
+              {selectedOption ? selectedOption.label : 'Sort by'}
+            </span>
+          </div>
+          <ChevronDown 
+            className={`h-4 w-4 text-gray-500 transition-transform ${
+              isSortDropdownOpen ? 'rotate-180' : ''
+            }`} 
+          />
+        </button>
+
+        {isSortDropdownOpen && (
+          <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-20 max-h-60 overflow-y-auto">
+            {sortOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => {
+                  console.log('Selected sort option:', option.value);
+                  setSortOption(option.value);
+                  setIsSortDropdownOpen(false);
+                }}
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors ${
+                  sortOption === option.value 
+                    ? 'bg-cbvt-navy text-white hover:bg-cbvt-navy' 
+                    : 'text-cbvt-dark-gray'
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   // Handle assignment deletion
@@ -169,10 +255,27 @@ const AssignmentPage = () => {
   };
 
   // Handle assignment editing
-  const handleEditAssignment = (assignmentId) => {
-    console.log('Editing assignment:', assignmentId);
-    // TODO: Navigate to edit page or open modal
-    // Example: navigate(`/assignments/${assignmentId}/edit`);
+  const handleEditAssignment = (assignmentId, updatedData) => {
+    console.log('Editing assignment:', assignmentId, updatedData);
+    
+    // Update the assignment in the local state
+    setAssignmentData(prev => 
+      prev.map(assignment => 
+        assignment.AssignmentID === assignmentId
+          ? { ...assignment, ...updatedData }
+          : assignment
+      )
+    );
+    
+    // TODO: Add API call to update assignment on server
+    // try {
+    //   const userData = JSON.parse(localStorage.getItem("user_data"));
+    //   await axios.patch(`http://localhost/im-2-project/api/assignments/${assignmentId}`, updatedData, {
+    //     headers: { Authorization: "Bearer " + userData.token }
+    //   });
+    // } catch (error) {
+    //   console.error('Error updating assignment:', error);
+    // }
   };
 
   const handleCreateAssignment = () => {
@@ -185,6 +288,20 @@ const AssignmentPage = () => {
     console.log('Logging out...');
     // TODO: Implement logout functionality
   };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isSortDropdownOpen && !event.target.closest('.relative')) {
+        setIsSortDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSortDropdownOpen]);
 
   // Loading state
   if (loading) {
@@ -276,9 +393,16 @@ const AssignmentPage = () => {
             </div>
             
             {/* Sort Dropdown */}
-            <SortingDropdown 
-              onSortChange={(sortValue) => setSortOption(sortValue)}
-            />
+            <SortingDropdown />
+          </div>
+
+          {/* Results Summary */}
+          <div className="mb-4">
+            <p className="text-sm text-cbvt-dark-gray">
+              Showing {displayAssignments.length} assignment{displayAssignments.length !== 1 ? 's' : ''}
+              {searchQuery && ` matching "${searchQuery}"`}
+              {sortOption !== 'default' && ` sorted by ${sortOptions.find(opt => opt.value === sortOption)?.label.toLowerCase()}`}
+            </p>
           </div>
         </div>
 
@@ -291,10 +415,11 @@ const AssignmentPage = () => {
               </p>
             </div>
           ) : (
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 mt-5'>
               {displayAssignments.map((assignment) => (
                 <AssignmentCard
                   key={assignment.AssignmentID}
+                  AssignmentID={assignment.AssignmentID}
                   Title={assignment.Title}
                   Description={assignment.Description}
                   AssignedPerson={assignment.AssignedPerson}
@@ -304,8 +429,8 @@ const AssignmentPage = () => {
                   Status={assignment.Status}
                   EstimatedTime={assignment.EstimatedTime}
                   is_removed={assignment.is_removed}
-                  onDelete={() => handleDeleteAssignment(assignment.AssignmentID)}
-                  onEdit={() => handleEditAssignment(assignment.AssignmentID)}
+                  onDelete={handleDeleteAssignment}
+                  onEdit={handleEditAssignment}
                 />
               ))}
             </div>
