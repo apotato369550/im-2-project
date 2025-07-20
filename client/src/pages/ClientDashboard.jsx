@@ -56,13 +56,13 @@ const ClientDashboard = () => {
         setUser({
             name: userData.user_full_name,
             email: userData.user_email,
-            profilePic: userData.image_path || null
+            profilePic: `http://localhost/im-2-project/${userData.image_path.replace(/^(\.\.\/)+/, '')}` || null
         });
 
         setProfileForm({
             name: userData.user_full_name,
             email: userData.email,
-            profilePic: userData.image_path || null,
+            profilePic: `http://localhost/im-2-project/${userData.image_path.replace(/^(\.\.\/)+/, '')}` || null,
             profileFile: null
         });
 
