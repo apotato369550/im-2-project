@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Outlet, useFetcher, useNavigate } from 'react-router-dom';
 import Sidebar from "../../components/Sidebar";
-import { Plus, Search, Filter} from "lucide-react";
+import { Plus, Search, Filter } from "lucide-react";
 import { ItemCard } from '../../components/ItemCard';
 import Modal from "react-modal";
 import { useDropzone } from "react-dropzone"
 import axios from 'axios';
+import SortingDropdown from '../../components/SortingDropdown';
 
 const InventoryPage = () => {
   const [activeItem, setActiveItem] = useState('Inventory');
@@ -27,10 +28,8 @@ const InventoryPage = () => {
   const [data, setData] = useState([]);
   const [output, setOutput] = useState([]);
 
-  //filter function
+  // Filter function
   const [sortOption, setSortOption] = useState('default');
-
-
 
   const [suppliers, setSuppliers] = useState([])
   const [itemData, setItemData] = useState([]);
@@ -38,60 +37,105 @@ const InventoryPage = () => {
   const userData = JSON.parse(localStorage.getItem("user_data"));
   const navigate = useNavigate();
   
-  useEffect(() => {
-    // Apply search filter to the main orders array
-    let results = itemData.filter(item =>
-      item.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.type.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  // Enhanced search function with priority scoring
+  const performSearch = (items, query) => {
+    if (!query.trim()) return items;
+    
+    const searchTerm = query.toLowerCase().trim();
+    
+    return items
+      .map(item => {
+        let score = 0;
+        const brand = item.brand?.toLowerCase() || '';
+        const model = item.model?.toLowerCase() || '';
+        const type = item.type?.toLowerCase() || '';
+        
+        // Priority scoring system
+        // Brand gets highest priority (score 4)
+        if (brand.includes(searchTerm)) {
+          score += 4;
+          if (brand.startsWith(searchTerm)) score += 2; // Extra points for starts with
+        }
+        
+        // Type gets second priority (score 3)
+        if (type.includes(searchTerm)) {
+          score += 3;
+          if (type.startsWith(searchTerm)) score += 1;
+        }
+        
+        // Model gets third priority (score 2)
+        if (model.includes(searchTerm)) {
+          score += 2;
+          if (model.startsWith(searchTerm)) score += 1;
+        }
+        
+        return { ...item, searchScore: score };
+      })
+      .filter(item => item.searchScore > 0) // Only include items with matches
+      .sort((a, b) => b.searchScore - a.searchScore); // Sort by relevance score
+  };
 
-    // Apply sorting
-    results = sortData(results, sortOption);
+  // Enhanced sorting function
+  const sortData = (data, option) => {
+    const sorted = [...data];
+    switch(option) {
+      case 'name-asc':
+      case 'a-z':
+        return sorted.sort((a, b) => {
+          // Primary sort by brand, fallback to model if brands are same
+          const brandCompare = (a.brand || '').localeCompare(b.brand || '');
+          if (brandCompare !== 0) return brandCompare;
+          return (a.model || '').localeCompare(b.model || '');
+        });
+      case 'name-desc':
+      case 'z-a':
+        return sorted.sort((a, b) => {
+          // Primary sort by brand (descending), fallback to model if brands are same
+          const brandCompare = (b.brand || '').localeCompare(a.brand || '');
+          if (brandCompare !== 0) return brandCompare;
+          return (b.model || '').localeCompare(a.model || '');
+        });
+      case 'default':
+      default:
+        return data; // Return original order
+    }
+  };
+
+  // Combined search and sort effect
+  useEffect(() => {
+    // Use all items (including removed ones)
+    let results = searchQuery ? performSearch(itemData, searchQuery) : itemData;
+    
+    // Apply sorting (but preserve search relevance for search results)
+    if (!searchQuery || sortOption !== 'default') {
+      results = sortData(results, sortOption);
+    }
     
     setOutput(results);
-  }, [searchQuery, sortOption]); 
+  }, [searchQuery, sortOption, itemData]);
 
-
- 
- 
- // Sorting function
-   const sortData = (data, option) => {
-     const sorted = [...data];
-     switch(option) {
-       case 'name-asc':
-         return sorted.sort((a, b) => a.Title.localeCompare(b.Title));
-       case 'name-desc':
-         return sorted.sort((a, b) => b.Title.localeCompare(a.Title));
-       default:
-         return data;
-     }
-   };
-
-   
   useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const res = await axios.get("http://localhost/im-2-project/api/items");
+        setItemData(res.data);
+        console.log("Items:", res.data);
+      } catch (err) {
+        console.error("Item fetch error:", err);
+      }
+    };
 
-  const fetchItems = async () => {
-    try {
-      const res = await axios.get("http://localhost/im-2-project/api/items");
-      setItemData(res.data);
-      console.log("Items:", res.data);
-    } catch (err) {
-      console.error("Item fetch error:", err);
-    }
-  };
-
-  const fetchSuppliers = async () => {
-    try {
-      const res = await axios.get("http://localhost/im-2-project/api/suppliers/fetch", {
-        headers: { Authorization: "Bearer " + userData.token }
-      });
-      setSuppliers(res.data);
-      console.log(res.data);
-    } catch (err) {
-      console.error("Supplier fetch error:", err);
-    }
-  };
+    const fetchSuppliers = async () => {
+      try {
+        const res = await axios.get("http://localhost/im-2-project/api/suppliers/fetch", {
+          headers: { Authorization: "Bearer " + userData.token }
+        });
+        setSuppliers(res.data);
+        console.log(res.data);
+      } catch (err) {
+        console.error("Supplier fetch error:", err);
+      }
+    };
 
     fetchItems();
     fetchSuppliers();
@@ -154,7 +198,7 @@ const InventoryPage = () => {
     setUploadedFiles((files) => files.filter((f) => f !== file));
   }
 
- const handleLogout = (e)=>{
+  const handleLogout = (e) => {
     localStorage.removeItem("user_data");
     navigate("/");
   }
@@ -208,20 +252,20 @@ const InventoryPage = () => {
     console.log('Delete called for item:', itemId);
 
     axios.delete(`http://localhost/im-2-project/api/items/delete/${itemId}`, {
-      headers:{
+      headers: {
         Authorization: "Bearer " + userData.token
       }
     })
-    .then(()=>{
+    .then(() => {
       setItemData(prev =>
         prev.map(item =>
-        item.item_id === itemId 
-          ? { ...item, is_removed: true }
-          : item
+          item.item_id === itemId 
+            ? { ...item, is_removed: true }
+            : item
         )
       );
     })
-    .catch((err)=>{
+    .catch((err) => {
       console.log(err);
     })
   };
@@ -249,12 +293,12 @@ const InventoryPage = () => {
 
     axios
       .post("http://localhost/im-2-project/api/items/create", formData, {
-        headers:{
+        headers: {
           Authorization: "Bearer " + userData.token,
           'Content-Type': 'multipart/form-data'
         }
       })
-      .then((response)=>{
+      .then((response) => {
         const newItem = {
           ...form,
           ...response.data,
@@ -264,12 +308,12 @@ const InventoryPage = () => {
           is_removed: false,
         };
         // Add the response data to itemData instead of newItem
-        setItemData(prev => [...prev, newItem ]);
+        setItemData(prev => [...prev, newItem]);
         setmodalIsOpen(false);
         setForm({ supplier_id: '', model: '', price: '0', type: '', inverter: '', horsepower: '', brand: '' });
         setUploadedFiles([]);
       })
-      .catch((err)=>{
+      .catch((err) => {
         console.log(err);
       })
   };
@@ -326,7 +370,6 @@ const InventoryPage = () => {
       />
 
       {/* Main Content */}
-
       <div className="flex-1 flex flex-col pb-8">
         {/* Header Section */}
         <div className="p-8 pb-0">
@@ -347,23 +390,23 @@ const InventoryPage = () => {
             </button>
           </div>
 
-          <div className='flex flex-row' > 
-          {/* Search Bar */}
-          <div className="mb-8">
-            <div className='relative bg-white border border-gray-200 rounded-3xl h-[38px] w-full max-w-[382px]'>
-              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500'/>
-              <input 
-                type='text' 
-                placeholder='Search inventory...' 
-                className='w-full h-full pl-10 pr-4 rounded-3xl focus:outline-none'
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+          <div className='flex flex-row'> 
+            {/* Search Bar */}
+            <div className="mb-8">
+              <div className='relative bg-white border border-gray-200 rounded-3xl h-[38px] w-full max-w-[382px]'>
+                <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500'/>
+                <input 
+                  type='text' 
+                  placeholder='Search inventory...' 
+                  className='w-full h-full pl-10 pr-4 rounded-3xl focus:outline-none'
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
             </div>
-          </div>
-          <SortingDropdown 
-            onSortChange={(sortValue) => setSortOption(sortValue)}
-          />
+            <SortingDropdown 
+              onSortChange={(sortValue) => setSortOption(sortValue)}
+            />
           </div>
         </div>
 
@@ -382,25 +425,31 @@ const InventoryPage = () => {
             </div>
             
             {/* List Items */}
-            {itemData.map((item) => (
-              <ItemCard 
-                key={item.item_id}
-                item_id={item.item_id}
-                supplier_id={item.supplier_id}
-                model={item.model}                       
-                manager_id={item.manager_id}
-                price={item.price}
-                image_path={item.image_path}
-                type={item.type}
-                inverter={item.inverter}
-                horsepower={item.horsepower}
-                brand={item.brand}
-                is_removed={item.is_removed}
-                suppliers={suppliers}
-                onEdit={handleEditFromCard}
-                onDelete={handleDeleteFromCard}
-              />
-            ))}
+            {output.length > 0 ? (
+              output.map((item) => (
+                <ItemCard 
+                  key={item.item_id}
+                  item_id={item.item_id}
+                  supplier_id={item.supplier_id}
+                  model={item.model}                       
+                  manager_id={item.manager_id}
+                  price={item.price}
+                  image_path={item.image_path}
+                  type={item.type}
+                  inverter={item.inverter}
+                  horsepower={item.horsepower}
+                  brand={item.brand}
+                  is_removed={item.is_removed}
+                  suppliers={suppliers}
+                  onEdit={handleEditFromCard}
+                  onDelete={handleDeleteFromCard}
+                />
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                {searchQuery ? `No items found matching "${searchQuery}"` : 'No items available'}
+              </div>
+            )}
           </div>
         </div>
 
