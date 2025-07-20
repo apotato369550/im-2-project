@@ -31,6 +31,41 @@ const InventoryPage = () => {
   const navigate = useNavigate();
   
   useEffect(() => {
+    // Apply search filter to the main orders array
+    let results = orders.filter(order =>
+      order.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.Description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.Customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.order_status.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Apply sorting
+    results = sortData(results, sortOption);
+    
+    setOutput(results);
+  }, [searchQuery, sortOption, orders]); 
+
+
+ 
+ 
+ // Sorting function
+   const sortData = (data, option) => {
+     const sorted = [...data];
+     switch(option) {
+       case 'name-asc':
+         return sorted.sort((a, b) => a.Title.localeCompare(b.Title));
+       case 'name-desc':
+         return sorted.sort((a, b) => b.Title.localeCompare(a.Title));
+       default:
+         return data;
+     }
+   };
+
+   
+
+
+
+  useEffect(() => {
 
   const fetchItems = async () => {
     try {
