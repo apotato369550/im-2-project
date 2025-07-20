@@ -51,7 +51,7 @@ class AssignmentController{
         $data = json_decode(file_get_contents('php://input'), true);
 
         $missingFields = MissingRequiredFields::checkMissingFields($data, [
-            'service_id', 'order_id', 'assignment_details', 'assignment_due'
+            'order_id', 'assignment_details', 'assignment_due'
         ]);
 
         if(!empty($missingFields)){

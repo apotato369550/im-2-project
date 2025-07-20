@@ -59,7 +59,8 @@ const OrdersPage = () => {
             day: "numeric",
           }) : null,
           order_status: order.order_status || "pending",
-          is_removed: order.is_removed || false
+          is_removed: order.is_removed || false,
+          ServiceId: order.service_id
         }));
 
         console.log("Formatted Orders:", formattedOrders);
@@ -297,6 +298,7 @@ const OrdersPage = () => {
                   onStatusUpdate={handleStatusUpdate}
                   onDelete={handleDeleteOrder}
                   onEdit={handleEditOrder}
+                  serviceId={order.ServiceId}
                   is_removed={order.is_removed}
                 />
               ))}
