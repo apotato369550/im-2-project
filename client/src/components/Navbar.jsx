@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode'
 
 const Navbar = () => {
 const [user, setUser] = useState(null)
+const [userImage, setUserImage] = useState(null)
 const navigate = useNavigate();
   useEffect(()=>{
     const userData = localStorage.getItem('user_data');
@@ -20,13 +21,16 @@ const navigate = useNavigate();
           console.log("Token expired");
           localStorage.removeItem('user_data');
           setUser(null);  
+          setUserImage(null);
         }else{
           setUser(firstName);
+          setUserImage(parsed.image_path || null);
         }
       }catch(err){
         console.error("Invalid token:", err);
         localStorage.removeItem('user_data');
         setUser(null);
+        setUserImage(null);
       }
     }
   }, []);
@@ -34,6 +38,7 @@ const navigate = useNavigate();
   const handleLogout = (e)=>{
     localStorage.removeItem("user_data");
     setUser(null);
+    setUserImage(null);
     navigate("/");
   }
   return (
@@ -57,10 +62,21 @@ const navigate = useNavigate();
              {user ? (
               <div className="flex items-center space-x-2 text-cbvt-navy">
                 <Link to="/clientdashboard">
-                  <FaUserCircle className="text-3xl" />
+                  {userImage ? (
+                    <img 
+                      src={userImage} 
+                      alt="User profile" 
+                      className="w-8 h-8 rounded-full object-cover border-2 border-cbvt-navy"
+                    />
+                  ) : (
+                    <FaUserCircle className="text-3xl" />
+                  )}
                 </Link>
                 <span className="flex gap-5 text-xl font-alegreya-sans-sc capitalize cursor-pointer">
-                  {user}
+                  <Link to="/clientdashboard">
+                    {user}
+                  </Link>
+                  
                     <LogOut className='cursor-pointer' onClick={handleLogout}/>
                 </span>
               </div>

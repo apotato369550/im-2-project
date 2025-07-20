@@ -25,7 +25,8 @@ const sidebarItems = [
   },
 ];
 
-const WorkerSidebar = ({ onLogout }) => {
+
+const WorkerSidebar = ({ onLogout, userData }) => {
   const location = useLocation();
   
   // Automatically determine active item based on current URL
@@ -39,7 +40,7 @@ const WorkerSidebar = ({ onLogout }) => {
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center gap-3">
           <div>
-            <h2 className="text-cbvt-navy font-khand text-3xl font-bold">Cebu Best Value</h2>
+            <h2 className="text-cbvt-navy font-khand text-lg font-bold">Cebu Best Value Trading</h2>
             <p className="text-sm text-gray-500">Worker Portal</p>
           </div>
         </div>
@@ -75,8 +76,8 @@ const WorkerSidebar = ({ onLogout }) => {
             <User className="h-4 w-4 text-cbvt-hover-blue" />
           </div>
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-900">John Worker</p>
-            <p className="text-xs text-gray-600">Worker ID: W001</p>
+            <p className="text-sm font-medium text-gray-900">{userData.user_full_name}</p>
+            <p className="text-xs text-gray-600">Worker ID: W{userData.user_id}</p>
           </div>
         </div>
         <button 

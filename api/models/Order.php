@@ -12,7 +12,7 @@ class Order{
                 o.order_date_created,
                 u.user_id,
                 u.user_full_name,
-                u.user_email,
+                u.user_email, 
                 s.service_id,
                 s.service_type, 
                 s.service_details, 
@@ -21,14 +21,15 @@ class Order{
                 i.type,
                 i.inverter,
                 i.brand, 
-                q.total_payment
+                q.total_payment,
+                o.is_removed
             FROM orders o 
             JOIN users u ON o.client_id = u.user_id
             JOIN service s ON o.service_id = s.service_id
             LEFT JOIN items i ON i.item_id = o.item_id
-            LEFT JOIN quotation q ON q.order_id = o.order_id AND q.quotation_status = :status 
+            LEFT JOIN quotation q ON q.order_id = o.order_id
         ");
-        $stmt->execute(["status"=> "Approved"]);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
@@ -36,9 +37,19 @@ class Order{
     {
         $db = DBHelper::getConnection();
         $stmt = $db->prepare(
-            "SELECT * 
-            FROM orders
-            WHERE client_id = :userId");
+            "SELECT 
+                o.*,
+                s.*,
+                q.quotation_id,
+                q.total_payment,
+                -- Don't select q.order_id since it conflicts
+                a.assignment_id
+            FROM orders o 
+            LEFT JOIN quotation q ON q.order_id = o.order_id
+            LEFT JOIN assignments a ON a.order_id = o.order_id
+            LEFT JOIN service s ON o.service_id = s.service_id
+            WHERE o.client_id = :userId
+            GROUP BY o.order_id");
         $stmt->execute(['userId' => $userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
@@ -98,4 +109,5 @@ class Order{
 
         return $result;
     }
+
 }

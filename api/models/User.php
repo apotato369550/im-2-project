@@ -20,6 +20,15 @@ Class User {
         return $user ?: null;
     }
 
+    public function findId($id)
+    {
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare("SELECT * FROM users WHERE user_id = :id");
+        $stmt->execute(['id' => $id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user ?: null;
+    }
+
     public function saveImagePath($userId, $imagePath) {
         $db = DBHelper::getConnection();
         $stmt = $db->prepare("UPDATE users SET image_path = :image_path WHERE user_id = :user_id");
@@ -42,6 +51,22 @@ Class User {
         ]);
 
         return $success ?: null;
+    }
+
+    public function updateProfileDetails($data){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare('
+            UPDATE users
+            SET user_email = :userEmail, user_full_name = :userFullName
+            WHERE user_id = :userId
+        ');
+        $result = $stmt->execute([
+            "userEmail" => $data['user_email'],
+            "userFullName" => $data['user_full_name'],
+            "userId" => $data['user_id']
+        ]);
+
+        return $result;
     }
 
     
@@ -73,7 +98,7 @@ Class User {
                     COUNT(o.order_id) as order_count
             FROM users u
             LEFT JOIN orders o ON u.user_id = o.client_id
-            LEFT JOIN quotation q ON q.order_id = o.order_id AND q.quotation_status = "Approved"
+            LEFT JOIN quotation q ON q.order_id = o.order_id
             WHERE u.user_id <> 1
             GROUP BY u.user_id
             ORDER BY total_spent;
@@ -86,6 +111,20 @@ Class User {
         }
 
         return $users;
+    }
+
+    public function deleteUser($userId){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare('
+            UPDATE users
+            SET is_removed = 1
+            WHERE user_id = :userId
+        ');
+        $result = $stmt->execute([
+            'userId' => $userId
+        ]);
+
+        return $result;
     }
 
 }

@@ -30,13 +30,17 @@ const App = () => (
       <Route path="/signup" element={<SignUp />} />
       <Route path="/about" element={<About />} />
       <Route path="/catalog" element={<Catalog />} />
-      <Route path="/clientdashboard" element={<ClientDashboard/>} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/order-form" element={<OrderForm />} />
       <Route path="/forget-password" element={<ForgetPasswordTestingSpace />} />
       <Route path="/reset-password" element={<ChangePasswordTestingSpace />} /> */
 
-        
+
+      {/*Client Routes*/} 
+      <Route element={<PrivateRoute allowedRoles={['client']} />}>
+        <Route path="/clientdashboard" element={<ClientDashboard/>} />
+      </Route>  
+
       {/* Manager Routes */}
       <Route element={<PrivateRoute allowedRoles={['manager']} />}>
         <Route path="/manager/dashboard" element={<Dashboard />} />
@@ -45,16 +49,13 @@ const App = () => (
         <Route path="/manager/users" element={<Users />} />
         <Route path="/manager/assignment" element={<Assignment />} />
         <Route path="/manager/orders" element={<Orders />} />
+      {/* Manager Routes */}
       </Route>
       {/* Worker Routes */}
-
-        
       <Route element={<PrivateRoute allowedRoles={['worker']} />}>
         <Route path="/worker/dashboard" element={<WorkerDashboard />} />
         <Route path="/worker/assignments" element={<WorkerAssignments />} />
         <Route path="/worker/tasks" element={<Tasks />} />
-      {/* Worker Routes */}
-      <Route element={<PrivateRoute allowedRoles={['worker']} />}>
       </Route>
 
       {/* Fallback */}

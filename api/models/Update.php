@@ -14,7 +14,7 @@ class Update{
             'updateMessage' => $data['message'],
         ]);
 
-        return $result ?: null;
+        return $result;
     }
 
         public function renderUpdates(){
@@ -36,6 +36,7 @@ class Update{
             JOIN assignments a ON a.assignment_id = u.assignment_id
             JOIN orders o ON o.order_id = a.order_id
             WHERE o.client_id = :client_id
+            ORDER BY u.date_last_update DESC
         ');
         $stmt->execute(['client_id' => $client_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];

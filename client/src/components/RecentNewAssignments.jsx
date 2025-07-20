@@ -1,5 +1,5 @@
 import { Briefcase } from 'lucide-react';
-import ApplyModal from './ApplyModal';
+import AcceptModal from './AcceptModal';
 
 
 export const RecentNewAssignments = ({ assignmentID, title, details, location, timeAgo }) => {
@@ -15,7 +15,7 @@ export const RecentNewAssignments = ({ assignmentID, title, details, location, t
         <div className="flex justify-between items-baseline gap-2">
           <p className="font-medium truncate font-carme">{title}</p>
         
-          <ApplyModal />
+          <AcceptModal />
 
         </div>
           <p className="font-[10px] truncate">{details}</p>
