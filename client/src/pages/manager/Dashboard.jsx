@@ -223,7 +223,7 @@ useEffect(() => {
 
                         <div className='flex items-center bg-white h-[38px] w-[310px] rounded-2xl border border-gray-200 mb-3'>
                             <Plus className='h-3 w-3 ml-3'/>
-                            <Link className='ml-2' to="../manager/assignments">Create Assignment</Link>
+                            <Link className='ml-2' to="../manager/assignment">Create Assignment</Link>
                         </div>  
 
                         <div className='flex items-center bg-white h-[38px] w-[310px] rounded-2xl border border-gray-200'>

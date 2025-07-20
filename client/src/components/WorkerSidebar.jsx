@@ -77,7 +77,7 @@ const WorkerSidebar = ({ onLogout, userData }) => {
           </div>
           <div className="flex-1">
             <p className="text-sm font-medium text-gray-900">{userData.user_full_name}</p>
-            <p className="text-xs text-gray-600">Worker ID: W{userData.user_id}</p>
+            <p className="text-xs text-gray-600">Worker ID: W{userData.user_id}</p>*
           </div>
         </div>
         <button 

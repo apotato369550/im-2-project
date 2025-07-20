@@ -33,6 +33,7 @@ class UserController{
                 "user_full_name" => $existingUser['user_full_name'],
                 "user_email"=> $existingUser['user_email'],
                 "user_type" => $existingUser['user_type'],
+                "image_path"=> $existingUser['image_path'],
                 "token" => $jwt
             ]);
         }else{

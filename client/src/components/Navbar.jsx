@@ -24,7 +24,7 @@ const navigate = useNavigate();
           setUserImage(null);
         }else{
           setUser(firstName);
-          setUserImage(parsed.image_path || null);
+          setUserImage(`http://localhost/im-2-project/${parsed.image_path.replace(/^(\.\.\/)+/, '')}` || null);
         }
       }catch(err){
         console.error("Invalid token:", err);

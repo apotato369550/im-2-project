@@ -18,7 +18,7 @@ export default function OrderForm() {
     phone_number: "",
     address: "",
     service_id: "",
-    item_id: "",
+    item_id: "" || null,
     concern: "",
     requestedService: "",
   });
@@ -93,6 +93,8 @@ export default function OrderForm() {
       user_id: userAcc.user_id, // Adjust based on your user object structure
     };
 
+    console.log(submissionData);
+
     axios
       .post("http://localhost/im-2-project/api/orders/create", submissionData, {
         headers: {
@@ -116,7 +118,7 @@ export default function OrderForm() {
 
   const handleViewDashboard = () => {
     setShowModal(false);
-    navigate("/dashboard"); // Adjust path to your dashboard route
+    navigate("/clientdashboard"); // Adjust path to your dashboard route
   };
 
   // Generate unit name for display
@@ -360,4 +362,4 @@ export default function OrderForm() {
       <Footer />
     </div>
   );
-}
+} 

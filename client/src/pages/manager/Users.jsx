@@ -8,11 +8,11 @@ import axios from "axios";
 
 const UsersPage = () => {
   const [activeItem, setActiveItem] = useState("Users");
-  
+
   // Core data states
   const [customerData, setCustomerData] = useState([]);
   const [displayCustomers, setDisplayCustomers] = useState([]);
-  
+
   // UI states
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState('default');
@@ -26,9 +26,9 @@ const UsersPage = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         const userData = JSON.parse(localStorage.getItem("user_data"));
-        
+
         if (!userData || !userData.token) {
           throw new Error("No authentication token found");
         }
@@ -61,7 +61,7 @@ const UsersPage = () => {
 
         console.log("Formatted customers:", formattedCustomers);
         setCustomerData(formattedCustomers);
-        
+
       } catch (error) {
         console.error("Error fetching customers:", error);
         setError(error.message || "Failed to fetch customers");
@@ -91,15 +91,15 @@ const UsersPage = () => {
   // Combined filter and sort effect
   useEffect(() => {
     console.log("Customer data in filter effect:", customerData);
-    
+
     // Filter out soft-deleted customers
     const activeCustomers = customerData.filter(customer => {
       console.log(`Customer ${customer.Name}: is_removed = ${customer.is_removed} (type: ${typeof customer.is_removed})`);
       return customer.is_removed === 0 || customer.is_removed === "0" || customer.is_removed === false || customer.is_removed === null || customer.is_removed === undefined;
     });
-    
+
     console.log("Active customers after filtering:", activeCustomers);
-    
+
     // Apply search filter
     let results = activeCustomers.filter(customer =>
       customer.Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -111,16 +111,16 @@ const UsersPage = () => {
 
     // Apply sorting
     results = sortCustomers(results, sortOption);
-    
+
     console.log("Final results after sorting:", results);
-    
+
     setDisplayCustomers(results);
   }, [searchQuery, sortOption, customerData]);
 
   // Sorting function
   const sortCustomers = (customers, option) => {
     const sorted = [...customers];
-    switch(option) {
+    switch (option) {
       case 'name-asc':
         return sorted.sort((a, b) => a.Name.localeCompare(b.Name));
       case 'name-desc':
@@ -145,36 +145,24 @@ const UsersPage = () => {
   const handleCustomerDelete = async (customerId) => {
     try {
       const userData = JSON.parse(localStorage.getItem("user_data"));
-      
+
       // TODO: Replace with actual delete API endpoint
       console.log('Deleting customer:', customerId);
-      
-      // Example API call for soft delete:
-      // await axios.patch(`http://localhost/im-2-project/api/users/${customerId}/delete`, {}, {
-      //   headers: { Authorization: "Bearer " + userData.token }
-      // });
-      
+
+      await axios.delete(`http://localhost/im-2-project/api/users/delete/${customerId}`, {
+        headers: { Authorization: "Bearer " + userData.token }
+      });
+
       // Refresh the data after deletion
-      // window.location.reload(); // or refetch data
-      
+      window.location.reload(); // or refetch data
+
     } catch (error) {
       console.error('Error deleting customer:', error);
     }
   };
 
-  const handleCustomerEdit = (customerId) => {
-    console.log('Editing customer:', customerId);
-    // TODO: Navigate to edit page or open modal
-    // Example: navigate(`/customers/${customerId}/edit`);
-  };
 
-  const handleAddCustomer = () => {
-    console.log('Adding new customer');
-    // TODO: Navigate to add customer page or open modal
-    // Example: navigate('/customers/add');
-  };
-
-  const handleLogout = (e)=>{
+  const handleLogout = (e) => {
     localStorage.removeItem("user_data");
     navigate("/");
   }
@@ -210,8 +198,8 @@ const UsersPage = () => {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <p className="text-red-600 mb-4">Error: {error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
+            <button
+              onClick={() => window.location.reload()}
               className="bg-cbvt-navy text-white px-4 py-2 rounded-lg hover:bg-opacity-90"
             >
               Retry
@@ -260,9 +248,9 @@ const UsersPage = () => {
                 />
               </div>
             </div>
-            
+
             {/* Sort Dropdown */}
-            <SortingDropdown 
+            <SortingDropdown
               onSortChange={(sortValue) => setSortOption(sortValue)}
             />
           </div>
@@ -279,18 +267,7 @@ const UsersPage = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
               {displayCustomers.map((customer) => (
-                <CustomerCard
-                  key={customer.CustomerID}
-                  Name={customer.Name}
-                  Address={customer.Address}
-                  DateJoined={customer.DateJoined}
-                  Email={customer.Email}
-                  Orders={customer.Orders}
-                  TotalSpent={customer.TotalSpent}
-                  is_removed={customer.is_removed}
-                  onDelete={() => handleCustomerDelete(customer.CustomerID)}
-                  onEdit={() => handleCustomerEdit(customer.CustomerID)}
-                />
+                <CustomerCard key={customer.CustomerID} {...customer} onDelete={handleCustomerDelete} />
               ))}
             </div>
           )}

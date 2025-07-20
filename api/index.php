@@ -73,6 +73,8 @@ $router->post('/im-2-project/api/assignments/create', 'AssignmentController@crea
 *********************************/
 $router->put('/im-2-project/api/assignments/accept/{id}', 'AssignmentController@acceptAssignment');
 $router->put('/im-2-project/api/assignments/edit/{id}', 'AssignmentController@editAssignment');
+$router->put('/im-2-project/api/assignments/editStatus/{id}', 'AssignmentController@editAssignmentStatus');
+
 /**********************************
  *          DELETE ENDPOINTS
 *********************************/
