@@ -18,7 +18,7 @@ export default function OrderForm() {
     phone_number: "",
     address: "",
     service_id: "",
-    item_id: "",
+    item_id: "" || null,
     concern: "",
     requestedService: "",
   });
