@@ -4,7 +4,7 @@ import { useStat, useRef, useEffect } from "react";
 import { useState } from "react";
 
 
-export const CustomerCard = ({Name, Address, DateJoined, Email, Orders, TotalSpent, is_removed,onDelete}) => {
+export const CustomerCard = ({CustomerID, Name, Address, DateJoined, Email, Orders, TotalSpent, is_removed,onDelete}) => {
 const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const menuRef = useRef(null);
