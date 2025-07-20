@@ -96,12 +96,11 @@ class Assignment{
     public function createAssignment($data){
         $db = DBHELPER::getConnection();
         $stmt = $db->prepare("
-            INSERT INTO assignments(service_id, order_id, assignment_details, assignment_status, assignment_due, assignment_date_created)
-            VALUES(:service_id, :order_id, :assignmentDetails, :assignmentStatus, :assignmentDue, CURDATE());
+            INSERT INTO assignments(order_id, assignment_details, assignment_status, assignment_due, assignment_date_created)
+            VALUES(:order_id, :assignmentDetails, :assignmentStatus, :assignmentDue, CURDATE());
         ");
 
         $success = $stmt->execute([
-            'service_id' => $data['service_id'],
             'order_id' => $data['order_id'],
             'assignmentDetails' => $data['assignment_details'],
             'assignmentStatus' => 'Pending',

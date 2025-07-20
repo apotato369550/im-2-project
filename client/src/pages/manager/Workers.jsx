@@ -176,12 +176,16 @@ const WorkersPage = () => {
   const handleCreateWorker = async (e) => {
     e.preventDefault();
     
-    try {
-      const userData = JSON.parse(localStorage.getItem("user_data"));
-      
+    try {      
       // TODO - MAKE API CALL
-
-      // Add new worker to local state
+      axios.post("http://localhost/im-2-project/api/users/register", {
+        user_email: form.email,
+        user_password: form.password,
+        user_full_name: form.fullName,
+        user_type: "worker"
+      })
+      .then((response)=>{
+        // Add new worker to local state
       const newWorker = {
         Name: form.fullName,
         worker_id: response.data.user_id || Date.now(), // Use response ID or fallback
@@ -189,9 +193,9 @@ const WorkersPage = () => {
         is_removed: 0,
         Email: form.email,
       };
-
-      setWorkerData(prev => [...prev, newWorker]);
-      closeModal();
+        setWorkerData(prev => [...prev, newWorker]);
+        closeModal();
+      })
       
     } catch (error) {
       console.error("Error creating worker:", error);
@@ -237,36 +241,36 @@ const WorkersPage = () => {
     try {
       const userData = JSON.parse(localStorage.getItem("user_data"));
       
-      await axios.delete(
-        `http://localhost/im-2-project/api/users/delete/${selectedWorker.worker_id}`,
-        {
-          headers: {
-            Authorization: "Bearer " + userData.token,
-          }
-        }
-      );
-
-      // Update worker in local state (soft delete)
-      setWorkerData(prev =>
-        prev.map(worker =>
-          worker.worker_id === selectedWorker.worker_id 
-            ? { ...worker, is_removed: 1 }
-            : worker
+      axios.delete(`http://localhost/im-2-project/api/users/delete/${selectedWorker.worker_id}`,
+          {headers: {Authorization: "Bearer " + userData.token}}
         )
-      );
-
-      closeModal();
-      
+        .then((response)=>{
+          console.log('user deleted');
+          setWorkerData(prev =>
+          prev.map(worker =>
+            worker.worker_id === selectedWorker.worker_id 
+              ? { ...worker, is_removed: 1 }
+              : worker
+            )
+          );
+          closeModal();
+        })
+      // Update worker in local state (soft delete)
     } catch (error) {
       console.error("Error deleting worker:", error);
     }
   };
 
   const handleWorkerDelete = (workerId) => {
+    const userData = JSON.parse(localStorage.getItem('user_data'));
+
     const worker = workerData.find(w => w.worker_id === workerId);
     if (worker) {
-      openDeleteModal(worker);
+        openDeleteModal(worker);
+        
     }
+    
+
   };
 
   const handleWorkerEdit = (workerId) => {

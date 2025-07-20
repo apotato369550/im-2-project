@@ -41,6 +41,12 @@ $router->post('/im-2-project/api/users/login', 'UserController@login');
 $router->post('/im-2-project/api/users/register', 'UserController@register');
 $router->post('/im-2-project/api/users/update-profile/{id}', 'UserController@updateProfile');
 
+/**********************************
+ *          DELETE ENDPOINTS
+ *********************************/
+$router->delete('/im-2-project/api/users/delete/{id}', 'UserController@deleteUser');
+
+
 
 /**************************************************************************
  *                          ASSIGNMENTS    ROUTES

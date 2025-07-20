@@ -48,7 +48,6 @@ const [isMenuOpen, setIsMenuOpen] = useState(false);
         // Update local state
         setCurrentName(editName);
         setCurrentPosition(editPosition);
-        setCurrentPhoneNumber(editPhoneNumber);
         setCurrentEmail(editEmail);
 
         // Call parent update function
@@ -56,7 +55,6 @@ const [isMenuOpen, setIsMenuOpen] = useState(false);
             onEdit(worker_id, {
                 Name: editName,
                 Position: editPosition,
-                PhoneNumber: editPhoneNumber,
                 Email: editEmail
             });
         }
@@ -165,18 +163,6 @@ const [isMenuOpen, setIsMenuOpen] = useState(false);
                                         type="text"
                                         value={editPosition}
                                         onChange={(e) => setEditPosition(e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cbvt-navy"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-cbvt-dark-gray mb-2">
-                                        Phone Number
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        value={editPhoneNumber}
-                                        onChange={(e) => setEditPhoneNumber(e.target.value)}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cbvt-navy"
                                     />
                                 </div>

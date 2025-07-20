@@ -134,8 +134,16 @@ class UserController{
         }
     }
 
-    public function viewQuotations(){
-        
+    public function deleteUser($userId){
+        $decoded = AuthMiddleware::verifyToken();
+        $user = new User();
+        $success = $user->deleteUser($userId);
+        if($success){
+            echo json_encode(['message' => 'user deleted successfully']);
+        }else{
+            ErrorHelper::sendError(400, "something went wrong");
+        }
+
     }
     
 

@@ -3,6 +3,7 @@ import{User, Calendar, DollarSign, Boxes, UserCheck, Edit} from 'lucide-react';
 import { EditStatusModal } from "./EditStatusModal";
 import { useState } from "react";
 import { Loader } from "lucide-react";
+import axios from 'axios';
 
 export const OrdersCard = ({ 
   OrderID, 
@@ -18,6 +19,7 @@ export const OrdersCard = ({
   onDelete, // Add this prop for delete functionality
   onCreateAssignment, // Add this prop for creating assignments
   onUpdateQuotation, // Add this prop for updating quotations
+  serviceId,
   is_removed
 }) => {
 
@@ -29,6 +31,10 @@ if (is_removed === 1) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isAssignmentOpen, setIsAssignmentOpen] = useState(false);
   const [isQuotationOpen, setIsQuotationOpen] = useState(false);
+  const [assignmentForm, setAssignmentForm] = useState({
+    assignmentDetails: '',
+    assignmentDue: ''
+  });
   const [quotationForm, setQuotationForm] = useState({
     totalPayment: Amount || '',
     description: ''
@@ -38,31 +44,74 @@ if (is_removed === 1) {
     onDelete(OrderID, { is_removed: 1 }); // Pass the OrderID and update object for soft delete
     setIsDeleteOpen(false);
   };
-
   // Status update handler now just forwards to parent
   const handleStatusUpdate = (orderId, newStatus) => {
     onStatusUpdate(orderId, newStatus);
   };
 
+  // Handle assignment form changes
+  const handleAssignmentFormChange = (e) => {
+    const { name, value } = e.target;
+    setAssignmentForm(prev => ({ ...prev, [name]: value }));
+  };
+
   // Handle creating assignment
-  const handleCreateAssignment = () => {
-    // Update the order status to "Assigned"
-    onStatusUpdate(OrderID, "Assigned");
+  const handleCreateAssignment = (e) => {
+    e.preventDefault();
+    const userData = JSON.parse(localStorage.getItem('user_data'))
     
-    // If there's a callback for creating assignments, call it
-    if (onCreateAssignment) {
-      onCreateAssignment(OrderID, {
-        Title,
-        Description,
-        Customer,
-        Quantity,
-        Amount,
-        OrderDate,
-        DeliveryDate
-      });
+    // Validate that assignment details are provided
+    if (!assignmentForm.assignmentDetails.trim()) {
+      alert('Please enter assignment details');
+      return;
     }
-    
+
+    // Validate that assignment due date is provided
+    if (!assignmentForm.assignmentDue) {
+      alert('Please select an assignment due date');
+      return;
+    }
+
+    axios.post('http://localhost/im-2-project/api/assignments/create', {
+      order_id: OrderID,
+      assignment_details: assignmentForm.assignmentDetails,
+      assignment_due: assignmentForm.assignmentDue
+    }, {
+      headers: {
+        Authorization: "Bearer " + userData.token
+      }
+    })
+    .then((response) => {
+      // Update the order status to "Assigned"
+      onStatusUpdate(OrderID, "Assignment Created");
+      
+      // If there's a callback for creating assignments, call it
+      if (onCreateAssignment) {
+        onCreateAssignment(OrderID, {
+          Title,
+          Description,
+          Customer,
+          Quantity,
+          Amount,
+          OrderDate,
+          DeliveryDate,
+          assignmentDetails: assignmentForm.assignmentDetails,
+          assignmentDue: assignmentForm.assignmentDue
+        });
+      }
+      
+      setIsAssignmentOpen(false);
+      setAssignmentForm({ assignmentDetails: '', assignmentDue: '' });
+    })
+    .catch((err) => {
+      console.error('Error creating assignment:', err);
+      alert('Failed to create assignment. Please try again.');
+    });
+  };
+
+  const closeAssignmentModal = () => {
     setIsAssignmentOpen(false);
+    setAssignmentForm({ assignmentDetails: '', assignmentDue: '' });
   };
 
   // Handle quotation form changes
@@ -73,17 +122,38 @@ if (is_removed === 1) {
 
   // Handle quotation update
   const handleUpdateQuotation = (e) => {
+    const userData = JSON.parse(localStorage.getItem('user_data'))
     e.preventDefault();
-    
+
+  axios.post('http://localhost/im-2-project/api/quotations/create', {
+    total_payment: quotationForm.totalPayment,
+    description: quotationForm.description,
+    order_id: OrderID
+  }, {
+    headers:{
+      Authorization: "Bearer " + userData.token 
+    }
+  })
+  .then((response)=>{
+    const formattedAmount = `Php ${parseFloat(quotationForm.totalPayment).toLocaleString("en-PH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+
     if (onUpdateQuotation) {
       onUpdateQuotation(OrderID, {
-        totalPayment: quotationForm.totalPayment,
+        Amount: formattedAmount,
         description: quotationForm.description
       });
     }
-    
+    onStatusUpdate(OrderID, "Quotation Confirmed");
     setIsQuotationOpen(false);
     setQuotationForm({ totalPayment: Amount || '', description: '' });
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+    
   };
 
   const closeQuotationModal = () => {
@@ -200,36 +270,80 @@ if (is_removed === 1) {
         </div>
       </div>
 
-      {/* Assignment Confirmation Modal */}
+      {/* Assignment Creation Modal */}
       {isAssignmentOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="fixed inset-0 bg-black bg-opacity-50"></div>
-            <div className="relative bg-white rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Create Assignment</h3>
-            <p className="mb-4">
-              This will convert Order #{OrderID} into an assignment and change the status to "Assigned".
-              <br/><br/>
-              <strong>Order Details:</strong><br/>
-              • Service: {Title}<br/>
-              • Customer: {Customer}<br/>
-              • Amount: {Amount}
-            </p>
-            <div className="flex justify-end space-x-3">
-              <button 
-                onClick={() => setIsAssignmentOpen(false)}
-                className="px-4 py-2 border border-gray-300 rounded-3xl hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={handleCreateAssignment}
-                className="px-4 py-2 bg-green-500 text-white rounded-3xl hover:bg-green-600"
-              >
-                Create Assignment
-              </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-50"></div>
+          <div className="relative w-full max-w-2xl mx-auto bg-white rounded-[24px] p-8 shadow-2xl">
+            <button 
+              onClick={closeAssignmentModal} 
+              className="absolute top-4 right-4 text-gray-400 hover:text-cbvt-navy text-2xl font-bold focus:outline-none" 
+              aria-label="Close"
+            >
+              ×
+            </button>
+            
+            <h2 className="font-alegreya-sans-sc text-cbvt-navy text-2xl font-semibold mb-6">
+              Create Assignment - Order #{OrderID}
+            </h2>
+            
+            <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+              <p className="text-sm text-gray-700">
+                <strong>Order Details:</strong><br/>
+                • Service: {Title}<br/>
+                • Customer: {Customer}<br/>
+                • Amount: {Amount}
+              </p>
             </div>
-          </div>
+            
+            <form onSubmit={handleCreateAssignment} className="space-y-6">
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <label className="block font-carme text-cbvt-navy mb-2">
+                    Assignment Details <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    name="assignmentDetails"
+                    value={assignmentForm.assignmentDetails}
+                    onChange={handleAssignmentFormChange}
+                    rows={4}
+                    className="w-full border rounded-lg p-3 text-cbvt-navy focus:outline-none focus:ring-2 focus:ring-cbvt-blue resize-vertical"
+                    placeholder="Enter specific details and requirements for this assignment..."
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block font-carme text-cbvt-navy mb-2">
+                    Assignment Due Date <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="assignmentDue"
+                    value={assignmentForm.assignmentDue}
+                    onChange={handleAssignmentFormChange}
+                    className="w-full border rounded-lg p-3 text-cbvt-navy focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="flex justify-center space-x-4 pt-4">
+                <button
+                  type="button"
+                  onClick={closeAssignmentModal}
+                  className="px-6 py-2 border border-gray-300 rounded-2xl text-gray-700 hover:bg-gray-100 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition font-semibold"
+                >
+                  Create Assignment
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

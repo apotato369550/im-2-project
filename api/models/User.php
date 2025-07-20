@@ -113,4 +113,18 @@ Class User {
         return $users;
     }
 
+    public function deleteUser($userId){
+        $db = DBHelper::getConnection();
+        $stmt = $db->prepare('
+            UPDATE users
+            SET is_removed = 1
+            WHERE user_id = :userId
+        ');
+        $result = $stmt->execute([
+            'userId' => $userId
+        ]);
+
+        return $result;
+    }
+
 }
