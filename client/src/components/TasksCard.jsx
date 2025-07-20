@@ -56,7 +56,7 @@ export const TaskCard = ({TaskID, Title, Description, Price, StartDate, Location
                 assignment_status: 'Completed'
             };
             
-            const response = await axios.put(`http://localhost/im-2-project/api/assignments/edit/${TaskID}`, payload, {
+            const response = await axios.put(`http://localhost/im-2-project/api/assignments/editStatus/${TaskID}`, payload, {
                 headers:{
                     Authorization: "Bearer " + userData.token
                 }
