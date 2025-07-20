@@ -13,6 +13,7 @@ const ContactForm = ({
   topPadding = "pt-28",
   backgroundImage,
   backgroundSize = "contain",
+  backgroundPosition = "center",
   height = "min-h-[1360px]"
 }) => {
 
@@ -80,10 +81,11 @@ const ContactForm = ({
         className={`bg-cover bg-center bg-no-repeat w-full overflow-hidden ${height}`}
         style={{ 
           backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-          backgroundSize: backgroundSize
+          backgroundSize: backgroundSize,
+          backgroundPosition: backgroundPosition
         }}
       >
-        <div className={`relative mx-auto max-w-6xl w-full px-4 md:px-8 z-10`}>
+        <div className={`relative mx-auto max-w-6xl w-full px-4 md:px-8 z-10 ${topMargin} ${topPadding}`}>
           <div className="grid gap-6 md:gap-12 grid-cols-1 md:grid-cols-2 items-start">
             {/* Contact Info */}
             <div className={`text-white order-1 w-full pl-0 md:pl-12 pt-10 md:pt-20`}>

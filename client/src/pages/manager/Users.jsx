@@ -162,17 +162,6 @@ const UsersPage = () => {
     }
   };
 
-  const handleCustomerEdit = (customerId) => {
-    console.log('Editing customer:', customerId);
-    // TODO: Navigate to edit page or open modal
-    // Example: navigate(`/customers/${customerId}/edit`);
-  };
-
-  const handleAddCustomer = () => {
-    console.log('Adding new customer');
-    // TODO: Navigate to add customer page or open modal
-    // Example: navigate('/customers/add');
-  };
 
   const handleLogout = (e)=>{
     localStorage.removeItem("user_data");
@@ -279,18 +268,7 @@ const UsersPage = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
               {displayCustomers.map((customer) => (
-                <CustomerCard
-                  key={customer.CustomerID}
-                  Name={customer.Name}
-                  Address={customer.Address}
-                  DateJoined={customer.DateJoined}
-                  Email={customer.Email}
-                  Orders={customer.Orders}
-                  TotalSpent={customer.TotalSpent}
-                  is_removed={customer.is_removed}
-                  onDelete={() => handleCustomerDelete(customer.CustomerID)}
-                  onEdit={() => handleCustomerEdit(customer.CustomerID)}
-                />
+                <CustomerCard key={customer.CustomerID} {...customer} onDelete={handleCustomerDelete} />
               ))}
             </div>
           )}

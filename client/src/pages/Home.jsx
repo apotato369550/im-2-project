@@ -34,8 +34,8 @@ const Home = () => {
       <Brands/>
       <div id="contact">
         <ContactForm 
-          height="min-h-[800px]" 
-          topMargin="mt-20" 
+          height="min-h-[1400px]" 
+          topMargin="mt-90" 
           topPadding="pt-8"
           backgroundSize="cover"
           backgroundImage={contactBg}

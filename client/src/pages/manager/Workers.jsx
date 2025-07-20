@@ -148,17 +148,6 @@ const WorkersPage = () => {
     setModalIsOpen(true);
   };
 
-  const openEditModal = (worker) => {
-    setModalType('edit');
-    setSelectedWorker(worker);
-    setForm({
-      email: worker.Email,
-      password: '', // Don't pre-fill password for security
-      fullName: worker.Name
-    });
-    setModalIsOpen(true);
-  };
-
   const openDeleteModal = (worker) => {
     setModalType('delete');
     setSelectedWorker(worker);
@@ -203,40 +192,6 @@ const WorkersPage = () => {
     }
   };
 
-  const handleUpdateWorker = async (e) => {
-    e.preventDefault();
-    
-    try {
-      const userData = JSON.parse(localStorage.getItem("user_data"));
-      
-      const updateData = {
-        email: form.email,
-        fullName: form.fullName,
-      };
-      
-      // Only include password if it was provided
-      if (form.password) {
-        updateData.password = form.password;
-      }
-
-      // TODO MAKE API CALL
-
-      // Update worker in local state
-      setWorkerData(prev =>
-        prev.map(worker =>
-          worker.worker_id === selectedWorker.worker_id 
-            ? { ...worker, Name: form.fullName, Email: form.email }
-            : worker
-        )
-      );
-
-      closeModal();
-      
-    } catch (error) {
-      console.error("Error updating worker:", error);
-    }
-  };
-
   const handleDeleteWorker = async () => {
     try {
       const userData = JSON.parse(localStorage.getItem("user_data"));
@@ -271,13 +226,6 @@ const WorkersPage = () => {
     }
     
 
-  };
-
-  const handleWorkerEdit = (workerId) => {
-    const worker = workerData.find(w => w.worker_id === workerId);
-    if (worker) {
-      openEditModal(worker);
-    }
   };
 
   const handleAddWorker = () => {
@@ -401,7 +349,6 @@ const WorkersPage = () => {
                   Email={worker.Email}
                   is_removed={worker.is_removed}
                   onDelete={() => handleWorkerDelete(worker.worker_id)}
-                  onEdit={() => handleWorkerEdit(worker.worker_id)}
                 />
               ))}
             </div>
@@ -478,65 +425,6 @@ const WorkersPage = () => {
                   className='bg-cbvt-navy text-white px-6 py-3 rounded-2xl font-semibold hover:bg-opacity-90 transition'
                 >
                   Create Worker
-                </button>
-              </div>
-            </>
-          )}
-          
-          {/* Edit Worker Modal */}
-          {modalType === 'edit' && (
-            <>
-              <h2 className='font-alegreya-sans-sc text-cbvt-navy text-2xl font-semibold mb-4 self-start'>
-                Edit Worker
-              </h2>
-              <form id='edit-worker-form' className='flex flex-col gap-4 w-full' onSubmit={handleUpdateWorker}>
-                <div className='flex flex-col gap-2'>
-                  <label className='font-carme text-cbvt-navy'>User Email</label>
-                  <input
-                    type='email'
-                    name='email'
-                    value={form.email}
-                    onChange={handleFormChange}
-                    className='border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cbvt-navy focus:ring-opacity-50'
-                    placeholder="Enter worker's email"
-                    required
-                  />
-                </div>
-                
-                <div className='flex flex-col gap-2'>
-                  <label className='font-carme text-cbvt-navy'>User Password</label>
-                  <input
-                    type='password'
-                    name='password'
-                    value={form.password}
-                    onChange={handleFormChange}
-                    className='border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cbvt-navy focus:ring-opacity-50'
-                    placeholder="Leave empty to keep current password"
-                  />
-                  <p className='text-xs text-gray-500'>Leave empty to keep current password</p>
-                </div>
-                
-                <div className='flex flex-col gap-2'>
-                  <label className='font-carme text-cbvt-navy'>User Full Name</label>
-                  <input
-                    type='text'
-                    name='fullName'
-                    value={form.fullName}
-                    onChange={handleFormChange}
-                    className='border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cbvt-navy focus:ring-opacity-50'
-                    placeholder="Enter worker's full name"
-                    required
-                  />
-                </div>
-              </form>
-              
-              <div className='flex justify-center w-full mt-4'>
-                <button 
-                  type='submit' 
-                  form='edit-worker-form' 
-                  className='bg-cbvt-navy text-white px-6 py-3 rounded-2xl font-semibold hover:bg-opacity-90 transition'
-                >
-                  Update Worker
                 </button>
               </div>
             </>
