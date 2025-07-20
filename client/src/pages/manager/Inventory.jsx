@@ -6,6 +6,7 @@ import { ItemCard } from '../../components/ItemCard';
 import Modal from "react-modal";
 import { useDropzone } from "react-dropzone"
 import axios from 'axios';
+import SortingDropdown from '../../components/SortingDropdown';
 
 const InventoryPage = () => {
   const [activeItem, setActiveItem] = useState('Inventory');
@@ -60,9 +61,9 @@ const InventoryPage = () => {
      const sorted = [...data];
      switch(option) {
        case 'name-asc':
-         return sorted.sort((a, b) => a.Title.localeCompare(b.Title));
+         return sorted.sort((a, b) => a.model.localeCompare(b.model));
        case 'name-desc':
-         return sorted.sort((a, b) => b.Title.localeCompare(a.Title));
+         return sorted.sort((a, b) => b.model.localeCompare(a.model));
        default:
          return data;
      }
