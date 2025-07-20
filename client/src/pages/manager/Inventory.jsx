@@ -24,6 +24,15 @@ const InventoryPage = () => {
     brand: '',
   });
 
+  const [data, setData] = useState([]);
+  const [output, setOutput] = useState([]);
+
+  //filter function
+  const [sortOption, setSortOption] = useState('default');
+
+  const [orders, setOrders] = useState([]); // Add this state for managing orders
+
+
   const [suppliers, setSuppliers] = useState([])
   const [itemData, setItemData] = useState([]);
   const [editItem, setEditItem] = useState(null);
