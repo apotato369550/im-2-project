@@ -116,7 +116,7 @@ export default function OrderForm() {
 
   const handleViewDashboard = () => {
     setShowModal(false);
-    navigate("/dashboard"); // Adjust path to your dashboard route
+    navigate("/clientdashboard"); // Adjust path to your dashboard route
   };
 
   // Generate unit name for display
