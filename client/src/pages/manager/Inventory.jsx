@@ -30,7 +30,6 @@ const InventoryPage = () => {
   //filter function
   const [sortOption, setSortOption] = useState('default');
 
-  const [orders, setOrders] = useState([]); // Add this state for managing orders
 
 
   const [suppliers, setSuppliers] = useState([])
@@ -41,11 +40,10 @@ const InventoryPage = () => {
   
   useEffect(() => {
     // Apply search filter to the main orders array
-    let results = orders.filter(order =>
-      order.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.Description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.Customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.order_status.toLowerCase().includes(searchQuery.toLowerCase())
+    let results = itemData.filter(item =>
+      item.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.type.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     // Apply sorting
@@ -71,9 +69,6 @@ const InventoryPage = () => {
    };
 
    
-
-
-
   useEffect(() => {
 
   const fetchItems = async () => {
@@ -366,10 +361,9 @@ const InventoryPage = () => {
               />
             </div>
           </div>
-          <div className='h-[38px] w-[101px] bg-white border border-gray-200 ml-[17px] rounded-3xl p-1 flex items-center'>
-            <Filter className='h-3 w-3 ml-3 text-gray-500'/>
-            <p className='text-gray-500 ml-2'>Filter</p>
-          </div>
+          <SortingDropdown 
+            onSortChange={(sortValue) => setSortOption(sortValue)}
+          />
           </div>
         </div>
 
