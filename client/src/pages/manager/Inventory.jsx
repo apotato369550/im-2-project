@@ -50,7 +50,7 @@ const InventoryPage = () => {
     results = sortData(results, sortOption);
     
     setOutput(results);
-  }, [searchQuery, sortOption, orders]); 
+  }, [searchQuery, sortOption]); 
 
 
  
