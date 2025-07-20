@@ -18,7 +18,7 @@ export default function OrderForm() {
     phone_number: "",
     address: "",
     service_id: "",
-    item_id: "",
+    item_id: "" || null,
     concern: "",
     requestedService: "",
   });
@@ -92,6 +92,8 @@ export default function OrderForm() {
       ...formData,
       user_id: userAcc.user_id, // Adjust based on your user object structure
     };
+
+    console.log(submissionData);
 
     axios
       .post("http://localhost/im-2-project/api/orders/create", submissionData, {
