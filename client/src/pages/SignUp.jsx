@@ -15,9 +15,28 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [checkSame, setCheckSame] = useState('');
+  const [passwordErrors, setPasswordErrors] = useState([]);
   const [registerSuccess, setRegisterSuccess] = useState('');
   const navigate = useNavigate();
 
+  // Password validation function
+  const validatePassword = (password) => {
+    const errors = [];
+    
+    if (password.length < 8) {
+      errors.push("Password must be at least 8 characters long");
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      errors.push("Password must contain at least 1 uppercase letter");
+    }
+    
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      errors.push("Password must contain at least 1 special character");
+    }
+    
+    return errors;
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,36 +44,53 @@ export default function SignUp() {
       ...prev,
       [name]: value,
     }));
+
+    // Validate password in real-time
+    if (name === 'user_password') {
+      const errors = validatePassword(value);
+      setPasswordErrors(errors);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Validate password before submission
+    const passwordValidationErrors = validatePassword(formData.user_password);
+    if (passwordValidationErrors.length > 0) {
+      setPasswordErrors(passwordValidationErrors);
+      return;
+    }
+
     const user_full_name = `${formData.first_name} ${formData.last_name}`.trim();
 
-    if(formData.user_password != formData.confirmPassword){
+    if(formData.user_password !== formData.confirmPassword){
       setCheckSame('Passwords do not match!');
     }else{
-      setCheckSame('')
+      setCheckSame('');
+      setPasswordErrors([]);
+      
       const dataToSend = {
-      ...formData,
-      user_full_name,
-      user_type: 'client'
+        ...formData,
+        user_full_name,
+        user_type: 'client'
       };
       
       axios.post('http://localhost/im-2-project/api/users/register', dataToSend)
       .then((response)=>{
-        if(response.status = 200){
-          setTimeout(()=>{
-            setRegisterSuccess('Registered successfully');
-          }, 2000)
+        if(response.status === 200){
+          setRegisterSuccess('Registered successfully');
           console.log(response.status);
-          navigate("/login");
+          setTimeout(()=>{
+            navigate("/login");
+          }, 2000)
         }else{
           setRegisterSuccess('Something went wrong try again');
         }
       })
       .catch((err)=>{
         console.log(err);
+        setRegisterSuccess('Something went wrong try again');
       })
     }
   };
@@ -107,6 +143,7 @@ export default function SignUp() {
                 value={formData.user_email}
                 onChange={handleInputChange}
                 className="w-full h-[59px] px-16 py-4 bg-gray-200 rounded-full text-[21px] font-carme text-cbvt-navy placeholder-gray-400 border-0 focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
+                required
               />
               <div className="absolute left-6 top-1/2 transform -translate-y-1/2">
                 <Mail size={20} color="gray" />
@@ -121,6 +158,7 @@ export default function SignUp() {
                   value={formData.first_name}
                   onChange={handleInputChange}
                   className="w-full h-[59px] px-16 py-4 bg-gray-200 rounded-full text-[21px] font-carme text-cbvt-navy placeholder-gray-400 border-0 focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
+                  required
                 />
                 <div className="absolute left-6 top-1/2 transform -translate-y-1/2">
                   <User size={20} color="gray" />
@@ -134,6 +172,7 @@ export default function SignUp() {
                   value={formData.last_name}
                   onChange={handleInputChange}
                   className="w-full h-[59px] px-16 py-4 bg-gray-200 rounded-full text-[21px] font-carme text-cbvt-navy placeholder-gray-400 border-0 focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
+                  required
                 />
                 <div className="absolute left-6 top-1/2 transform -translate-y-1/2">
                   <User size={20} color="gray" />
@@ -147,7 +186,10 @@ export default function SignUp() {
                 placeholder="password"
                 value={formData.user_password}
                 onChange={handleInputChange}
-                className="w-full h-[59px] px-16 py-4 bg-gray-200 rounded-full text-[21px] font-carme text-cbvt-navy placeholder-gray-400 border-0 focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
+                className={`w-full h-[59px] px-16 py-4 bg-gray-200 rounded-full text-[21px] font-carme text-cbvt-navy placeholder-gray-400 border-0 focus:outline-none focus:ring-2 ${
+                  passwordErrors.length > 0 && formData.user_password ? 'focus:ring-red-500' : 'focus:ring-cbvt-blue'
+                }`}
+                required
               />
               <div className="absolute left-6 top-1/2 transform -translate-y-1/2">
                 <KeyRound size={20} color="gray" />
@@ -164,6 +206,18 @@ export default function SignUp() {
                 )}
               </button>
             </div>
+            
+            {/* Password validation errors */}
+            {passwordErrors.length > 0 && formData.user_password && (
+              <div className="space-y-1">
+                {passwordErrors.map((error, index) => (
+                  <p key={index} className="text-red-500 text-sm text-left px-4">
+                    • {error}
+                  </p>
+                ))}
+              </div>
+            )}
+            
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
@@ -172,6 +226,7 @@ export default function SignUp() {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 className="w-full h-[59px] px-16 py-4 bg-gray-200 rounded-full text-[21px] font-carme text-cbvt-navy placeholder-gray-400 border-0 focus:outline-none focus:ring-2 focus:ring-cbvt-blue"
+                required
               />
               <div className="absolute left-6 top-1/2 transform -translate-y-1/2">
                 <KeyRound size={20} color="gray" />
@@ -188,12 +243,14 @@ export default function SignUp() {
                 )}
               </button>
             </div>
-            {/* Error message */}
+            
+            {/* Password mismatch error */}
             {checkSame && (
               <p className="text-red-500 text-sm text-center p-0 m-0">
                 {checkSame}
               </p>
             )}
+            
             <button
               type="submit"
               className="w-full h-[50px] bg-cbvt-blue hover:scale-105 text-white rounded-full text-[24px] font-khand font-medium transition-all shadow-lg duration-300 ease-in-out mt-8"
@@ -201,11 +258,12 @@ export default function SignUp() {
               Sign Up
             </button>
           </form>
+          
           {registerSuccess && (
-              <p className="text-green-500 text-sm text-center p-0 m-0">
-                {registerSuccess}
-              </p>
-            )}
+            <p className="text-green-500 text-sm text-center p-0 m-0">
+              {registerSuccess}
+            </p>
+          )}
 
           {/* Login link for mobile */}
           <div className="lg:hidden text-center">
